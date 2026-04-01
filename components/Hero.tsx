@@ -65,13 +65,13 @@ export function Hero() {
             className="mt-8 flex flex-wrap items-center gap-3"
           >
             <a
-              href="#pricing"
+              href="/products#offer"
               className="inline-flex items-center justify-center rounded-2xl bg-accent px-7 py-3.5 text-base font-extrabold text-white shadow-lg shadow-accent/30 transition-transform hover:scale-[1.03] active:scale-[0.98]"
             >
               Buy now
             </a>
             <a
-              href="#showcase"
+              href="#buzz"
               className="inline-flex items-center justify-center rounded-2xl border-2 border-pink-200 bg-white px-6 py-3.5 text-base font-bold text-foreground shadow-sm transition hover:border-accent/50"
             >
               See the vibe

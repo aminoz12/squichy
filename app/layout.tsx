@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Fredoka, Montserrat, Nunito } from "next/font/google";
+import { PromoMarquee } from "@/components/PromoMarquee";
 import "./globals.css";
 
 const fredoka = Fredoka({
@@ -42,6 +43,7 @@ export default function RootLayout({
       className={`${fredoka.variable} ${nunito.variable} ${montserrat.variable} h-full antialiased`}
     >
       <body className="relative min-h-full flex flex-col font-sans">
+        <PromoMarquee />
         {children}
       </body>
     </html>

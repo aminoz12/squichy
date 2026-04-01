@@ -3,13 +3,12 @@
 import { create } from "zustand";
 
 export type CartLine = {
-  /** Matches pricing tier id */
+  /** `size-17` / `size-24` for Checkout API, or legacy tier id `single`/`triple`/`five` */
   id: string;
   name: string;
-  /** Display price for one bundle */
-  unitPrice: number;
+  /** Unit price in EUR (matches single product offer) */
+  unitPriceEuro: number;
   quantity: number;
-  stripeUrl: string;
 };
 
 type CartState = {
@@ -19,10 +18,11 @@ type CartState = {
   closeCart: () => void;
   toggleCart: () => void;
   addTier: (line: Omit<CartLine, "quantity">) => void;
+  /** Replace or insert one line with an exact quantity (product page). */
+  putLine: (line: CartLine) => void;
   removeLine: (id: string) => void;
   setLineQuantity: (id: string, quantity: number) => void;
-  /** Redirects to Stripe for the first line (Payment Links are one product per URL). */
-  checkoutFirstLine: () => void;
+  clearCart: () => void;
 };
 
 export const useCartStore = create<CartState>((set, get) => ({
@@ -50,6 +50,18 @@ export const useCartStore = create<CartState>((set, get) => ({
       };
     }),
 
+  putLine: (line) =>
+    set((state) => ({
+      isOpen: true,
+      items: [
+        ...state.items.filter((i) => i.id !== line.id),
+        {
+          ...line,
+          quantity: Math.min(99, Math.max(1, line.quantity)),
+        },
+      ],
+    })),
+
   removeLine: (id) =>
     set((state) => ({
       items: state.items.filter((i) => i.id !== id),
@@ -63,11 +75,5 @@ export const useCartStore = create<CartState>((set, get) => ({
           : state.items.map((i) => (i.id === id ? { ...i, quantity } : i)),
     })),
 
-  checkoutFirstLine: () => {
-    const first = get().items[0];
-    if (!first) return;
-    if (typeof window !== "undefined") {
-      window.location.assign(first.stripeUrl);
-    }
-  },
+  clearCart: () => set({ items: [], isOpen: false }),
 }));

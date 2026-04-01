@@ -2,6 +2,7 @@
 
 import { motion, useReducedMotion } from "framer-motion";
 import type { PricingTier } from "@/lib/data";
+import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 function formatMoney(n: number) {
@@ -17,10 +18,11 @@ type ProductCardProps = {
 };
 
 /**
- * Single pricing tier: add-to-cart (Zustand) + direct Stripe Payment Link.
+ * Single pricing tier: add-to-cart (Zustand); checkout uses /api/checkout sessions.
  */
 export function ProductCard({ tier, index }: ProductCardProps) {
-  const addTier = useCartStore((s) => s.addTier);
+  const putLine = useCartStore((s) => s.putLine);
+  const defaultSize = singleProductOffer.options[0]!;
   const reduce = useReducedMotion();
 
   return (
@@ -65,11 +67,11 @@ export function ProductCard({ tier, index }: ProductCardProps) {
         <button
           type="button"
           onClick={() =>
-            addTier({
-              id: tier.id,
-              name: `${tier.count} dumpling pack`,
-              unitPrice: tier.price,
-              stripeUrl: tier.stripeUrl,
+            putLine({
+              id: defaultSize.id,
+              name: `${tier.count}× ${singleProductOffer.name} (${defaultSize.label})`,
+              unitPriceEuro: defaultSize.priceEuro,
+              quantity: tier.count,
             })
           }
           className="w-full rounded-2xl bg-foreground py-3.5 text-center text-sm font-extrabold text-white shadow-lg transition hover:opacity-95 active:scale-[0.99]"
@@ -77,12 +79,10 @@ export function ProductCard({ tier, index }: ProductCardProps) {
           Add to cart
         </button>
         <a
-          href={tier.stripeUrl}
-          target="_blank"
-          rel="noopener noreferrer"
+          href="/products#offer"
           className="w-full rounded-2xl border-2 border-pink-200 py-3 text-center text-sm font-extrabold text-foreground transition hover:border-accent/50"
         >
-            Buy Now
+          Buy now
         </a>
       </div>
     </motion.article>

@@ -20,7 +20,7 @@ export function Navbar() {
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
         <Link
-          href="#top"
+          href="/"
           className="font-[family-name:var(--font-fredoka)] text-lg font-semibold tracking-tight text-foreground sm:text-xl"
         >
           {product.name.split(" ").slice(0, 2).join(" ")}
@@ -28,20 +28,20 @@ export function Navbar() {
         </Link>
 
         <nav className="hidden items-center gap-6 text-sm font-semibold text-muted md:flex">
-          <a href="#showcase" className="transition-colors hover:text-accent">
+          <Link href="/products" className="transition-colors hover:text-accent">
             Product
+          </Link>
+          <a href="/products#offer" className="transition-colors hover:text-accent">
+            Buy
           </a>
-          <a href="#pricing" className="transition-colors hover:text-accent">
-            Pricing
-          </a>
-          <a href="#faq" className="transition-colors hover:text-accent">
+          <a href="/#faq" className="transition-colors hover:text-accent">
             FAQ
           </a>
         </nav>
 
         <div className="flex items-center gap-2">
           <a
-            href="#pricing"
+            href="/products#offer"
             className="hidden rounded-xl bg-accent px-4 py-2 text-sm font-bold text-white shadow-md shadow-accent/25 transition-transform hover:scale-[1.02] active:scale-[0.98] sm:inline-flex"
           >
             Buy now

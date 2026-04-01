@@ -17,13 +17,13 @@ export function StickyMobileCTA() {
     >
       <div className="mx-auto flex max-w-lg items-center gap-2">
         <a
-          href="#pricing"
+          href="/products#offer"
           className="flex-1 rounded-2xl bg-accent py-3.5 text-center text-sm font-extrabold text-white shadow-md shadow-accent/30"
         >
           Buy now
         </a>
         <a
-          href="#faq"
+          href="/#faq"
           className="rounded-2xl border-2 border-pink-200 px-4 py-3.5 text-sm font-extrabold text-foreground"
         >
           FAQ

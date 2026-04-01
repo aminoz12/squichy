@@ -1,6 +1,6 @@
 /**
- * Central product + marketing copy. Swap Stripe URLs for your live Payment Links.
- * Images use Unsplash (configured in next.config.ts).
+ * Central product + marketing copy.
+ * Checkout uses Stripe Checkout Sessions (POST /api/checkout), not Payment Links.
  */
 
 export const product = {
@@ -10,13 +10,7 @@ export const product = {
   stockRemaining: 47,
 } as const;
 
-export const stripeLinks = {
-  single: "https://buy.stripe.com/test_xxx_single",
-  triple: "https://buy.stripe.com/test_xxx_triple",
-  five: "https://buy.stripe.com/test_xxx_five",
-} as const;
-
-export type PricingTierId = keyof typeof stripeLinks;
+export type PricingTierId = "single" | "triple" | "five";
 
 export type PricingTier = {
   id: PricingTierId;
@@ -25,7 +19,6 @@ export type PricingTier = {
   price: number;
   compareAt?: number;
   badge?: string;
-  stripeUrl: string;
   highlight?: boolean;
 };
 
@@ -35,7 +28,6 @@ export const pricingTiers: PricingTier[] = [
     label: "Starter",
     count: 1,
     price: 9.99,
-    stripeUrl: stripeLinks.single,
   },
   {
     id: "triple",
@@ -44,7 +36,6 @@ export const pricingTiers: PricingTier[] = [
     price: 24.99,
     compareAt: 29.97,
     badge: "Best seller",
-    stripeUrl: stripeLinks.triple,
     highlight: true,
   },
   {
@@ -53,7 +44,6 @@ export const pricingTiers: PricingTier[] = [
     count: 5,
     price: 39.99,
     compareAt: 49.95,
-    stripeUrl: stripeLinks.five,
   },
 ];
 
@@ -153,6 +143,128 @@ export const social = {
   instagram: "https://www.instagram.com/",
   email: "hello@squishybun.com",
 } as const;
+
+export type ProductSizeOption = {
+  id: string;
+  label: string;
+  sizeCm: number;
+  priceEuro: number;
+};
+
+export const singleProductOffer = {
+  id: "squishybun-mystery-dumpling",
+  name: "Crazy Fun Rainbow Squishy Bun Mystery Dumpling",
+  deliveryEuro: 9,
+  images: ["/big1.png", "/big2.png", "/big3.png"],
+  description:
+    "One product, two sizes. Pick your size and checkout instantly. Delivery is €9 on smaller orders; free when your basket reaches the equivalent of $50 USD (see site banner).",
+  details: [
+    "This is a Mystery Squishy Bao Bun Sensory Fidget Toy.",
+    "The product is from the brand Crazy Fun.",
+    "It functions as a sensory fidget toy.",
+    "This toy is suitable for ages 3 and up.",
+    "Each package contains 1 set.",
+    "There is a possibility to find a Super Rare Shimmering Starlight Dumpling.",
+  ],
+  specs: [
+    { label: "Color", value: "Mystery" },
+    { label: "Theme", value: "Mystery Dumpling" },
+    { label: "Brand", value: "RMS" },
+    { label: "Character", value: "Dumpling" },
+    {
+      label: "Dimensions",
+      value: "Varies by size (17 cm or 24 cm) — see size option.",
+    },
+    { label: "Weight", value: "Approx. 0.7–1.9 kg depending on size." },
+  ],
+  options: [
+    {
+      id: "size-17",
+      label: "17 cm",
+      sizeCm: 17,
+      priceEuro: 18,
+    },
+    {
+      id: "size-24",
+      label: "24 cm",
+      sizeCm: 24,
+      priceEuro: 26,
+    },
+  ] as ProductSizeOption[],
+} as const;
+
+export type ProductDetail = {
+  id: string;
+  name: string;
+  size: string;
+  price: number;
+  compareAt?: number;
+  description: string;
+  details: string[];
+  specs: {
+    color: string;
+    theme: string;
+    brand: string;
+    character: string;
+    dimensions: string;
+    weight: string;
+  };
+  images: string[];
+};
+
+export const productDetails: ProductDetail[] = [
+  {
+    id: "mini-crazy-fun-rainbow",
+    name: "Mini Crazy Fun Rainbow Squishy Bun Mystery Dumpling 17CM",
+    size: "17CM",
+    price: 9.99,
+    description:
+      "Discover endless fun with the Mystery Squishy Bao Bun Sensory fidget toy, a delightful addition to the Crazy Fun collection. Each set provides an exciting unboxing experience, where you might uncover a super rare shimmering starlight dumpling. This engaging sensory toy is perfect for children aged 3 and up, offering a satisfying squishy texture and a touch of mystery. Enjoy the tactile play and the thrill of finding out which unique dumpling you receive in your set.",
+    details: [
+      "This is a Mystery Squishy Bao Bun Sensory Fidget Toy.",
+      "The product is from the brand Crazy Fun.",
+      "It functions as a sensory fidget toy.",
+      "This toy is suitable for ages 3 and up.",
+      "Each package contains 1 set.",
+      "There is a possibility to find a Super Rare Shimmering Starlight Dumpling.",
+    ],
+    specs: {
+      color: "Mystery",
+      theme: "Mystery Dumpling",
+      brand: "RMS",
+      character: "Dumpling",
+      dimensions: "6.69 x 6.69 x 5.02 Inches (17 x 17 x 12.75 cm)",
+      weight: "1.60 lb (0.73 kg)",
+    },
+    images: ["/big1.png", "/big2.png", "/big3.png"],
+  },
+  {
+    id: "big-crazy-fun-rainbow",
+    name: "i Crazy Fun Rainbow Squishy Bun Mystery Dumpling 28CM",
+    size: "28CM",
+    price: 24.99,
+    compareAt: 29.97,
+    description:
+      "Discover endless fun with the Mystery Squishy Bao Bun Sensory fidget toy, a delightful addition to the Crazy Fun collection. Each set provides an exciting unboxing experience, where you might uncover a super rare shimmering starlight dumpling. This engaging sensory toy is perfect for children aged 3 and up, offering a satisfying squishy texture and a touch of mystery. Enjoy the tactile play and the thrill of finding out which unique dumpling you receive in your set.",
+    details: [
+      "This is a Mystery Squishy Bao Bun Sensory Fidget Toy.",
+      "The product is from the brand Crazy Fun.",
+      "It functions as a sensory fidget toy.",
+      "This toy is suitable for ages 3 and up.",
+      "Each package contains 1 set.",
+      "There is a possibility to find a Super Rare Shimmering Starlight Dumpling.",
+    ],
+    specs: {
+      color: "Mystery",
+      theme: "Mystery Dumpling",
+      brand: "RMS",
+      character: "Dumpling",
+      dimensions: "11.02 x 11.02 x 8.27 Inches (28 x 28 x 21 cm)",
+      weight: "4.20 lb (1.90 kg)",
+    },
+    images: ["/big1.png", "/big2.png", "/big3.png"],
+  },
+];
 
 /** “The buzz is everywhere” — only these `/public` MP4s (no posters or extra assets). */
 export const buzzReelVideos = [

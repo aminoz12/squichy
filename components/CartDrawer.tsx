@@ -1,19 +1,27 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
-import { useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
+import { redirectToStripeCheckout } from "@/lib/checkout-client";
+import { resolveStripeCheckoutParams } from "@/lib/cart-helpers";
+import {
+  FREE_DELIVERY_THRESHOLD_USD,
+  qualifiesForFreeDeliverySubtotalEur,
+  subtotalEurToUsdApprox,
+} from "@/lib/delivery";
+import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
-function formatMoney(n: number) {
-  return new Intl.NumberFormat("en-US", {
+function formatEuro(n: number) {
+  return new Intl.NumberFormat("fr-FR", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
   }).format(n);
 }
 
 /**
- * Slide-over cart: pure client state. Checkout uses Stripe Payment Links (no backend).
- * Multiple bundles = complete Stripe checkout per line (first line used by primary CTA).
+ * Slide-over cart. Checkout always uses POST /api/checkout (Stripe Checkout
+ * Session) so amount and currency match the cart line — no static Payment Links.
  */
 export function CartDrawer() {
   const reduce = useReducedMotion();
@@ -22,12 +30,17 @@ export function CartDrawer() {
   const items = useCartStore((s) => s.items);
   const removeLine = useCartStore((s) => s.removeLine);
   const setLineQuantity = useCartStore((s) => s.setLineQuantity);
-  const checkoutFirstLine = useCartStore((s) => s.checkoutFirstLine);
 
-  const subtotal = items.reduce(
-    (acc, line) => acc + line.unitPrice * line.quantity,
+  const [checkoutLoading, setCheckoutLoading] = useState(false);
+  const [checkoutError, setCheckoutError] = useState<string | null>(null);
+
+  const subtotalEur = items.reduce(
+    (acc, line) => acc + line.unitPriceEuro * line.quantity,
     0,
   );
+  const freeDelivery = qualifiesForFreeDeliverySubtotalEur(subtotalEur);
+  const deliveryEur = freeDelivery ? 0 : singleProductOffer.deliveryEuro;
+  const estimatedTotalEur = subtotalEur + deliveryEur;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -44,6 +57,27 @@ export function CartDrawer() {
       document.body.style.overflow = "";
     };
   }, [isOpen]);
+
+  const startCheckout = useCallback(async () => {
+    const first = useCartStore.getState().items[0];
+    if (!first) return;
+    setCheckoutError(null);
+    setCheckoutLoading(true);
+    try {
+      const resolved = resolveStripeCheckoutParams(first);
+      if (!resolved) {
+        throw new Error(
+          "This cart line can’t be checked out. Remove it and add the product again from the shop.",
+        );
+      }
+      await redirectToStripeCheckout(resolved.sizeId, resolved.quantity);
+    } catch (e) {
+      setCheckoutError(
+        e instanceof Error ? e.message : "Checkout could not start",
+      );
+      setCheckoutLoading(false);
+    }
+  }, []);
 
   return (
     <AnimatePresence>
@@ -87,8 +121,8 @@ export function CartDrawer() {
             <div className="flex-1 overflow-y-auto px-5 py-4">
               {items.length === 0 ? (
                 <p className="text-sm font-semibold text-muted">
-                  Your cart is empty — add a bundle and let fate choose your
-                  dumpling.
+                  Your cart is empty — pick a size on the product page and add
+                  it here, or tap Buy now.
                 </p>
               ) : (
                 <ul className="space-y-4">
@@ -103,7 +137,7 @@ export function CartDrawer() {
                             {line.name}
                           </p>
                           <p className="text-sm font-bold text-muted">
-                            {formatMoney(line.unitPrice)} each
+                            {formatEuro(line.unitPriceEuro)} each
                           </p>
                         </div>
                         <button
@@ -132,17 +166,15 @@ export function CartDrawer() {
                           />
                         </label>
                         <p className="text-sm font-extrabold">
-                          {formatMoney(line.unitPrice * line.quantity)}
+                          {formatEuro(line.unitPriceEuro * line.quantity)}
                         </p>
                       </div>
-                      <a
-                        href={line.stripeUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="mt-3 block w-full rounded-xl border-2 border-accent/30 py-2 text-center text-xs font-extrabold text-accent hover:bg-accent/5"
-                      >
-                        Pay this line on Stripe
-                      </a>
+                      {!resolveStripeCheckoutParams(line) && (
+                        <p className="mt-2 text-xs font-bold text-amber-800">
+                          Remove this line — it uses an old cart format. Add the
+                          item again from the product page.
+                        </p>
+                      )}
                     </li>
                   ))}
                 </ul>
@@ -150,23 +182,53 @@ export function CartDrawer() {
             </div>
 
             <div className="border-t border-pink-100 bg-white/90 p-5 backdrop-blur-sm">
-              <div className="flex items-center justify-between text-sm font-extrabold">
-                <span>Subtotal (display only)</span>
-                <span>{formatMoney(subtotal)}</span>
+              <div className="space-y-1 text-sm font-extrabold">
+                <div className="flex items-center justify-between">
+                  <span>Subtotal</span>
+                  <span>{formatEuro(subtotalEur)}</span>
+                </div>
+                <div className="flex items-center justify-between text-muted">
+                  <span>Delivery</span>
+                  <span>
+                    {freeDelivery ? (
+                      <span className="font-extrabold text-emerald-600">
+                        Free
+                      </span>
+                    ) : (
+                      formatEuro(singleProductOffer.deliveryEuro)
+                    )}
+                  </span>
+                </div>
+                <div className="flex items-center justify-between border-t border-pink-100 pt-2 text-base text-foreground">
+                  <span>Estimated total</span>
+                  <span>{formatEuro(estimatedTotalEur)}</span>
+                </div>
               </div>
-              <p className="mt-2 text-xs font-semibold text-muted">
-                Stripe Payment Links cover one bundle purchase per checkout. For
-                multiple bundles, use “Pay this line” or checkout again after
-                paying.
-              </p>
+              {items.length > 0 && (
+                <p className="mt-2 text-xs font-semibold text-muted">
+                  Subtotals of about {FREE_DELIVERY_THRESHOLD_USD} USD or more
+                  qualify for free delivery (see top banner). Your subtotal is
+                  about ${subtotalEurToUsdApprox(subtotalEur).toFixed(2)} USD
+                  equivalent.
+                </p>
+              )}
+              {checkoutError && (
+                <p className="mt-2 text-sm font-semibold text-red-600" role="alert">
+                  {checkoutError}
+                </p>
+              )}
               <button
                 type="button"
-                disabled={items.length === 0}
-                onClick={checkoutFirstLine}
+                disabled={items.length === 0 || checkoutLoading}
+                onClick={startCheckout}
                 className="mt-4 w-full rounded-2xl bg-accent py-3.5 text-sm font-extrabold text-white shadow-lg shadow-accent/25 transition enabled:hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                Checkout (first item)
+                {checkoutLoading ? "Redirecting…" : "Checkout"}
               </button>
+              <p className="mt-2 text-xs font-semibold text-muted">
+                One Stripe checkout per visit for the first line. Change qty
+                above, or remove lines to pick another item.
+              </p>
             </div>
           </motion.aside>
         </>
