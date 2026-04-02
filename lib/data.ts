@@ -126,7 +126,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     q: "How long does shipping take?",
-    a: "Most U.S. orders ship within 2 business days and arrive in 3–7 days. You’ll get tracking by email.",
+    a: "Most EU orders ship within 2 business days and arrive in 3–7 days. You’ll get tracking by email.",
   },
   {
     q: "What’s your refund policy?",
@@ -157,7 +157,7 @@ export const singleProductOffer = {
   deliveryEuro: 9,
   images: ["/big1.png", "/big2.png", "/big3.png"],
   description:
-    "One product, two sizes. Pick your size and checkout instantly. Delivery is €9 on smaller orders; free when your basket reaches the equivalent of $50 USD (see site banner).",
+    "One product, two sizes. Pick your size and checkout instantly. Delivery is €9 on smaller orders; free when your basket reaches €50 (see site banner).",
   details: [
     "This is a Mystery Squishy Bao Bun Sensory Fidget Toy.",
     "The product is from the brand Crazy Fun.",

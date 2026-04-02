@@ -7,7 +7,7 @@ import { getStripe } from "@/lib/stripe-server";
 /**
  * Creates a Stripe Checkout Session (payment) for the single product:
  * line 1 = unit price × quantity; optional line 2 = delivery (waived when
- * subtotal meets FREE_DELIVERY_THRESHOLD_USD via lib/delivery).
+ * subtotal meets FREE_DELIVERY_THRESHOLD_EUR via lib/delivery).
  */
 export async function POST(request: Request) {
   const secret = process.env.STRIPE_SECRET_KEY?.trim();

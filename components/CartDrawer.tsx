@@ -5,9 +5,8 @@ import { useCallback, useEffect, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import { resolveStripeCheckoutParams } from "@/lib/cart-helpers";
 import {
-  FREE_DELIVERY_THRESHOLD_USD,
+  FREE_DELIVERY_THRESHOLD_EUR,
   qualifiesForFreeDeliverySubtotalEur,
-  subtotalEurToUsdApprox,
 } from "@/lib/delivery";
 import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
@@ -206,10 +205,9 @@ export function CartDrawer() {
               </div>
               {items.length > 0 && (
                 <p className="mt-2 text-xs font-semibold text-muted">
-                  Subtotals of about {FREE_DELIVERY_THRESHOLD_USD} USD or more
-                  qualify for free delivery (see top banner). Your subtotal is
-                  about ${subtotalEurToUsdApprox(subtotalEur).toFixed(2)} USD
-                  equivalent.
+                  Subtotals of {FREE_DELIVERY_THRESHOLD_EUR}€ or more qualify for
+                  free delivery (see top banner). Your subtotal is{" "}
+                  {formatEuro(subtotalEur)}.
                 </p>
               )}
               {checkoutError && (

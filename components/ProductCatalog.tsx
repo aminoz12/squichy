@@ -7,9 +7,9 @@ import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 function formatMoney(n: number) {
-  return new Intl.NumberFormat("en-US", {
+  return new Intl.NumberFormat("fr-FR", {
     style: "currency",
-    currency: "USD",
+    currency: "EUR",
   }).format(n);
 }
 

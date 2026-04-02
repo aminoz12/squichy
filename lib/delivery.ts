@@ -1,16 +1,9 @@
 /**
- * Free-delivery rule (customer-facing USD). Orders are charged in EUR in Stripe;
- * we compare using a fixed approximate EUR→USD rate so the banner and checkout stay aligned.
+ * Free delivery when the cart / order subtotal (before delivery) reaches this
+ * amount in EUR. Matches Stripe line items priced in EUR.
  */
-export const FREE_DELIVERY_THRESHOLD_USD = 50;
-
-/** Approximate EUR→USD for threshold checks only (not for FX settlement). */
-export const EUR_TO_USD_APPROX = 1.08;
-
-export function subtotalEurToUsdApprox(subtotalEur: number): number {
-  return subtotalEur * EUR_TO_USD_APPROX;
-}
+export const FREE_DELIVERY_THRESHOLD_EUR = 50;
 
 export function qualifiesForFreeDeliverySubtotalEur(subtotalEur: number): boolean {
-  return subtotalEurToUsdApprox(subtotalEur) >= FREE_DELIVERY_THRESHOLD_USD - 1e-9;
+  return subtotalEur >= FREE_DELIVERY_THRESHOLD_EUR - 1e-9;
 }

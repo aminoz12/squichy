@@ -20,7 +20,7 @@ type SingleProductOfferProps = {
 };
 
 function moneyEuro(n: number) {
-  return `${n.toFixed(2)} euro`;
+  return `${n.toFixed(2)} €`;
 }
 
 export function SingleProductOffer({

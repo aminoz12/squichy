@@ -221,7 +221,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
               ) : (
                 <>
                   Delivery {moneyEuro(offer.deliveryEuro)} — free when your
-                  subtotal reaches the equivalent of $50 USD (see banner above).
+                  subtotal reaches €50 (see banner above).
                 </>
               )}
               {" "}
