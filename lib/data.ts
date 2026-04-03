@@ -134,7 +134,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     q: "Is this food?",
-    a: "No — it’s a toy. Do not eat the squishy. (We can’t believe we had to say that.)",
+    a: "No — it’s a toy. Do not eat the squishy.",
   },
 ];
 
@@ -155,9 +155,7 @@ export const singleProductOffer = {
   id: "squishybun-mystery-dumpling",
   name: "Crazy Fun Rainbow Squishy Bun Mystery Dumpling",
   deliveryEuro: 9,
-  images: ["/big1.png", "/big2.png", "/big3.png"],
-  description:
-    "One product, two sizes. Pick your size and checkout instantly. Delivery is €9 on smaller orders; free when your basket reaches €50 (see site banner).",
+  images: ["/big1.png", "/big2.png", "/big3.png"],    
   details: [
     "This is a Mystery Squishy Bao Bun Sensory Fidget Toy.",
     "The product is from the brand Crazy Fun.",

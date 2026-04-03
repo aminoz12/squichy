@@ -23,7 +23,7 @@ function ReelCard({ src }: { src: string }) {
   return (
     <div
       ref={wrapRef}
-      className="relative w-[min(42vw,240px)] flex-shrink-0 snap-center sm:w-full sm:max-w-none"
+      className="relative w-full min-w-0 sm:max-w-none"
     >
       <div
         className="relative aspect-[9/16] overflow-hidden rounded-2xl shadow-[0_12px_40px_-8px_rgba(0,0,0,0.35)] ring-1 ring-black/10"
@@ -88,7 +88,7 @@ export function BuzzEverywhere({ videos }: BuzzEverywhereProps) {
         </div>
 
         <div className="relative z-10 mx-auto -mt-[4.5rem] max-w-6xl px-4 sm:-mt-[5.5rem] sm:px-6">
-          <div className="flex snap-x snap-mandatory gap-4 overflow-x-auto pb-2 pl-1 pr-1 [-ms-overflow-style:none] [scrollbar-width:none] sm:grid sm:grid-cols-4 sm:gap-5 sm:overflow-visible sm:pb-0 sm:pl-0 sm:pr-0 [&::-webkit-scrollbar]:hidden">
+          <div className="grid grid-cols-2 gap-3 pb-2 sm:grid-cols-4 sm:gap-5 sm:pb-0">
             {videos.map((src) => (
               <ReelCard key={src} src={src} />
             ))}

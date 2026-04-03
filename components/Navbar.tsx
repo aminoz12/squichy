@@ -27,22 +27,25 @@ export function Navbar() {
           <span className="text-primary-dark">.</span>
         </Link>
 
-        <nav className="hidden items-center gap-2 rounded-full border border-pink-100 bg-white/90 px-2 py-1 text-sm font-semibold text-muted shadow-sm md:flex">
+        <nav
+          aria-label="Main"
+          className="hidden items-stretch divide-x divide-pink-200/70 rounded-full border border-pink-100/90 bg-white/90 text-sm shadow-sm md:flex"
+        >
           <Link
             href="/products"
-            className="rounded-full px-3 py-1.5 transition-colors hover:bg-pink-50 hover:text-accent"
+            className="px-4 py-2 font-bold text-foreground transition-colors first:pl-5 hover:bg-pink-50/80 hover:text-accent"
           >
             Product
           </Link>
           <a
             href="/products#offer"
-            className="rounded-full px-3 py-1.5 transition-colors hover:bg-pink-50 hover:text-accent"
+            className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
           >
             Buy
           </a>
           <a
             href="/#faq"
-            className="rounded-full px-3 py-1.5 transition-colors hover:bg-pink-50 hover:text-accent"
+            className="px-4 py-2 font-bold text-foreground transition-colors last:pr-5 hover:bg-pink-50/80 hover:text-accent"
           >
             FAQ
           </a>
