@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fredoka, Montserrat, Nunito } from "next/font/google";
 import { PromoMarquee } from "@/components/PromoMarquee";
+import { rootMetadataExtras } from "@/lib/seo";
 import "./globals.css";
 
 const fredoka = Fredoka({
@@ -23,13 +24,7 @@ const montserrat = Montserrat({
 });
 
 export const metadata: Metadata = {
-  title: "SquishyBun Dumplings | Crazy Fun Drop",
-  description:
-    "Blind-box squishy dumplings — cute, viral, and oddly therapeutic. Guest checkout with Stripe.",
-  openGraph: {
-    title: "SquishyBun Dumplings",
-    description: "You won’t know which dumpling you get. That’s the point.",
-  },
+  ...rootMetadataExtras(),
 };
 
 export default function RootLayout({
@@ -39,7 +34,7 @@ export default function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
+      lang="en-US"
       className={`${fredoka.variable} ${nunito.variable} ${montserrat.variable} h-full antialiased`}
     >
       <body className="relative min-h-full flex flex-col font-sans">

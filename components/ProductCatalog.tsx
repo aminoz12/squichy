@@ -7,9 +7,9 @@ import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 function formatMoney(n: number) {
-  return new Intl.NumberFormat("fr-FR", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
   }).format(n);
 }
 
@@ -222,7 +222,7 @@ export function ProductCatalog({
               putLine({
                 id: sizeOption.id,
                 name: selected.name,
-                unitPriceEuro: sizeOption.priceEuro,
+                unitPriceUsd: sizeOption.priceUsd,
                 quantity: 1,
               })
             }

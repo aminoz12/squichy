@@ -1,13 +1,13 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { singleProductOffer } from "@/lib/data";
-import { qualifiesForFreeDeliverySubtotalEur } from "@/lib/delivery";
+import { qualifiesForFreeDeliverySubtotal } from "@/lib/delivery";
 import { getStripe } from "@/lib/stripe-server";
 
 /**
  * Creates a Stripe Checkout Session (payment) for the single product:
  * line 1 = unit price × quantity; optional line 2 = delivery (waived when
- * subtotal meets FREE_DELIVERY_THRESHOLD_EUR via lib/delivery).
+ * subtotal meets FREE_DELIVERY_THRESHOLD_USD via lib/delivery).
  */
 export async function POST(request: Request) {
   const secret = process.env.STRIPE_SECRET_KEY?.trim();
@@ -45,18 +45,18 @@ export async function POST(request: Request) {
     process.env.NEXT_PUBLIC_APP_URL?.trim() ||
     "http://localhost:3000";
 
-  const unitAmount = Math.round(option.priceEuro * 100);
-  const subtotalEur = option.priceEuro * quantity;
-  const deliveryFree = qualifiesForFreeDeliverySubtotalEur(subtotalEur);
+  const unitAmount = Math.round(option.priceUsd * 100);
+  const subtotalUsd = option.priceUsd * quantity;
+  const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
   const deliveryAmount = deliveryFree
     ? 0
-    : Math.round(singleProductOffer.deliveryEuro * 100);
+    : Math.round(singleProductOffer.deliveryUsd * 100);
 
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
     {
       quantity,
       price_data: {
-        currency: "eur",
+        currency: "usd",
         unit_amount: unitAmount,
         product_data: {
           name: `${singleProductOffer.name} (${option.label})`,
@@ -70,7 +70,7 @@ export async function POST(request: Request) {
     lineItems.push({
       quantity: 1,
       price_data: {
-        currency: "eur",
+        currency: "usd",
         unit_amount: deliveryAmount,
         product_data: {
           name: "Delivery",

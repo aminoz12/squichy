@@ -5,8 +5,8 @@ import { useMemo, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import type { ProductSizeOption } from "@/lib/data";
 import {
-  FREE_DELIVERY_THRESHOLD_EUR,
-  qualifiesForFreeDeliverySubtotalEur,
+  FREE_DELIVERY_THRESHOLD_USD,
+  qualifiesForFreeDeliverySubtotal,
 } from "@/lib/delivery";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
@@ -15,7 +15,7 @@ export type ProductPageOfferData = {
   name: string;
   description: string;
   images: readonly string[];
-  deliveryEuro: number;
+  deliveryUsd: number;
   details: readonly string[];
   specs: readonly { label: string; value: string }[];
   options: readonly ProductSizeOption[];
@@ -27,10 +27,10 @@ type ProductPageOfferProps = {
   offer: ProductPageOfferData;
 };
 
-function moneyEuro(n: number) {
-  return new Intl.NumberFormat("fr-FR", {
+function moneyUsd(n: number) {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
     minimumFractionDigits: 2,
     maximumFractionDigits: 2,
   }).format(n);
@@ -63,11 +63,11 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
     setQuantity((q) => Math.min(99, Math.max(1, q + delta)));
   };
 
-  const subtotalEur = selected.priceEuro * quantity;
-  const deliveryFree = qualifiesForFreeDeliverySubtotalEur(subtotalEur);
-  const deliveryLineEur = deliveryFree ? 0 : offer.deliveryEuro;
-  const estimatedTotalEur = subtotalEur + deliveryLineEur;
-  const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD_EUR - subtotalEur);
+  const subtotalUsd = selected.priceUsd * quantity;
+  const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
+  const deliveryLineUsd = deliveryFree ? 0 : offer.deliveryUsd;
+  const estimatedTotalUsd = subtotalUsd + deliveryLineUsd;
+  const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD_USD - subtotalUsd);
 
   function addToCart() {
     setCheckoutError(null);
@@ -77,7 +77,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
     putLine({
       id: opt.id,
       name: `${offer.name} (${opt.label})`,
-      unitPriceEuro: opt.priceEuro,
+      unitPriceUsd: opt.priceUsd,
       quantity,
     });
   }
@@ -177,7 +177,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                             isOn ? "text-white/90" : "text-slate-500"
                           }`}
                         >
-                          {moneyEuro(opt.priceEuro)}
+                          {moneyUsd(opt.priceUsd)}
                         </span>
                       </button>
                     );
@@ -239,7 +239,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       </span>
                     </span>
                     <span className="font-semibold tabular-nums text-slate-900">
-                      {moneyEuro(subtotalEur)}
+                      {moneyUsd(subtotalUsd)}
                     </span>
                   </div>
                   <div className="flex items-center justify-between gap-3 text-sm">
@@ -258,16 +258,16 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       </span>
                     ) : (
                       <span className="font-semibold tabular-nums text-slate-900">
-                        {moneyEuro(offer.deliveryEuro)}
+                        {moneyUsd(offer.deliveryUsd)}
                       </span>
                     )}
                   </div>
                   {!deliveryFree && amountToFreeDelivery > 0 && (
                     <p className="rounded-lg bg-violet-50/90 px-2.5 py-2 text-[11px] leading-snug text-violet-950 ring-1 ring-violet-100">
                       <span className="font-semibold">Free delivery</span> from{" "}
-                      {moneyEuro(FREE_DELIVERY_THRESHOLD_EUR)} subtotal — add{" "}
+                      {moneyUsd(FREE_DELIVERY_THRESHOLD_USD)} subtotal — add{" "}
                       <span className="font-bold tabular-nums">
-                        {moneyEuro(amountToFreeDelivery)}
+                        {moneyUsd(amountToFreeDelivery)}
                       </span>{" "}
                       more.
                     </p>
@@ -281,7 +281,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                   <div className="flex items-baseline justify-between border-t border-dashed border-slate-200 pt-3">
                     <span className="text-sm font-bold text-slate-800">Total</span>
                     <span className="text-xl font-black tabular-nums text-slate-900 sm:text-2xl">
-                      {moneyEuro(estimatedTotalEur)}
+                      {moneyUsd(estimatedTotalUsd)}
                     </span>
                   </div>
                 </div>

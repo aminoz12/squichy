@@ -6,9 +6,9 @@ import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 function formatMoney(n: number) {
-  return new Intl.NumberFormat("fr-FR", {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
   }).format(n);
 }
 
@@ -70,7 +70,7 @@ export function ProductCard({ tier, index }: ProductCardProps) {
             putLine({
               id: defaultSize.id,
               name: `${tier.count}× ${singleProductOffer.name} (${defaultSize.label})`,
-              unitPriceEuro: defaultSize.priceEuro,
+              unitPriceUsd: defaultSize.priceUsd,
               quantity: tier.count,
             })
           }

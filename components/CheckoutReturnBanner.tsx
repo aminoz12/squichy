@@ -16,8 +16,13 @@ type SessionPayload = {
 function formatPaidTotal(cents: number | null, currency: string | null) {
   if (cents == null) return null;
   const amount = cents / 100;
-  const cur = (currency ?? "eur").toLowerCase();
-  if (cur === "eur") return `${amount.toFixed(2)} €`;
+  const cur = (currency ?? "usd").toLowerCase();
+  if (cur === "usd") {
+    return new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
+  }
   try {
     return new Intl.NumberFormat("fr-FR", {
       style: "currency",

@@ -126,7 +126,7 @@ export const faqItems: FaqItem[] = [
   },
   {
     q: "How long does shipping take?",
-    a: "Most EU orders ship within 2 business days and arrive in 3–7 days. You’ll get tracking by email.",
+    a: "Most US and Canada orders ship within 2 business days. Transit is typically 3–7 business days depending on your region. You’ll get tracking by email.",
   },
   {
     q: "What’s your refund policy?",
@@ -148,14 +148,16 @@ export type ProductSizeOption = {
   id: string;
   label: string;
   sizeCm: number;
-  priceEuro: number;
+  priceUsd: number;
 };
 
 export const singleProductOffer = {
   id: "squishybun-mystery-dumpling",
   name: "Crazy Fun Rainbow Squishy Bun Mystery Dumpling",
-  deliveryEuro: 9,
-  images: ["/big1.png", "/big2.png", "/big3.png"],    
+  description:
+    "Mystery squishy bao bun sensory fidget toy — slow-rise texture, blind-box fun, and a chance at the super rare Shimmering Starlight Dumpling. Ages 3+.",
+  deliveryUsd: 9,
+  images: ["/big1.png", "/big2.png", "/big3.png"],
   details: [
     "This is a Mystery Squishy Bao Bun Sensory Fidget Toy.",
     "The product is from the brand Crazy Fun.",
@@ -180,13 +182,13 @@ export const singleProductOffer = {
       id: "size-17",
       label: "17 cm",
       sizeCm: 17,
-      priceEuro: 18,
+      priceUsd: 18,
     },
     {
       id: "size-24",
       label: "24 cm",
       sizeCm: 24,
-      priceEuro: 26,
+      priceUsd: 26,
     },
   ] as ProductSizeOption[],
 } as const;

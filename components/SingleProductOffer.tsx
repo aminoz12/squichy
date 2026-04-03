@@ -4,7 +4,7 @@ import Image from "next/image";
 import { useMemo, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import type { ProductSizeOption } from "@/lib/data";
-import { qualifiesForFreeDeliverySubtotalEur } from "@/lib/delivery";
+import { qualifiesForFreeDeliverySubtotal } from "@/lib/delivery";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 type SingleProductOfferProps = {
@@ -15,12 +15,17 @@ type SingleProductOfferProps = {
   name: string;
   description: string;
   images: readonly string[];
-  deliveryEuro: number;
+  deliveryUsd: number;
   options: readonly ProductSizeOption[];
 };
 
-function moneyEuro(n: number) {
-  return `${n.toFixed(2)} €`;
+function moneyUsd(n: number) {
+  return new Intl.NumberFormat("en-US", {
+    style: "currency",
+    currency: "USD",
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2,
+  }).format(n);
 }
 
 export function SingleProductOffer({
@@ -30,7 +35,7 @@ export function SingleProductOffer({
   name,
   description,
   images,
-  deliveryEuro,
+  deliveryUsd,
   options,
 }: SingleProductOfferProps) {
   const addTier = useCartStore((s) => s.addTier);
@@ -45,10 +50,10 @@ export function SingleProductOffer({
   );
 
   if (!selected) return null;
-  const subtotalEur = selected.priceEuro;
-  const deliveryFree = qualifiesForFreeDeliverySubtotalEur(subtotalEur);
-  const deliveryCharge = deliveryFree ? 0 : deliveryEuro;
-  const total = subtotalEur + deliveryCharge;
+  const subtotalUsd = selected.priceUsd;
+  const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
+  const deliveryCharge = deliveryFree ? 0 : deliveryUsd;
+  const total = subtotalUsd + deliveryCharge;
   const heroSrc = images[imageIndex] ?? images[0];
 
   async function buyNow() {
@@ -76,7 +81,7 @@ export function SingleProductOffer({
             }`}
           >
             <span>
-              {opt.label} - {moneyEuro(opt.priceEuro)}
+              {opt.label} - {moneyUsd(opt.priceUsd)}
             </span>
             <input
               className="h-4 w-4 accent-violet-600"
@@ -91,16 +96,16 @@ export function SingleProductOffer({
 
       <div className="mt-4 space-y-1 text-sm font-semibold text-foreground">
         <p>
-          Product: <strong>{moneyEuro(selected.priceEuro)}</strong>
+          Product: <strong>{moneyUsd(selected.priceUsd)}</strong>
         </p>
         <p>
           Delivery:{" "}
           <strong>
-            {deliveryFree ? "FREE" : moneyEuro(deliveryEuro)}
+            {deliveryFree ? "FREE" : moneyUsd(deliveryUsd)}
           </strong>
         </p>
         <p className="text-base">
-          Total: <strong>{moneyEuro(total)}</strong>
+          Total: <strong>{moneyUsd(total)}</strong>
         </p>
       </div>
 
@@ -111,7 +116,7 @@ export function SingleProductOffer({
             addTier({
               id: selected.id,
               name: `${name} (${selected.label})`,
-              unitPriceEuro: selected.priceEuro,
+              unitPriceUsd: selected.priceUsd,
             })
           }
           className="w-full rounded-2xl bg-foreground py-3.5 text-center text-sm font-extrabold text-white shadow-lg transition hover:opacity-95 active:scale-[0.99]"

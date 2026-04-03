@@ -2,7 +2,7 @@ import type { CartLine } from "@/lib/store/use-cart-store";
 import { singleProductOffer } from "@/lib/data";
 
 /**
- * Maps a cart line to Stripe Checkout Session params (dynamic amount in EUR on the server).
+ * Maps a cart line to Stripe Checkout Session params (dynamic amount in USD on the server).
  * Legacy tier ids (single / triple / five) map to the default 17 cm SKU × bundle count.
  */
 export function resolveStripeCheckoutParams(

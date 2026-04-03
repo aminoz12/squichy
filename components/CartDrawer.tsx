@@ -5,16 +5,16 @@ import { useCallback, useEffect, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import { resolveStripeCheckoutParams } from "@/lib/cart-helpers";
 import {
-  FREE_DELIVERY_THRESHOLD_EUR,
-  qualifiesForFreeDeliverySubtotalEur,
+  FREE_DELIVERY_THRESHOLD_USD,
+  qualifiesForFreeDeliverySubtotal,
 } from "@/lib/delivery";
 import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
-function formatEuro(n: number) {
-  return new Intl.NumberFormat("fr-FR", {
+function formatUsd(n: number) {
+  return new Intl.NumberFormat("en-US", {
     style: "currency",
-    currency: "EUR",
+    currency: "USD",
   }).format(n);
 }
 
@@ -33,13 +33,13 @@ export function CartDrawer() {
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
-  const subtotalEur = items.reduce(
-    (acc, line) => acc + line.unitPriceEuro * line.quantity,
+  const subtotalUsd = items.reduce(
+    (acc, line) => acc + line.unitPriceUsd * line.quantity,
     0,
   );
-  const freeDelivery = qualifiesForFreeDeliverySubtotalEur(subtotalEur);
-  const deliveryEur = freeDelivery ? 0 : singleProductOffer.deliveryEuro;
-  const estimatedTotalEur = subtotalEur + deliveryEur;
+  const freeDelivery = qualifiesForFreeDeliverySubtotal(subtotalUsd);
+  const deliveryUsd = freeDelivery ? 0 : singleProductOffer.deliveryUsd;
+  const estimatedTotalUsd = subtotalUsd + deliveryUsd;
 
   useEffect(() => {
     if (!isOpen) return;
@@ -136,7 +136,7 @@ export function CartDrawer() {
                             {line.name}
                           </p>
                           <p className="text-sm font-bold text-muted">
-                            {formatEuro(line.unitPriceEuro)} each
+                            {formatUsd(line.unitPriceUsd)} each
                           </p>
                         </div>
                         <button
@@ -165,7 +165,7 @@ export function CartDrawer() {
                           />
                         </label>
                         <p className="text-sm font-extrabold">
-                          {formatEuro(line.unitPriceEuro * line.quantity)}
+                          {formatUsd(line.unitPriceUsd * line.quantity)}
                         </p>
                       </div>
                       {!resolveStripeCheckoutParams(line) && (
@@ -184,7 +184,7 @@ export function CartDrawer() {
               <div className="space-y-1 text-sm font-extrabold">
                 <div className="flex items-center justify-between">
                   <span>Subtotal</span>
-                  <span>{formatEuro(subtotalEur)}</span>
+                  <span>{formatUsd(subtotalUsd)}</span>
                 </div>
                 <div className="flex items-center justify-between text-muted">
                   <span>Delivery</span>
@@ -194,20 +194,20 @@ export function CartDrawer() {
                         Free
                       </span>
                     ) : (
-                      formatEuro(singleProductOffer.deliveryEuro)
+                      formatUsd(singleProductOffer.deliveryUsd)
                     )}
                   </span>
                 </div>
                 <div className="flex items-center justify-between border-t border-pink-100 pt-2 text-base text-foreground">
                   <span>Estimated total</span>
-                  <span>{formatEuro(estimatedTotalEur)}</span>
+                  <span>{formatUsd(estimatedTotalUsd)}</span>
                 </div>
               </div>
               {items.length > 0 && (
                 <p className="mt-2 text-xs font-semibold text-muted">
-                  Subtotals of {FREE_DELIVERY_THRESHOLD_EUR}€ or more qualify for
-                  free delivery (see top banner). Your subtotal is{" "}
-                  {formatEuro(subtotalEur)}.
+                  Subtotals of {formatUsd(FREE_DELIVERY_THRESHOLD_USD)} or more
+                  qualify for free delivery (see top banner). Your subtotal is{" "}
+                  {formatUsd(subtotalUsd)}.
                 </p>
               )}
               {checkoutError && (
