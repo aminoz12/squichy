@@ -7,7 +7,6 @@ import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
 import { ProductPageOffer } from "@/components/ProductPageOffer";
 import { ProductReviewsSection } from "@/components/ProductReviewsSection";
-import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { singleProductOffer, siteIconPath } from "@/lib/data";
 import {
   getMetadataBase,
@@ -71,7 +70,6 @@ export default function ProductsPage() {
       </main>
       <Footer />
       <CartDrawer />
-      <StickyMobileCTA />
     </>
   );
 }

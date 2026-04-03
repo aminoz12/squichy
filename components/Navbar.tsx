@@ -9,7 +9,8 @@ import { useCartStore } from "@/lib/store/use-cart-store";
 
 export function Navbar() {
   const pathname = usePathname();
-  const isProductsPage = pathname === "/products";
+  const path = pathname.replace(/\/$/, "") || "/";
+  const isProductsPage = path === "/products";
 
   const toggleCart = useCartStore((s) => s.toggleCart);
   const count = useCartStore((s) =>
