@@ -3,10 +3,14 @@
 import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { product, siteIconPath } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 export function Navbar() {
+  const pathname = usePathname();
+  const isProductsPage = pathname === "/products";
+
   const toggleCart = useCartStore((s) => s.toggleCart);
   const count = useCartStore((s) =>
     s.items.reduce((acc, i) => acc + i.quantity, 0),
@@ -39,43 +43,47 @@ export function Navbar() {
           </span>
         </Link>
 
-        <nav
-          aria-label="Main"
-          className="hidden items-stretch divide-x divide-pink-200/70 rounded-full border border-pink-100/90 bg-white/90 text-sm shadow-sm md:flex"
-        >
-          <Link
-            href="/products"
-            className="px-4 py-2 font-bold text-foreground transition-colors first:pl-5 hover:bg-pink-50/80 hover:text-accent"
+        {!isProductsPage && (
+          <nav
+            aria-label="Main"
+            className="hidden items-stretch divide-x divide-pink-200/70 rounded-full border border-pink-100/90 bg-white/90 text-sm shadow-sm md:flex"
           >
-            Product
-          </Link>
-          <Link
-            href="/blog"
-            className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
-          >
-            Blog
-          </Link>
-          <a
-            href="/products#offer"
-            className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
-          >
-            Buy
-          </a>
-          <a
-            href="/#faq"
-            className="px-4 py-2 font-bold text-foreground transition-colors last:pr-5 hover:bg-pink-50/80 hover:text-accent"
-          >
-            FAQ
-          </a>
-        </nav>
+            <Link
+              href="/products"
+              className="px-4 py-2 font-bold text-foreground transition-colors first:pl-5 hover:bg-pink-50/80 hover:text-accent"
+            >
+              Product
+            </Link>
+            <Link
+              href="/blog"
+              className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
+            >
+              Blog
+            </Link>
+            <a
+              href="/products#offer"
+              className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
+            >
+              Buy
+            </a>
+            <a
+              href="/#faq"
+              className="px-4 py-2 font-bold text-foreground transition-colors last:pr-5 hover:bg-pink-50/80 hover:text-accent"
+            >
+              FAQ
+            </a>
+          </nav>
+        )}
 
         <div className="flex items-center gap-2">
-          <a
-            href="/products#offer"
-            className="hidden rounded-xl bg-[#ffd500] px-4 py-2 text-sm font-black text-[#2d2384] shadow-md shadow-amber-400/40 transition-transform hover:scale-[1.03] hover:brightness-105 active:scale-[0.98] sm:inline-flex"
-          >
-            BUY NOW
-          </a>
+          {!isProductsPage && (
+            <a
+              href="/products#offer"
+              className="hidden rounded-xl bg-[#ffd500] px-4 py-2 text-sm font-black text-[#2d2384] shadow-md shadow-amber-400/40 transition-transform hover:scale-[1.03] hover:brightness-105 active:scale-[0.98] sm:inline-flex"
+            >
+              BUY NOW
+            </a>
+          )}
           <button
             type="button"
             onClick={toggleCart}

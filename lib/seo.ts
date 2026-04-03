@@ -100,7 +100,11 @@ export function rootMetadataExtras(): Pick<
       images: [ogImage.toString()],
     },
     icons: {
-      icon: [{ url: siteIconPath, type: "image/png" }],
+      icon: [
+        { url: siteIconPath, type: "image/png", sizes: "32x32" },
+        { url: siteIconPath, type: "image/png", sizes: "any" },
+      ],
+      shortcut: siteIconPath,
       apple: siteIconPath,
     },
   };

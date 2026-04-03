@@ -8,7 +8,7 @@ import { Navbar } from "@/components/Navbar";
 import { ProductPageOffer } from "@/components/ProductPageOffer";
 import { ProductReviewsSection } from "@/components/ProductReviewsSection";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
-import { singleProductOffer } from "@/lib/data";
+import { singleProductOffer, siteIconPath } from "@/lib/data";
 import {
   getMetadataBase,
   productBreadcrumbJsonLd,
@@ -45,6 +45,11 @@ export const metadata: Metadata = {
   twitter: {
     title: `${singleProductOffer.name} | ${SITE_NAME}`,
     description: productDesc,
+  },
+  icons: {
+    icon: [{ url: siteIconPath, type: "image/png" }],
+    shortcut: siteIconPath,
+    apple: siteIconPath,
   },
 };
 
