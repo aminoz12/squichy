@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
-import { faqItems, singleProductOffer, social } from "@/lib/data";
+import type { BlogPost } from "@/lib/blog-data";
+import { blogPosts } from "@/lib/blog-data";
+import { faqItems, singleProductOffer, siteIconPath, social } from "@/lib/data";
 
 export const SITE_NAME = "SquishyBun Dumplings";
 export const SITE_TAGLINE =
-  "Mystery squishy dumpling fidget toys — blind-box fun, slow-rise squish, ships USA & Canada.";
+  "Mystery squishy dumpling fidget toys — blind-box fun, slow-rise squish, ships USA, Canada & UK.";
 
 /** Canonical origin for metadata, sitemap, and JSON-LD. Set NEXT_PUBLIC_SITE_URL in production. */
 export function getSiteUrl(): string {
@@ -33,6 +35,7 @@ export function rootMetadataExtras(): Pick<
   | "robots"
   | "alternates"
   | "category"
+  | "icons"
 > {
   const base = getMetadataBase();
   const ogImage = new URL(OG_IMAGE_PATH, base);
@@ -40,7 +43,7 @@ export function rootMetadataExtras(): Pick<
   return {
     metadataBase: base,
     title: {
-      default: `${SITE_NAME} | Mystery Squishy Dumpling Toys | USA & Canada`,
+      default: `${SITE_NAME} | Mystery Squishy Dumpling Toys | USA, Canada & UK`,
       template: `%s | ${SITE_NAME}`,
     },
     description: SITE_TAGLINE,
@@ -54,6 +57,8 @@ export function rootMetadataExtras(): Pick<
       "blind box toy",
       "USA",
       "Canada",
+      "United Kingdom",
+      "UK",
       "stress relief toy",
     ],
     authors: [{ name: SITE_NAME }],
@@ -65,6 +70,7 @@ export function rootMetadataExtras(): Pick<
         "x-default": "/",
         "en-US": "/",
         "en-CA": "/",
+        "en-GB": "/",
       },
     },
     robots: {
@@ -75,7 +81,7 @@ export function rootMetadataExtras(): Pick<
     openGraph: {
       type: "website",
       locale: "en_US",
-      alternateLocale: ["en_CA"],
+      alternateLocale: ["en_CA", "en_GB"],
       siteName: SITE_NAME,
       title: SITE_NAME,
       description: SITE_TAGLINE,
@@ -92,6 +98,10 @@ export function rootMetadataExtras(): Pick<
       title: SITE_NAME,
       description: SITE_TAGLINE,
       images: [ogImage.toString()],
+    },
+    icons: {
+      icon: [{ url: siteIconPath, type: "image/png" }],
+      apple: siteIconPath,
     },
   };
 }
@@ -123,7 +133,7 @@ export function websiteJsonLd() {
     name: SITE_NAME,
     description: SITE_TAGLINE,
     publisher: { "@id": `${url}/#organization` },
-    inLanguage: ["en-US", "en-CA"],
+    inLanguage: ["en-US", "en-CA", "en-GB"],
   };
 }
 
@@ -164,19 +174,72 @@ export function productBreadcrumbJsonLd() {
   };
 }
 
+export function blogIndexJsonLd() {
+  const url = getSiteUrl();
+  const blogUrl = `${url}/blog`;
+  return {
+    "@type": "Blog" as const,
+    "@id": `${blogUrl}#blog`,
+    url: blogUrl,
+    name: `${SITE_NAME} — Blog`,
+    description:
+      "Guides, shipping tips, and squishy dumpling ideas for shoppers in the United States, Canada, and the United Kingdom.",
+    publisher: { "@id": `${url}/#organization` },
+    inLanguage: ["en-US", "en-CA", "en-GB"],
+    blogPost: blogPosts.map((p) => ({
+      "@type": "BlogPosting" as const,
+      headline: p.title,
+      description: p.description,
+      url: `${url}/blog/${p.slug}`,
+      datePublished: p.publishedAt,
+    })),
+  };
+}
+
+export function blogPostingJsonLd(post: BlogPost) {
+  const url = getSiteUrl();
+  const postUrl = `${url}/blog/${post.slug}`;
+  const ogImage = absoluteUrl(OG_IMAGE_PATH);
+  return {
+    "@type": "BlogPosting" as const,
+    "@id": `${postUrl}#article`,
+    mainEntityOfPage: { "@type": "WebPage" as const, "@id": postUrl },
+    headline: post.title,
+    description: post.description,
+    image: [ogImage],
+    datePublished: post.publishedAt,
+    dateModified: post.publishedAt,
+    author: {
+      "@type": "Organization" as const,
+      name: SITE_NAME,
+      url,
+    },
+    publisher: { "@id": `${url}/#organization` },
+    inLanguage: ["en-US", "en-CA", "en-GB"],
+    keywords: post.keywords.join(", "),
+  };
+}
+
+function isRasterImagePath(src: string) {
+  return /\.(png|jpe?g|gif|webp|avif)(\?.*)?$/i.test(src);
+}
+
 export function productJsonLd() {
   const url = getSiteUrl();
   const prices = singleProductOffer.options.map((o) => o.priceUsd);
   const low = Math.min(...prices);
   const high = Math.max(...prices);
   const productUrl = `${url}/products`;
+  const productImages = singleProductOffer.images
+    .filter(isRasterImagePath)
+    .map((src) => absoluteUrl(src));
 
   return {
     "@type": "Product" as const,
     "@id": `${productUrl}#product`,
     name: singleProductOffer.name,
     description: singleProductOffer.description,
-    image: singleProductOffer.images.map((src) => absoluteUrl(src)),
+    image: productImages,
     brand: {
       "@type": "Brand" as const,
       name: "Crazy Fun",

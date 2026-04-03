@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
 import { ProductPageOffer } from "@/components/ProductPageOffer";
+import { ProductReviewsSection } from "@/components/ProductReviewsSection";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { singleProductOffer } from "@/lib/data";
 import {
@@ -26,6 +27,7 @@ export const metadata: Metadata = {
       "x-default": "/products",
       "en-US": "/products",
       "en-CA": "/products",
+      "en-GB": "/products",
     },
   },
   openGraph: {
@@ -54,12 +56,13 @@ export default function ProductsPage() {
       <Suspense fallback={null}>
         <CheckoutReturnBanner />
       </Suspense>
-      <main className="flex-1 pb-24 md:pb-0">
+      <main className="flex-1 pb-20 md:pb-0">
         <ProductPageOffer
           id="offer"
-          className="mx-auto max-w-6xl px-4 pb-16 pt-10 sm:px-6 sm:pb-20 sm:pt-14"
+          className="mx-auto max-w-6xl px-4 pb-8 pt-5 sm:px-6 sm:pb-10 sm:pt-7"
           offer={singleProductOffer}
         />
+        <ProductReviewsSection />
       </main>
       <Footer />
       <CartDrawer />

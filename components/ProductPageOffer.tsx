@@ -36,9 +36,13 @@ function moneyUsd(n: number) {
   }).format(n);
 }
 
-/** Fixed order: hero is always big1; row below is big2 + big3 (not `images[0]`, so data order can’t flip them). */
+/** Fixed order: hero is always big1; row below is vid2 + big3 (not `images[0]`, so data order can’t flip them). */
 const GALLERY_PRIMARY = "/big1.png";
-const GALLERY_THUMBNAILS = ["/big2.png", "/big3.png"] as const;
+const GALLERY_THUMBNAILS = ["/vid2.mp4", "/big3.png"] as const;
+
+function isVideoAsset(src: string) {
+  return /\.(mp4|webm|ogg)(\?.*)?$/i.test(src);
+}
 
 export function ProductPageOffer({ id, className = "", offer }: ProductPageOfferProps) {
   const putLine = useCartStore((s) => s.putLine);
@@ -98,8 +102,8 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
       id={id}
       className={`bg-gradient-to-b from-violet-50/35 via-white to-amber-50/25 ${className}`.trim()}
     >
-      <div className="grid gap-8 rounded-[1.75rem] border border-white/90 bg-white/95 p-5 shadow-[0_28px_90px_-40px_rgba(76,29,149,0.35)] ring-1 ring-violet-100/60 backdrop-blur-sm sm:p-7 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-12 lg:p-10">
-        <div className="flex flex-col gap-3 lg:sticky lg:top-28 lg:self-start">
+      <div className="grid gap-5 rounded-[1.75rem] border border-white/90 bg-white/95 p-4 shadow-[0_28px_90px_-40px_rgba(76,29,149,0.35)] ring-1 ring-violet-100/60 backdrop-blur-sm sm:p-6 lg:grid-cols-[minmax(0,1fr)_minmax(0,1.05fr)] lg:gap-8 lg:p-8">
+        <div className="flex flex-col gap-2 lg:sticky lg:top-24 lg:self-start">
           {primaryImage && (
             <div className="group relative aspect-[4/3] w-full overflow-hidden rounded-2xl bg-gradient-to-br from-slate-100 to-violet-50/40 shadow-md ring-1 ring-slate-200/70">
               <Image
@@ -119,13 +123,25 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                   key={src}
                   className="relative aspect-square overflow-hidden rounded-xl bg-slate-100 ring-1 ring-slate-200/70"
                 >
-                  <Image
-                    src={src}
-                    alt={`${offer.name} — ${i + 2}`}
-                    fill
-                    sizes="(max-width: 1024px) 45vw, 240px"
-                    className="object-cover"
-                  />
+                  {isVideoAsset(src) ? (
+                    <video
+                      src={src}
+                      className="absolute inset-0 h-full w-full object-cover"
+                      muted
+                      playsInline
+                      loop
+                      autoPlay
+                      aria-label={`${offer.name} — ${i + 2}`}
+                    />
+                  ) : (
+                    <Image
+                      src={src}
+                      alt={`${offer.name} — ${i + 2}`}
+                      fill
+                      sizes="(max-width: 1024px) 45vw, 240px"
+                      className="object-cover"
+                    />
+                  )}
                 </div>
               ))}
             </div>
@@ -133,7 +149,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
         </div>
 
         <div className="flex min-w-0 flex-col">
-          <header className="space-y-2 border-b border-slate-100/90 pb-6">
+          <header className="space-y-2 border-b border-slate-100/90 pb-4">
             <span className="inline-flex w-fit rounded-full bg-violet-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-800">
               In stock
             </span>
@@ -145,8 +161,8 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
             </p>
           </header>
 
-          <div className="mt-6 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-slate-50/50 to-white p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] sm:p-5">
-            <div className="space-y-5">
+          <div className="mt-4 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-slate-50/50 to-white p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] sm:p-5">
+            <div className="space-y-4">
               <div>
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
                   Size
@@ -313,7 +329,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
             </div>
           </div>
 
-          <div className="mt-10 flex flex-col gap-8 border-t border-slate-100 pt-8">
+          <div className="mt-6 flex flex-col gap-5 border-t border-slate-100 pt-5">
             <div className="min-w-0">
               <h3 className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
                 Details

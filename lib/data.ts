@@ -10,6 +10,9 @@ export const product = {
   stockRemaining: 47,
 } as const;
 
+/** Favicon, navbar, and footer — place `icon.png` in `/public`. */
+export const siteIconPath = "/icon.png" as const;
+
 export type PricingTierId = "single" | "triple" | "five";
 
 export type PricingTier = {
@@ -99,6 +102,65 @@ export const reviews = [
   },
 ] as const;
 
+/** Long-form list on `/products` — matches classic e‑commerce review layout. */
+export type ProductPageReview = {
+  rating: number;
+  title: string;
+  body?: string;
+  reviewPosted: string;
+  purchaseDate: string;
+  author: string;
+  /** Customer / product photo in `/public` */
+  image: string;
+};
+
+export const productPageReviews: ProductPageReview[] = [
+  {
+    rating: 5,
+    title: "So cute I had to order another",
+    body: "I screamed. It’s so dumb and so perfect. Already ordered the 3-pack.",
+    reviewPosted: "2026-03-18",
+    purchaseDate: "2026-03-02",
+    author: "Mia R.",
+    image: "/rev1.png",
+  },
+  {
+    rating: 5,
+    title: "I opened it and literally went “wait—WHAT?”",
+    body: "Not gonna lie, I thought it would be gimmicky. The second I squeezed it I burst out laughing — it’s so soft and slow-rise I’m in love. Arrived quick too. Already telling my friends.",
+    reviewPosted: "2026-03-12",
+    purchaseDate: "2026-02-28",
+    author: "Jordan K.",
+    image: "/rev2.png",
+  },
+  {
+    rating: 5,
+    title: "Got it for my daughter — ended up a hit with both of us",
+    body: "Ordered this for my daughter’s birthday and she squealed when she opened it. The mystery pull is so fun. Honestly? I keep sneaking it off her desk to squeeze it — the squish is ridiculous. Dad approved.",
+    reviewPosted: "2026-02-26",
+    purchaseDate: "2026-02-10",
+    author: "Sam L.",
+    image: "/rev3.png",
+  },
+  {
+    rating: 5,
+    title: "My daughter’s new favorite — I’m impressed too",
+    body: "Bought the mystery dumpling for my daughter and the unboxing was pure joy. Slow rise is perfect and she carries it everywhere. I didn’t expect to like it this much myself, but here we are. Would buy again.",
+    reviewPosted: "2026-03-05",
+    purchaseDate: "2026-02-19",
+    author: "Elena V.",
+    image: "/rev4.png",
+  },
+  {
+    rating: 5,
+    title: "Exactly like the videos",
+    reviewPosted: "2026-01-30",
+    purchaseDate: "2026-01-14",
+    author: "Chris P.",
+    image: "/rev5.png",
+  },
+];
+
 export const howItWorks = [
   {
     step: 1,
@@ -157,7 +219,7 @@ export const singleProductOffer = {
   description:
     "Mystery squishy bao bun sensory fidget toy — slow-rise texture, blind-box fun, and a chance at the super rare Shimmering Starlight Dumpling. Ages 3+.",
   deliveryUsd: 9,
-  images: ["/big1.png", "/big2.png", "/big3.png"],
+  images: ["/big1.png", "/vid2.mp4", "/big3.png"],
   details: [
     "This is a Mystery Squishy Bao Bun Sensory Fidget Toy.",
     "The product is from the brand Crazy Fun.",
@@ -236,7 +298,7 @@ export const productDetails: ProductDetail[] = [
       dimensions: "6.69 x 6.69 x 5.02 Inches (17 x 17 x 12.75 cm)",
       weight: "1.60 lb (0.73 kg)",
     },
-    images: ["/big1.png", "/big2.png", "/big3.png"],
+    images: ["/big1.png", "/vid2.mp4", "/big3.png"],
   },
   {
     id: "big-crazy-fun-rainbow",
@@ -262,7 +324,7 @@ export const productDetails: ProductDetail[] = [
       dimensions: "11.02 x 11.02 x 8.27 Inches (28 x 28 x 21 cm)",
       weight: "4.20 lb (1.90 kg)",
     },
-    images: ["/big1.png", "/big2.png", "/big3.png"],
+    images: ["/big1.png", "/vid2.mp4", "/big3.png"],
   },
 ];
 

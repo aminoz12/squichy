@@ -1,8 +1,9 @@
 "use client";
 
 import { motion } from "framer-motion";
+import Image from "next/image";
 import Link from "next/link";
-import { product } from "@/lib/data";
+import { product, siteIconPath } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 export function Navbar() {
@@ -21,10 +22,21 @@ export function Navbar() {
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
         <Link
           href="/"
-          className="font-[family-name:var(--font-fredoka)] text-lg font-black tracking-tight text-foreground sm:text-2xl"
+          className="flex items-center gap-2 sm:gap-2.5 font-[family-name:var(--font-fredoka)] text-lg font-black tracking-tight text-foreground sm:text-2xl"
         >
-          {product.name.split(" ").slice(0, 2).join(" ")}
-          <span className="text-primary-dark">.</span>
+          <span className="relative shrink-0 drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]">
+            <Image
+              src={siteIconPath}
+              alt=""
+              width={48}
+              height={48}
+              className="h-10 w-10 rounded-xl object-cover sm:h-11 sm:w-11"
+            />
+          </span>
+          <span>
+            {product.name.split(" ").slice(0, 2).join(" ")}
+            <span className="text-primary-dark">.</span>
+          </span>
         </Link>
 
         <nav
@@ -36,6 +48,12 @@ export function Navbar() {
             className="px-4 py-2 font-bold text-foreground transition-colors first:pl-5 hover:bg-pink-50/80 hover:text-accent"
           >
             Product
+          </Link>
+          <Link
+            href="/blog"
+            className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
+          >
+            Blog
           </Link>
           <a
             href="/products#offer"

@@ -6,6 +6,7 @@ import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { HowItWorks } from "@/components/HowItWorks";
 import { JsonLd } from "@/components/JsonLd";
+import { NewsletterSection } from "@/components/NewsletterSection";
 import { Navbar } from "@/components/Navbar";
 import { Reviews } from "@/components/Reviews";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
@@ -43,6 +44,7 @@ export default function Home() {
         <BuzzEverywhere videos={buzzReelVideos} />
         <HowItWorks />
         <FAQ />
+        <NewsletterSection />
       </main>
       <Footer />
       <CartDrawer />
