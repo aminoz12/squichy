@@ -46,7 +46,7 @@ export const metadata: Metadata = {
     description: productDesc,
   },
   icons: {
-    icon: [{ url: siteIconPath, type: "image/png" }],
+    icon: siteIconPath,
     shortcut: siteIconPath,
     apple: siteIconPath,
   },

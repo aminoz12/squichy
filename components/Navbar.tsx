@@ -7,6 +7,27 @@ import { usePathname } from "next/navigation";
 import { product, siteIconPath } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
+function CartIcon({ className }: { className?: string }) {
+  return (
+    <svg
+      className={className}
+      width="22"
+      height="22"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden
+    >
+      <circle cx="9" cy="21" r="1" />
+      <circle cx="20" cy="21" r="1" />
+      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
+    </svg>
+  );
+}
+
 export function Navbar() {
   const pathname = usePathname();
   const path = pathname.replace(/\/$/, "") || "/";
@@ -88,10 +109,10 @@ export function Navbar() {
           <button
             type="button"
             onClick={toggleCart}
-            className="relative rounded-xl border border-pink-200 bg-white px-3 py-2 text-sm font-extrabold text-foreground shadow-sm transition hover:border-accent/40 hover:shadow-md"
-            aria-label="Open cart"
+            className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-pink-200 bg-white text-foreground shadow-sm transition hover:border-accent/40 hover:shadow-md sm:h-11 sm:w-11"
+            aria-label={count > 0 ? `Open cart, ${count} items` : "Open cart"}
           >
-            CART
+            <CartIcon className="h-[22px] w-[22px] sm:h-6 sm:w-6" />
             {count > 0 && (
               <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-dark px-1 text-[10px] font-extrabold text-white">
                 {count > 9 ? "9+" : count}

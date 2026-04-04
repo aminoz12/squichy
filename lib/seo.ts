@@ -99,11 +99,9 @@ export function rootMetadataExtras(): Pick<
       description: SITE_TAGLINE,
       images: [ogImage.toString()],
     },
+    /** Tab + bookmark icon: `public/icon.png` (also mirrored as `app/icon.png`). */
     icons: {
-      icon: [
-        { url: siteIconPath, type: "image/png", sizes: "32x32" },
-        { url: siteIconPath, type: "image/png", sizes: "any" },
-      ],
+      icon: siteIconPath,
       shortcut: siteIconPath,
       apple: siteIconPath,
     },
