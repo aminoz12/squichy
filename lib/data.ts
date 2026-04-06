@@ -235,21 +235,21 @@ export const singleProductOffer = {
     { label: "Character", value: "Dumpling" },
     {
       label: "Dimensions",
-      value: "Varies by size (17 cm or 24 cm) — see size option.",
+      value: "Varies by size (17 cm / 6.69 in or 28 cm / 11.02 in) — see size option.",
     },
     { label: "Weight", value: "Approx. 0.7–1.9 kg depending on size." },
   ],
   options: [
     {
       id: "size-17",
-      label: "17 cm",
+      label: "17 cm (6.69 in)",
       sizeCm: 17,
       priceUsd: 18,
     },
     {
-      id: "size-24",
-      label: "24 cm",
-      sizeCm: 24,
+      id: "size-28",
+      label: "28 cm (11.02 in)",
+      sizeCm: 28,
       priceUsd: 26,
     },
   ] as ProductSizeOption[],
@@ -277,8 +277,8 @@ export type ProductDetail = {
 export const productDetails: ProductDetail[] = [
   {
     id: "mini-crazy-fun-rainbow",
-    name: "Mini Crazy Fun Rainbow Squishy Bun Mystery Dumpling 17CM",
-    size: "17CM",
+    name: "Mini Crazy Fun Rainbow Squishy Bun Mystery Dumpling 17CM (6.69\")",
+    size: "17CM (6.69\")",
     price: 9.99,
     description:
       "Discover endless fun with the Mystery Squishy Bao Bun Sensory fidget toy, a delightful addition to the Crazy Fun collection. Each set provides an exciting unboxing experience, where you might uncover a super rare shimmering starlight dumpling. This engaging sensory toy is perfect for children aged 3 and up, offering a satisfying squishy texture and a touch of mystery. Enjoy the tactile play and the thrill of finding out which unique dumpling you receive in your set.",
@@ -302,8 +302,8 @@ export const productDetails: ProductDetail[] = [
   },
   {
     id: "big-crazy-fun-rainbow",
-    name: "i Crazy Fun Rainbow Squishy Bun Mystery Dumpling 28CM",
-    size: "28CM",
+    name: "i Crazy Fun Rainbow Squishy Bun Mystery Dumpling 28CM (11.02\")",
+    size: "28CM (11.02\")",
     price: 24.99,
     compareAt: 29.97,
     description:

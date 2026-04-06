@@ -6,7 +6,7 @@ import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
 import { ProductPageOffer } from "@/components/ProductPageOffer";
-import { ProductReviewsSection } from "@/components/ProductReviewsSection";
+import { HappyClients } from "@/components/HappyClients";
 import { singleProductOffer, siteIconPath } from "@/lib/data";
 import {
   getMetadataBase,
@@ -66,7 +66,7 @@ export default function ProductsPage() {
           className="mx-auto max-w-6xl px-4 pb-8 pt-5 sm:px-6 sm:pb-10 sm:pt-7"
           offer={singleProductOffer}
         />
-        <ProductReviewsSection />
+        <HappyClients />
       </main>
       <Footer />
       <CartDrawer />

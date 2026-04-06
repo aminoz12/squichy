@@ -60,6 +60,10 @@ body::before {
   animation: promo-marquee 32s linear infinite;
 }
 
+.scrollbar-hide::-webkit-scrollbar {
+  display: none;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .promo-marquee-track {
     animation: none;
