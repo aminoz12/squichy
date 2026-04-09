@@ -84,6 +84,17 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: lineItems,
+      shipping_address_collection: {
+        allowed_countries: [
+          "US", "CA", "AL", "AD", "AT", "BE", "BA", "BG", "HR", "CY", "CZ", "DK",
+          "EE", "FI", "FR", "DE", "GR", "HU", "IS", "IE", "IT", "LV", "LI", "LT",
+          "LU", "MT", "MD", "MC", "ME", "NL", "MK", "NO", "PL", "PT", "RO", "SM",
+          "RS", "SK", "SI", "ES", "SE", "CH", "UA", "GB", "VA",
+        ],
+      },
+      phone_number_collection: {
+        enabled: true,
+      },
       success_url: `${origin}/products?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/products?checkout=cancel`,
       metadata: {
