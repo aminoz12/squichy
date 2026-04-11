@@ -36,10 +36,6 @@ function moneyUsd(n: number) {
   }).format(n);
 }
 
-/** Fixed order: hero is always big1; row below is vid2 + big3 (not `images[0]`, so data order can’t flip them). */
-const GALLERY_PRIMARY = "/big1.png";
-const GALLERY_THUMBNAILS = ["/vid2.mp4", "/big3.png"] as const;
-
 function isVideoAsset(src: string) {
   return /\.(mp4|webm|ogg)(\?.*)?$/i.test(src);
 }
@@ -58,10 +54,8 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
 
   if (!selected) return null;
 
-  const primaryImage = offer.images.includes(GALLERY_PRIMARY)
-    ? GALLERY_PRIMARY
-    : (offer.images[0] ?? GALLERY_PRIMARY);
-  const secondaryImages = GALLERY_THUMBNAILS.filter((src) => offer.images.includes(src));
+  const primaryImage = offer.images[0];
+  const secondaryImages = offer.images.slice(1);
 
   const bumpQty = (delta: number) => {
     setQuantity((q) => Math.min(99, Math.max(1, q + delta)));
@@ -111,7 +105,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                 alt={`${offer.name} — main`}
                 fill
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                className="object-cover transition duration-500 group-hover:scale-[1.02]"
+                className="object-contain p-4 sm:p-6 transition duration-500 group-hover:scale-[1.02]"
                 priority
               />
             </div>
@@ -139,7 +133,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       alt={`${offer.name} — ${i + 2}`}
                       fill
                       sizes="(max-width: 1024px) 45vw, 240px"
-                      className="object-cover"
+                      className="object-contain p-2 sm:p-4"
                     />
                   )}
                 </div>

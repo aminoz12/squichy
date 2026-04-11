@@ -35,7 +35,7 @@ export function Hero() {
             </span>
           </div>
           <a
-            href="/products#offer"
+            href="/products/mystery-dumpling#offer"
             className="text-[11px] font-extrabold uppercase tracking-wide text-white hover:text-yellow-200 sm:text-xs"
           >
             BUY NOW
@@ -54,7 +54,7 @@ export function Hero() {
               Squishy Bun that turns scrolling into obsession.
             </p>
             <a
-              href="/products#offer"
+              href="/products/mystery-dumpling#offer"
               className="mt-6 inline-flex rounded-lg bg-[#ffd500] px-5 py-3 text-sm font-black uppercase tracking-wide text-[#2d2384] shadow-lg transition hover:brightness-105"
             >
               BUY NOW

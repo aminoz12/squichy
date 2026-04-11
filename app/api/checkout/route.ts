@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import type Stripe from "stripe";
-import { singleProductOffer } from "@/lib/data";
+import { products } from "@/lib/data";
 import { qualifiesForFreeDeliverySubtotal } from "@/lib/delivery";
 import { getStripe } from "@/lib/stripe-server";
 
@@ -35,8 +35,19 @@ export async function POST(request: Request) {
       : 1;
   const quantity = Math.min(99, Math.max(1, Number.isFinite(rawQty) ? rawQty : 1));
 
-  const option = singleProductOffer.options.find((o) => o.id === sizeId);
-  if (!option) {
+  let option: typeof products[number]["options"][number] | undefined;
+  let product: typeof products[number] | undefined;
+  
+  for (const p of products) {
+    const opt = p.options.find((o) => o.id === sizeId);
+    if (opt) {
+      option = opt;
+      product = p;
+      break;
+    }
+  }
+
+  if (!option || !product) {
     return NextResponse.json({ error: "Invalid size" }, { status: 400 });
   }
 
@@ -50,7 +61,7 @@ export async function POST(request: Request) {
   const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
   const deliveryAmount = deliveryFree
     ? 0
-    : Math.round(singleProductOffer.deliveryUsd * 100);
+    : Math.round(product.deliveryUsd * 100);
 
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
     {
@@ -59,7 +70,7 @@ export async function POST(request: Request) {
         currency: "usd",
         unit_amount: unitAmount,
         product_data: {
-          name: `${singleProductOffer.name} (${option.label})`,
+          name: `${product.name} (${option.label})`,
           description: `${option.sizeCm} cm`,
         },
       },

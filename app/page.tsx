@@ -4,6 +4,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
+import { DiscoverSquishies } from "@/components/DiscoverSquishies";
 import { HowItWorks } from "@/components/HowItWorks";
 import { JsonLd } from "@/components/JsonLd";
 import { NewsletterSection } from "@/components/NewsletterSection";
@@ -40,6 +41,7 @@ export default function Home() {
       <UrgencyBar />
       <main className="flex-1 pb-24 md:pb-0">
         <Hero />
+        <DiscoverSquishies />
         <Reviews />
         <BuzzEverywhere videos={buzzReelVideos} />
         <HowItWorks />

@@ -60,6 +60,27 @@ body::before {
   animation: promo-marquee 32s linear infinite;
 }
 
+@keyframes category-marquee {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-25%);
+  }
+}
+
+.category-marquee-track {
+  animation: category-marquee 15s linear infinite;
+  /* Add hardware acceleration for smoother mobile scrolling */
+  will-change: transform;
+}
+
+/* Pause animation on desktop hover and mobile touch (active) */
+.category-marquee-track:hover,
+.category-marquee-track:active {
+  animation-play-state: paused;
+}
+
 .scrollbar-hide::-webkit-scrollbar {
   display: none;
 }

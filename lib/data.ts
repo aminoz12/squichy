@@ -216,6 +216,9 @@ export type ProductSizeOption = {
 export const singleProductOffer = {
   id: "squishybun-mystery-dumpling",
   name: "Crazy Fun Rainbow Squishy Bun Mystery Dumpling",
+  slug: "mystery-dumpling",
+  categoryName: "Dumpling Squishy",
+  categoryImage: "/dumpling.png",
   description:
     "Mystery squishy bao bun sensory fidget toy — slow-rise texture, blind-box fun, and a chance at the super rare Shimmering Starlight Dumpling. Ages 3+.",
   deliveryUsd: 9,
@@ -255,6 +258,169 @@ export const singleProductOffer = {
   ] as ProductSizeOption[],
 } as const;
 
+export type ProductOffer = typeof singleProductOffer & {
+  accentColor?: string;
+  badge?: string;
+};
+
+export const products: ProductOffer[] = [
+  {
+    ...singleProductOffer,
+    id: "squishybun-mystery-dumpling",
+    accentColor: "#fdf2f8", // Rose 50
+    badge: "Hot",
+  },
+  {
+    ...singleProductOffer,
+    id: "apple-squishy",
+    name: "Apple Squishy",
+    slug: "apple-squishy",
+    categoryName: "Apple Squishy",
+    categoryImage: "/apple.png",
+    description: "Sweet, squishy, and satisfying Apple Squishy. A perfect addition to your collection.",
+    images: ["/Apple1.png", "/Apple2.png", "/Apple3.png"],
+    details: [
+      "Premium slow-rise PU foam material.",
+      "Sweet Apple-inspired scent for a sensory experience.",
+      "Perfect for stress relief, fidgeting, and desk decoration.",
+      "Vibrant red color with realistic leaf and stem detail.",
+      "Suitable for ages 3 and up.",
+    ],
+    specs: [
+      { label: "Color", value: "Red" },
+      { label: "Material", value: "Slow-Rise PU Foam" },
+      { label: "Theme", value: "Fruit" },
+      { label: "Brand", value: "Crazy Fun" },
+      { label: "Dimensions", value: "6cm Large, 7cm Tall" },
+      { label: "Weight", value: "Approx. 0.2 kg" },
+    ],
+    accentColor: "#fff1f2", // Rose 50
+    options: [
+      {
+        id: "apple-standard",
+        label: "6cm large, 7cm tall",
+        sizeCm: 7,
+        priceUsd: 18,
+      },
+    ],
+  },
+  {
+    ...singleProductOffer,
+    id: "cheese-square",
+    name: "Cheese Square",
+    slug: "cheese-square",
+    categoryName: "Cheese Square Squishy",
+    categoryImage: "/cheese.png",
+    description: "The cheesiest squishy around! Soft, slow-rise Cheese Square that you'll want to squeeze all day.",
+    images: ["/cheese.png"],
+    details: [
+      "Realistic Swiss cheese design with crater holes.",
+      "Premium slow-rise texture that's incredibly satisfying to squeeze.",
+      "Perfect for cheese lovers and fidget toy collectors.",
+      "Durable and high-quality construction.",
+      "Suitable for ages 3 and up.",
+    ],
+    specs: [
+      { label: "Color", value: "Yellow" },
+      { label: "Material", value: "Soft PU Foam / TPR" },
+      { label: "Theme", value: "Food" },
+      { label: "Brand", value: "Crazy Fun" },
+      { label: "Dimensions", value: "12cm x 14cm x 16cm" },
+      { label: "Weight", value: "0.5 kg" },
+    ],
+    accentColor: "#fffbeb", // Amber 50
+    badge: "Trending",
+    options: [
+      {
+        id: "cheese-standard",
+        label: "12cm x 14cm x 16cm",
+        sizeCm: 16,
+        priceUsd: 25,
+      },
+    ],
+  },
+  {
+    ...singleProductOffer,
+    id: "needoh",
+    name: "NeeDoh",
+    slug: "needoh",
+    categoryName: "NeeDoh Squishy",
+    categoryImage: "/needoh.png",
+    description: "Experience extreme relaxation with our vibrant cubes: pink, blue, green, and purple. Designed to evoke a sense of calm and tranquility.",
+    images: ["/needoh1.png", "/needoh2.png", "/videoneedoh.mp4"],
+    details: [
+      "Vibrant cubes: pink, blue, green, and purple.",
+      "Helps deter habits like fidgeting, skin and nail picking, and finger cracking.",
+      "Soft, durable exteriors enclose a high-density groovy goo filling.",
+      "Silent and satisfying fidget experience that won't disturb others.",
+      "Wash with water after frequent use to keep them as good as new!",
+    ],
+    specs: [
+      { label: "Color", value: "Pink, blue, green, purple" },
+      { label: "Material", value: "Soft exterior with high-density groovy goo filling" },
+      { label: "Theme", value: "Sensory Fidget" },
+      { label: "Brand", value: "Crazy Fun" },
+      { label: "Dimensions", value: "2.35 inches per cube" },
+      { label: "Weight", value: "Approx. 0.3 kg" },
+    ],
+    accentColor: "#f0fdf4", // Green 50
+    options: [
+      {
+        id: "needoh-2pcs",
+        label: "2pcs",
+        sizeCm: 6,
+        priceUsd: 24,
+      },
+      {
+        id: "needoh-3pcs",
+        label: "3pcs",
+        sizeCm: 6,
+        priceUsd: 32,
+      },
+      {
+        id: "needoh-4pcs",
+        label: "4pcs",
+        sizeCm: 6,
+        priceUsd: 40,
+      },
+    ],
+  },
+  {
+    ...singleProductOffer,
+    id: "butter-squishy",
+    name: "Butter Squishy",
+    slug: "butter-squishy",
+    categoryName: "Butter Squishy",
+    categoryImage: "/butter.png",
+    description: "Smooth, satisfying, and oh-so-squishy! The Butter Squishy is the ultimate sensory delight.",
+    images: ["/butter.png"],
+    details: [
+      "Ultra-soft slow-rise material designed to look like a butter stick.",
+      "Satisfying dough-like texture for deep sensory play.",
+      "Large size makes it great for two-handed squishing.",
+      "Non-toxic and safe for kids and adults.",
+      "Perfect for decompressing after a long day.",
+    ],
+    specs: [
+      { label: "Color", value: "Buttery Yellow" },
+      { label: "Material", value: "Slow-rise TPR / Foam" },
+      { label: "Theme", value: "Food" },
+      { label: "Brand", value: "Crazy Fun" },
+      { label: "Dimensions", value: "28 cm Stick" },
+      { label: "Weight", value: "0.4 kg" },
+    ],
+    accentColor: "#fffbeb", // Amber 50
+    options: [
+      {
+        id: "butter-standard",
+        label: "28 cm tall",
+        sizeCm: 28,
+        priceUsd: 28,
+      },
+    ],
+  },
+];
+
 export type ProductDetail = {
   id: string;
   name: string;
@@ -277,9 +443,9 @@ export type ProductDetail = {
 export const productDetails: ProductDetail[] = [
   {
     id: "mini-crazy-fun-rainbow",
-    name: "Mini Crazy Fun Rainbow Squishy Bun Mystery Dumpling 17CM (6.69\")",
-    size: "17CM (6.69\")",
-    price: 9.99,
+    name: "Mini Crazy Fun Rainbow Squishy Bun Mystery Dumpling 9CM (3.54\")",
+    size: "9CM (3.54\")",
+    price: 18,
     description:
       "Discover endless fun with the Mystery Squishy Bao Bun Sensory fidget toy, a delightful addition to the Crazy Fun collection. Each set provides an exciting unboxing experience, where you might uncover a super rare shimmering starlight dumpling. This engaging sensory toy is perfect for children aged 3 and up, offering a satisfying squishy texture and a touch of mystery. Enjoy the tactile play and the thrill of finding out which unique dumpling you receive in your set.",
     details: [
@@ -295,16 +461,16 @@ export const productDetails: ProductDetail[] = [
       theme: "Mystery Dumpling",
       brand: "RMS",
       character: "Dumpling",
-      dimensions: "6.69 x 6.69 x 5.02 Inches (17 x 17 x 12.75 cm)",
+      dimensions: "3.54 x 3.54 x 2.66 Inches (9 x 9 x 6.75 cm)",
       weight: "1.60 lb (0.73 kg)",
     },
     images: ["/big1.png", "/vid2.mp4", "/big3.png"],
   },
   {
     id: "big-crazy-fun-rainbow",
-    name: "i Crazy Fun Rainbow Squishy Bun Mystery Dumpling 28CM (11.02\")",
-    size: "28CM (11.02\")",
-    price: 24.99,
+    name: "i Crazy Fun Rainbow Squishy Bun Mystery Dumpling 25CM (9.84\")",
+    size: "25CM (9.84\")",
+    price: 35,
     compareAt: 29.97,
     description:
       "Discover endless fun with the Mystery Squishy Bao Bun Sensory fidget toy, a delightful addition to the Crazy Fun collection. Each set provides an exciting unboxing experience, where you might uncover a super rare shimmering starlight dumpling. This engaging sensory toy is perfect for children aged 3 and up, offering a satisfying squishy texture and a touch of mystery. Enjoy the tactile play and the thrill of finding out which unique dumpling you receive in your set.",
@@ -321,10 +487,102 @@ export const productDetails: ProductDetail[] = [
       theme: "Mystery Dumpling",
       brand: "RMS",
       character: "Dumpling",
-      dimensions: "11.02 x 11.02 x 8.27 Inches (28 x 28 x 21 cm)",
+      dimensions: "9.84 x 9.84 x 7.38 Inches (25 x 25 x 18.75 cm)",
       weight: "4.20 lb (1.90 kg)",
     },
     images: ["/big1.png", "/vid2.mp4", "/big3.png"],
+  },
+  {
+    id: "apple-squishy",
+    name: "Apple Squishy",
+    size: "6cm large, 7cm tall",
+    price: 18,
+    description: "Sweet, squishy, and satisfying Apple Squishy. A perfect addition to your collection.",
+    details: [
+      "Premium slow-rise PU foam material.",
+      "Sweet Apple-inspired scent for a sensory experience.",
+      "Perfect for stress relief, fidgeting, and desk decoration.",
+      "Vibrant red color with realistic leaf and stem detail.",
+      "Suitable for ages 3 and up.",
+    ],
+    specs: {
+      color: "Red",
+      theme: "Fruit",
+      brand: "Crazy Fun",
+      character: "Apple",
+      dimensions: "6cm Large, 7cm Tall",
+      weight: "0.2 kg",
+    },
+    images: ["/Apple1.png", "/Apple2.png", "/Apple3.png"],
+  },
+  {
+    id: "cheese-square",
+    name: "Cheese Square",
+    size: "12cm x 14cm x 16cm",
+    price: 25,
+    description: "The cheesiest squishy around! Soft, slow-rise Cheese Square that you'll want to squeeze all day.",
+    details: [
+      "Realistic Swiss cheese design with crater holes.",
+      "Premium slow-rise texture that's incredibly satisfying to squeeze.",
+      "Perfect for cheese lovers and fidget toy collectors.",
+      "Durable and high-quality construction.",
+      "Suitable for ages 3 and up.",
+    ],
+    specs: {
+      color: "Yellow",
+      theme: "Food",
+      brand: "Crazy Fun",
+      character: "Cheese",
+      dimensions: "12cm x 14cm x 16cm",
+      weight: "0.5 kg",
+    },
+    images: ["/cheese.png"],
+  },
+  {
+    id: "butter-squishy",
+    name: "Butter Squishy",
+    size: "28 cm tall",
+    price: 28,
+    description: "Smooth, satisfying, and oh-so-squishy! The Butter Squishy is the ultimate sensory delight.",
+    details: [
+      "Ultra-soft slow-rise material designed to look like a butter stick.",
+      "Satisfying dough-like texture for deep sensory play.",
+      "Large size makes it great for two-handed squishing.",
+      "Non-toxic and safe for kids and adults.",
+      "Perfect for decompressing after a long day.",
+    ],
+    specs: {
+      color: "Buttery Yellow",
+      theme: "Food",
+      brand: "Crazy Fun",
+      character: "Butter",
+      dimensions: "28 cm Stick",
+      weight: "0.4 kg",
+    },
+    images: ["/butter.png"],
+  },
+  {
+    id: "needoh",
+    name: "NeeDoh",
+    size: "2.35 inches per cube",
+    price: 24,
+    description: "Experience extreme relaxation with our vibrant cubes: pink, blue, green, and purple, designed to evoke a sense of calm and tranquility. These brightly colored soft squares offer a soothing tactile experience, perfect for individuals seeking stress relief, including those with ADD/ADHD, OCD, autism, or high anxiety. Whether you're in the office, classroom, traveling, or aboard an airplane, these anxiety relief toys keep you focused and entertained. Mellow and cool to the touch, their soft, durable exteriors encase a high-density groovy goo filling. Wash with water after frequent use and it will be as good as new!",
+    details: [
+      "Vibrant cubes: pink, blue, green, and purple.",
+      "Helps deter habits like fidgeting, skin and nail picking, and finger cracking.",
+      "Soft, durable exteriors enclose a high-density groovy goo filling.",
+      "Silent and satisfying fidget experience that won't disturb others.",
+      "Wash with water after frequent use to keep them as good as new!",
+    ],
+    specs: {
+      color: "Pink, blue, green, purple",
+      theme: "Sensory Fidget",
+      brand: "Crazy Fun",
+      character: "Cube",
+      dimensions: "2.35 inches per cube",
+      weight: "0.3 kg",
+    },
+    images: ["/needoh1.png", "/needoh2.png", "/videoneedoh.mp4"],
   },
 ];
 

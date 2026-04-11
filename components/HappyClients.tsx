@@ -8,7 +8,7 @@ const CLIENT_VIDEOS = [
   { src: "/dumpling-3-trimmed.mp4", label: "Happy client 3" },
   { src: "/videoreview.mp4", label: "Happy client 4" },
   { src: "/dumplings-5.mp4", label: "Happy client 5" },
-  { src: "/video6.mp4", label: "Happy client 6" },
+  { src: "/dumpling-3-trimmed.mp4", label: "Happy client 6" },
 ];
 
 const GAP = 16; // gap-4 = 1rem = 16px
