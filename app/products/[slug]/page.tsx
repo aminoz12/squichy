@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
-import { Suspense, notFound } from "react";
+import { notFound } from "next/navigation";
+import { Suspense } from "react";
 import { CartDrawer } from "@/components/CartDrawer";
 import { CheckoutReturnBanner } from "@/components/CheckoutReturnBanner";
 import { Footer } from "@/components/Footer";

@@ -258,7 +258,17 @@ export const singleProductOffer = {
   ] as ProductSizeOption[],
 } as const;
 
-export type ProductOffer = typeof singleProductOffer & {
+export type ProductOffer = Omit<typeof singleProductOffer, "id" | "name" | "slug" | "categoryName" | "categoryImage" | "description" | "images" | "details" | "specs" | "options"> & {
+  id: string;
+  name: string;
+  slug: string;
+  categoryName: string;
+  categoryImage: string;
+  description: string;
+  images: readonly string[];
+  details: readonly string[];
+  specs: readonly { label: string; value: string }[];
+  options: ProductSizeOption[];
   accentColor?: string;
   badge?: string;
 };
