@@ -234,7 +234,7 @@ export const singleProductOffer = {
   specs: [
     { label: "Color", value: "Mystery" },
     { label: "Theme", value: "Mystery Dumpling" },
-    { label: "Brand", value: "RMS" },
+    { label: "Brand", value: "Squishy-Bun" },
     { label: "Character", value: "Dumpling" },
     {
       label: "Dimensions",
@@ -469,7 +469,7 @@ export const productDetails: ProductDetail[] = [
     specs: {
       color: "Mystery",
       theme: "Mystery Dumpling",
-      brand: "RMS",
+      brand: "Squishy-Bun",
       character: "Dumpling",
       dimensions: "3.54 x 3.54 x 2.66 Inches (9 x 9 x 6.75 cm)",
       weight: "1.60 lb (0.73 kg)",
@@ -495,7 +495,7 @@ export const productDetails: ProductDetail[] = [
     specs: {
       color: "Mystery",
       theme: "Mystery Dumpling",
-      brand: "RMS",
+      brand: "Squishy-Bun",
       character: "Dumpling",
       dimensions: "9.84 x 9.84 x 7.38 Inches (25 x 25 x 18.75 cm)",
       weight: "4.20 lb (1.90 kg)",

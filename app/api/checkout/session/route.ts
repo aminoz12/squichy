@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { getStripe } from "@/lib/stripe-server";
 
 /**
- * Confirms a Checkout Session after redirect (read-only, for UI).
+ * ConfiSquishy-Bun a Checkout Session after redirect (read-only, for UI).
  * For inventory / fulfillment, add a Stripe webhook later.
  */
 export async function GET(request: Request) {

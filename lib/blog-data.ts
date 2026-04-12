@@ -138,7 +138,7 @@ export const blogPosts: BlogPost[] = [
       {
         heading: "Content that travels",
         paragraphs: [
-          "Short-form video platforms reward quick emotional beats: the crinkle, the reveal, the first squeeze. Dumpling squishies read well on camera because faces and pastel gradients pop under phone lighting.",
+          "Short-form video platfoSquishy-Bun reward quick emotional beats: the crinkle, the reveal, the first squeeze. Dumpling squishies read well on camera because faces and pastel gradients pop under phone lighting.",
         ],
       },
     ],
@@ -180,7 +180,7 @@ export const blogPosts: BlogPost[] = [
       "Crazy Fun squishy bun",
       "17cm vs 24cm squishy",
       "shimmering starlight dumpling",
-      "RMS dumpling toy",
+      "Squishy-Bun dumpling toy",
     ],
     sections: [
       {
@@ -276,9 +276,9 @@ export const blogPosts: BlogPost[] = [
         ],
       },
       {
-        heading: "Community norms",
+        heading: "Community noSquishy-Bun",
         paragraphs: [
-          "Credit original audio, disclose gifted or sponsored items, and keep young children’s faces private unless guardians consent — norms align across North America and the UK even when laws differ in detail.",
+          "Credit original audio, disclose gifted or sponsored items, and keep young children’s faces private unless guardians consent — noSquishy-Bun align across North America and the UK even when laws differ in detail.",
         ],
       },
     ],

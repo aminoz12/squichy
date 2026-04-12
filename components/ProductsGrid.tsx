@@ -17,15 +17,34 @@ export function ProductsGrid() {
       ? [...products] 
       : products.filter((p) => p.categoryName === selectedCategory);
 
+    // Always put mystery dumpling first
+    const mysteryIndex = result.findIndex(p => p.id === "squishybun-mystery-dumpling");
+    if (mysteryIndex > 0) {
+      const [mystery] = result.splice(mysteryIndex, 1);
+      result.unshift(mystery);
+    }
+
     switch (sortBy) {
       case "price-low":
-        result.sort((a, b) => Math.min(...a.options.map(o => o.priceUsd)) - Math.min(...b.options.map(o => o.priceUsd)));
+        result.sort((a, b) => {
+          if (a.id === "squishybun-mystery-dumpling") return -1;
+          if (b.id === "squishybun-mystery-dumpling") return 1;
+          return Math.min(...a.options.map(o => o.priceUsd)) - Math.min(...b.options.map(o => o.priceUsd));
+        });
         break;
       case "price-high":
-        result.sort((a, b) => Math.max(...b.options.map(o => o.priceUsd)) - Math.max(...a.options.map(o => o.priceUsd)));
+        result.sort((a, b) => {
+          if (a.id === "squishybun-mystery-dumpling") return -1;
+          if (b.id === "squishybun-mystery-dumpling") return 1;
+          return Math.max(...b.options.map(o => o.priceUsd)) - Math.max(...a.options.map(o => o.priceUsd));
+        });
         break;
       case "name":
-        result.sort((a, b) => a.name.localeCompare(b.name));
+        result.sort((a, b) => {
+          if (a.id === "squishybun-mystery-dumpling") return -1;
+          if (b.id === "squishybun-mystery-dumpling") return 1;
+          return a.name.localeCompare(b.name);
+        });
         break;
     }
 
