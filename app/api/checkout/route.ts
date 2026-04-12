@@ -4,9 +4,14 @@ import { products } from "@/lib/data";
 import { qualifiesForFreeDeliverySubtotal } from "@/lib/delivery";
 import { getStripe } from "@/lib/stripe-server";
 
+type CartItem = {
+  id: string;
+  quantity: number;
+};
+
 /**
- * Creates a Stripe Checkout Session (payment) for the single product:
- * line 1 = unit price × quantity; optional line 2 = delivery (waived when
+ * Creates a Stripe Checkout Session (payment) for multiple products:
+ * each product line with unit price × quantity; optional delivery line (waived when
  * subtotal meets FREE_DELIVERY_THRESHOLD_USD via lib/delivery).
  */
 export async function POST(request: Request) {
@@ -25,30 +30,28 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: "Invalid JSON body" }, { status: 400 });
   }
 
-  const sizeId =
-    typeof body === "object" && body !== null && "sizeId" in body
-      ? String((body as { sizeId: unknown }).sizeId)
-      : "";
-  const rawQty =
-    typeof body === "object" && body !== null && "quantity" in body
-      ? Number((body as { quantity: unknown }).quantity)
-      : 1;
-  const quantity = Math.min(99, Math.max(1, Number.isFinite(rawQty) ? rawQty : 1));
-
-  let option: typeof products[number]["options"][number] | undefined;
-  let product: typeof products[number] | undefined;
+  // Support both old format (sizeId + quantity) and new format (items array)
+  let cartItems: CartItem[] = [];
   
-  for (const p of products) {
-    const opt = p.options.find((o) => o.id === sizeId);
-    if (opt) {
-      option = opt;
-      product = p;
-      break;
-    }
+  if (typeof body === "object" && body !== null && "items" in body && Array.isArray((body as { items: unknown }).items)) {
+    // New format: array of items
+    cartItems = (body as { items: CartItem[] }).items.map((item) => ({
+      id: String(item.id),
+      quantity: Math.min(99, Math.max(1, Number(item.quantity) || 1)),
+    }));
+  } else if (typeof body === "object" && body !== null && "sizeId" in body) {
+    // Legacy format: single item
+    const sizeId = String((body as { sizeId: unknown }).sizeId);
+    const rawQty =
+      typeof body === "object" && body !== null && "quantity" in body
+        ? Number((body as { quantity: unknown }).quantity)
+        : 1;
+    const quantity = Math.min(99, Math.max(1, Number.isFinite(rawQty) ? rawQty : 1));
+    cartItems = [{ id: sizeId, quantity }];
   }
 
-  if (!option || !product) {
-    return NextResponse.json({ error: "Invalid size" }, { status: 400 });
+  if (cartItems.length === 0) {
+    return NextResponse.json({ error: "No items in cart" }, { status: 400 });
   }
 
   const origin =
@@ -56,16 +59,35 @@ export async function POST(request: Request) {
     process.env.NEXT_PUBLIC_APP_URL?.trim() ||
     "http://localhost:3000";
 
-  const unitAmount = Math.round(option.priceUsd * 100);
-  const subtotalUsd = option.priceUsd * quantity;
-  const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
-  const deliveryAmount = deliveryFree
-    ? 0
-    : Math.round(product.deliveryUsd * 100);
+  const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
+  let subtotalUsd = 0;
+  let maxDeliveryUsd = 0;
 
-  const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [
-    {
-      quantity,
+  // Build line items for each cart item
+  for (const cartItem of cartItems) {
+    let option: typeof products[number]["options"][number] | undefined;
+    let product: typeof products[number] | undefined;
+    
+    for (const p of products) {
+      const opt = p.options.find((o) => o.id === cartItem.id);
+      if (opt) {
+        option = opt;
+        product = p;
+        break;
+      }
+    }
+
+    if (!option || !product) {
+      return NextResponse.json({ error: `Invalid product option: ${cartItem.id}` }, { status: 400 });
+    }
+
+    const unitAmount = Math.round(option.priceUsd * 100);
+    const itemSubtotal = option.priceUsd * cartItem.quantity;
+    subtotalUsd += itemSubtotal;
+    maxDeliveryUsd = Math.max(maxDeliveryUsd, product.deliveryUsd);
+
+    lineItems.push({
+      quantity: cartItem.quantity,
       price_data: {
         currency: "usd",
         unit_amount: unitAmount,
@@ -74,15 +96,17 @@ export async function POST(request: Request) {
           description: `${option.sizeCm} cm`,
         },
       },
-    },
-  ];
+    });
+  }
 
-  if (deliveryAmount > 0) {
+  // Add delivery line if applicable (use max delivery cost from all products)
+  const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
+  if (!deliveryFree && maxDeliveryUsd > 0) {
     lineItems.push({
       quantity: 1,
       price_data: {
         currency: "usd",
-        unit_amount: deliveryAmount,
+        unit_amount: Math.round(maxDeliveryUsd * 100),
         product_data: {
           name: "Delivery",
         },
@@ -109,8 +133,7 @@ export async function POST(request: Request) {
       success_url: `${origin}/products?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/products?checkout=cancel`,
       metadata: {
-        size_id: sizeId,
-        quantity: String(quantity),
+        items: JSON.stringify(cartItems.map(i => ({ id: i.id, qty: i.quantity }))),
       },
     });
 

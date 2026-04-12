@@ -1,6 +1,7 @@
 "use client";
 
 import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import { resolveStripeCheckoutParams } from "@/lib/cart-helpers";
@@ -58,18 +59,29 @@ export function CartDrawer() {
   }, [isOpen]);
 
   const startCheckout = useCallback(async () => {
-    const first = useCartStore.getState().items[0];
-    if (!first) return;
+    const items = useCartStore.getState().items;
+    if (items.length === 0) return;
+    
+    // Validate all items can be checked out
+    for (const item of items) {
+      const resolved = resolveStripeCheckoutParams(item);
+      if (!resolved) {
+        setCheckoutError(
+          `\u201c${item.name}\u201d can\u2019t be checked out. Remove it and add the product again from the shop.`,
+        );
+        return;
+      }
+    }
+    
     setCheckoutError(null);
     setCheckoutLoading(true);
     try {
-      const resolved = resolveStripeCheckoutParams(first);
-      if (!resolved) {
-        throw new Error(
-          "This cart line can’t be checked out. Remove it and add the product again from the shop.",
-        );
-      }
-      await redirectToStripeCheckout(resolved.sizeId, resolved.quantity);
+      // Send all items to checkout
+      const cartItems = items.map((item) => ({
+        id: item.id,
+        quantity: item.quantity,
+      }));
+      await redirectToStripeCheckout(cartItems);
     } catch (e) {
       setCheckoutError(
         e instanceof Error ? e.message : "Checkout could not start",
@@ -221,11 +233,17 @@ export function CartDrawer() {
                 onClick={startCheckout}
                 className="mt-4 w-full rounded-2xl bg-accent py-3.5 text-sm font-extrabold text-white shadow-lg shadow-accent/25 transition enabled:hover:scale-[1.01] disabled:cursor-not-allowed disabled:opacity-40"
               >
-                {checkoutLoading ? "Redirecting…" : "Checkout"}
+                {checkoutLoading ? "Redirecting…" : "Pay"}
               </button>
-              <p className="mt-2 text-xs font-semibold text-muted">
-                One Stripe checkout per visit for the first line. Change qty
-                above, or remove lines to pick another item.
+              <Link
+                href="/products"
+                onClick={closeCart}
+                className="mt-3 block w-full rounded-2xl border-2 border-pink-200 py-3 text-center text-sm font-extrabold text-foreground transition hover:border-accent/50 hover:bg-pink-50"
+              >
+                Add more products
+              </Link>
+              <p className="mt-3 text-xs font-semibold text-muted">
+                All items in your cart will be included in checkout. Change quantities above or remove items.
               </p>
             </div>
           </motion.aside>
