@@ -4,7 +4,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { CheckoutReturnBanner } from "@/components/CheckoutReturnBanner";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import { DiscoverSquishies } from "@/components/DiscoverSquishies";
+import { ProductsGrid } from "@/components/ProductsGrid";
 import { HappyClients } from "@/components/HappyClients";
 import { SITE_NAME } from "@/lib/seo";
 
@@ -24,7 +24,7 @@ export default function ProductsPage() {
         <CheckoutReturnBanner />
       </Suspense>
       <main className="flex-1">
-        <DiscoverSquishies />
+        <ProductsGrid />
         <HappyClients />
       </main>
       <Footer />

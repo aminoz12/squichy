@@ -100,8 +100,8 @@ export function Navbar() {
         <div className="flex items-center gap-2">
           {!isProductsPage && (
             <Link
-              href="/products/mystery-dumpling#offer"
-              className="hidden rounded-xl bg-[#ffd500] px-4 py-2 text-sm font-black text-[#2d2384] shadow-md shadow-amber-400/40 transition-transform hover:scale-[1.03] hover:brightness-105 active:scale-[0.98] sm:inline-flex"
+              href="/products"
+              className="hidden rounded-xl bg-[#ffd500] px-4 py-2 text-sm font-black text-[#2b2282] shadow-md shadow-amber-400/40 transition-transform hover:scale-[1.03] hover:brightness-105 active:scale-[0.98] sm:inline-flex"
             >
               BUY NOW
             </Link>

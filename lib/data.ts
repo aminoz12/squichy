@@ -238,22 +238,22 @@ export const singleProductOffer = {
     { label: "Character", value: "Dumpling" },
     {
       label: "Dimensions",
-      value: "Varies by size (17 cm / 6.69 in or 28 cm / 11.02 in) — see size option.",
+      value: "Varies by size (9 cm / 3.54 in or 25 cm / 9.84 in) — see size option.",
     },
     { label: "Weight", value: "Approx. 0.7–1.9 kg depending on size." },
   ],
   options: [
     {
-      id: "size-17",
-      label: "17 cm (6.69 in)",
-      sizeCm: 17,
+      id: "size-9",
+      label: "9 cm (3.54 in)",
+      sizeCm: 9,
       priceUsd: 18,
     },
     {
-      id: "size-28",
-      label: "28 cm (11.02 in)",
-      sizeCm: 28,
-      priceUsd: 26,
+      id: "size-25",
+      label: "25 cm (9.84 in)",
+      sizeCm: 25,
+      priceUsd: 35,
     },
   ] as ProductSizeOption[],
 } as const;
