@@ -181,8 +181,8 @@ function ProductCard({ product, index }: { product: ProductOffer; index: number 
             <span className="text-xl font-black text-slate-900">
               {priceDisplay}
             </span>
-            <span className="text-sm font-bold text-violet-600 group-hover:underline">
-              View Details →
+            <span className="inline-flex items-center justify-center px-5 py-2 rounded-full bg-slate-900 ring-1 ring-slate-900/10 text-white text-xs font-black tracking-wider uppercase shadow-md group-hover:bg-violet-600 group-hover:ring-violet-600/50 group-hover:shadow-violet-500/30 transition-all duration-300 transform group-hover:-translate-y-0.5">
+              BUY NOW
             </span>
           </div>
         </div>
