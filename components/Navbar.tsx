@@ -83,7 +83,7 @@ export function Navbar() {
               Blog
             </Link>
             <Link
-              href="/products/mystery-dumpling#offer"
+              href="/products"
               className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
             >
               Buy
