@@ -9,11 +9,12 @@ export const SITE_TAGLINE =
 
 /** Canonical origin for metadata, sitemap, and JSON-LD. Set NEXT_PUBLIC_SITE_URL in production. */
 export function getSiteUrl(): string {
+  if (process.env.NODE_ENV === "development") {
+    return "http://localhost:3000";
+  }
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (fromEnv) return fromEnv.replace(/\/$/, "");
-  if (process.env.VERCEL_URL)
-    return `https://${process.env.VERCEL_URL.replace(/\/$/, "")}`;
-  return "http://localhost:3000";
+  return "https://www.squishy-bun.com";
 }
 
 export function getMetadataBase(): URL {
@@ -56,10 +57,12 @@ export function rootMetadataExtras(): Pick<
       "Crazy Fun",
       "blind box toy",
       "USA",
-      "Canada",
+      "USA shipping",
       "United Kingdom",
       "UK",
+      "Worldwide shipping",
       "stress relief toy",
+      "buy online",
     ],
     authors: [{ name: SITE_NAME }],
     creator: SITE_NAME,
@@ -68,9 +71,11 @@ export function rootMetadataExtras(): Pick<
       canonical: "/",
       languages: {
         "x-default": "/",
+        "en": "/",
         "en-US": "/",
         "en-CA": "/",
         "en-GB": "/",
+        "en-AU": "/",
       },
     },
     robots: {

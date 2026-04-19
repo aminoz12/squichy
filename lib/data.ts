@@ -238,7 +238,7 @@ export const singleProductOffer = {
     { label: "Character", value: "Dumpling" },
     {
       label: "Dimensions",
-      value: "Varies by size (9 cm / 3.54 in or 25 cm / 9.84 in) — see size option.",
+      value: "Varies by size (9 cm / 3.54 in, 15 cm / 5.90 in, or 25 cm / 9.84 in) — see size option.",
     },
     { label: "Weight", value: "Approx. 0.7–1.9 kg depending on size." },
   ],
@@ -248,6 +248,12 @@ export const singleProductOffer = {
       label: "9 cm (3.54 in)",
       sizeCm: 9,
       priceUsd: 18,
+    },
+    {
+      id: "size-15",
+      label: "15 cm (5.90 in)",
+      sizeCm: 15,
+      priceUsd: 26,
     },
     {
       id: "size-25",
@@ -473,6 +479,31 @@ export const productDetails: ProductDetail[] = [
       character: "Dumpling",
       dimensions: "3.54 x 3.54 x 2.66 Inches (9 x 9 x 6.75 cm)",
       weight: "1.60 lb (0.73 kg)",
+    },
+    images: ["/big1.png", "/vid2.mp4", "/big3.png"],
+  },
+  {
+    id: "medium-crazy-fun-rainbow",
+    name: "Medium Crazy Fun Rainbow Squishy Bun Mystery Dumpling 15CM (5.90\")",
+    size: "15CM (5.90\")",
+    price: 26,
+    description:
+      "Discover endless fun with the Mystery Squishy Bao Bun Sensory fidget toy, a delightful addition to the Crazy Fun collection. Each set provides an exciting unboxing experience, where you might uncover a super rare shimmering starlight dumpling. This engaging sensory toy is perfect for children aged 3 and up, offering a satisfying squishy texture and a touch of mystery. Enjoy the tactile play and the thrill of finding out which unique dumpling you receive in your set.",
+    details: [
+      "This is a Mystery Squishy Bao Bun Sensory Fidget Toy.",
+      "The product is from the brand Crazy Fun.",
+      "It functions as a sensory fidget toy.",
+      "This toy is suitable for ages 3 and up.",
+      "Each package contains 1 set.",
+      "There is a possibility to find a Super Rare Shimmering Starlight Dumpling.",
+    ],
+    specs: {
+      color: "Mystery",
+      theme: "Mystery Dumpling",
+      brand: "Squishy-Bun",
+      character: "Dumpling",
+      dimensions: "5.90 x 5.90 x 4.40 Inches (15 x 15 x 11.25 cm)",
+      weight: "2.40 lb (1.10 kg)",
     },
     images: ["/big1.png", "/vid2.mp4", "/big3.png"],
   },
