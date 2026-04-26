@@ -10,6 +10,7 @@ import { blogPosts, getBlogPost } from "@/lib/blog-data";
 import {
   blogPostingJsonLd,
   getMetadataBase,
+  getSiteUrl,
   SITE_NAME,
 } from "@/lib/seo";
 
@@ -24,24 +25,25 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const post = getBlogPost(slug);
   if (!post) return { title: "Not found" };
 
-  const path = `/blog/${post.slug}`;
+  const base = getSiteUrl();
+  const canonicalUrl = `${base}/blog/${post.slug}`;
 
   return {
     title: post.title,
     description: post.description,
     keywords: post.keywords,
     alternates: {
-      canonical: path,
+      canonical: canonicalUrl,
       languages: {
-        "x-default": path,
-        "en-US": path,
-        "en-CA": path,
-        "en-GB": path,
+        "x-default": canonicalUrl,
+        "en-US": canonicalUrl,
+        "en-CA": canonicalUrl,
+        "en-GB": canonicalUrl,
       },
     },
     openGraph: {
       type: "article",
-      url: path,
+      url: canonicalUrl,
       title: post.title,
       description: post.description,
       publishedTime: post.publishedAt,
@@ -55,6 +57,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     twitter: {
       title: post.title,
       description: post.description,
+      images: [new URL("/herosqueeze.png", getMetadataBase()).toString()],
     },
   };
 }

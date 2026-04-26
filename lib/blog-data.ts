@@ -43,13 +43,13 @@ export const blogPosts: BlogPost[] = [
         heading: "Why families in the US, Canada, and UK search for them",
         paragraphs: [
           "Shoppers from California to Ontario and from Texas to London often look for compact stress toys that ship reliably and photograph well for TikTok or Instagram. Mystery formats add a light ritual: open, react, squeeze.",
-          "If you are comparing sellers, check stated dimensions (for example 17 cm vs 24 cm), delivery regions, and age guidance on the product page before you buy.",
+          "If you are comparing sellers, check available pack options (1 PCS to 8 PCS), delivery regions, and age guidance on the product page before you buy.",
         ],
       },
       {
         heading: "Where to shop SquishyBun Dumplings",
         paragraphs: [
-          "Ready to pick a size and check out? Our shop lists current bundles, imagery, and checkout options on the product page.",
+          "Ready to choose a pack and check out? Our shop lists current pack bundles, imagery, and checkout options on the product page.",
         ],
       },
     ],
@@ -172,34 +172,38 @@ export const blogPosts: BlogPost[] = [
   },
   {
     slug: "crazy-fun-rainbow-squishy-bun-sizes",
-    title: "Crazy Fun Rainbow Squishy Bun: Sizes, Weight & Rare Dumpling Notes",
+    title: "Crazy Fun Rainbow Squishy Bun: Pack Options, Pricing & Rare Dumpling Notes",
     description:
-      "Honest notes on 17 cm vs 24 cm options, approximate weights, and what “mystery” means when you order the Crazy Fun rainbow squishy bun in USD from the United States, Canada, or the UK.",
-    publishedAt: "2026-03-18",
+      "Honest notes on 1 PCS to 8 PCS pack options, pricing tiers, and what 'mystery' means when you order the Crazy Fun rainbow squishy bun in USD from the United States, Canada, or the UK.",
+    publishedAt: "2026-04-26",
     keywords: [
       "Crazy Fun squishy bun",
-      "17cm vs 24cm squishy",
+      "squishy packs 1 PCS",
+      "squishy bundle 2 PCS 4 PCS",
+      "8 PCS squishy set",
       "shimmering starlight dumpling",
       "Squishy-Bun dumpling toy",
+      "squishy bulk order",
+      "mystery dumpling packs",
     ],
     sections: [
       {
-        heading: "Two practical sizes",
+        heading: "Pack options for every buyer",
         paragraphs: [
-          "The line is commonly offered around 17 cm and 24 cm heights. The larger body usually weighs more and feels more dramatic to squeeze; the smaller one travels easily in a tote or school bag.",
-          "Specs on the product page list imperial and metric measurements so American, Canadian, and British buyers can compare without mental conversion.",
+          "The line is now offered in convenient packs: 1 PCS ($18), 2 PCS ($34), 4 PCS ($65), 6 PCS ($89), and 8 PCS ($109). Larger packs offer better value for collectors and gift-givers. Each dumpling is approximately 10 cm — perfect for desk display, travel, or sharing with friends.",
+          "Specs on the product page list current pack pricing so American, Canadian, and British buyers can choose the best value without confusion.",
         ],
       },
       {
         heading: "Mystery and rare variants",
         paragraphs: [
-          "Each unit is a blind-style experience: you might receive different colours or expressions. A super rare shimmering starlight dumpling may appear in some packs — it is a chase item, not a guarantee.",
+          "Every pack is a blind-style experience: you might receive different colours or expressions in each dumpling. A super rare shimmering starlight dumpling may appear in some packs — it is a chase item, not a guarantee. The more you buy, the better your chances of finding one!",
         ],
       },
       {
         heading: "Buy with current photos and price",
         paragraphs: [
-          "Always confirm live price, delivery, and imagery on our product page before checkout.",
+          "Always confirm live pack pricing, delivery, and imagery on our product page before checkout. Packs are updated regularly based on stock availability.",
         ],
       },
     ],
