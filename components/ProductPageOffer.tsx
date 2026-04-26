@@ -61,7 +61,9 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
     setQuantity((q) => Math.min(99, Math.max(1, q + delta)));
   };
 
-  const subtotalUsd = selected.priceUsd * quantity;
+  const isMysteryDumpling = offer.id === "squishybun-mystery-dumpling";
+  const effectiveQuantity = isMysteryDumpling ? 1 : quantity;
+  const subtotalUsd = selected.priceUsd * effectiveQuantity;
   const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
   const deliveryLineUsd = deliveryFree ? 0 : offer.deliveryUsd;
   const estimatedTotalUsd = subtotalUsd + deliveryLineUsd;
@@ -76,7 +78,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
       id: opt.id,
       name: `${offer.name} (${opt.label})`,
       unitPriceUsd: opt.priceUsd,
-      quantity,
+      quantity: effectiveQuantity,
     });
   }
 
@@ -84,7 +86,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
     setCheckoutError(null);
     setCheckoutLoading(true);
     try {
-      await redirectToStripeCheckout(selected.id, quantity);
+      await redirectToStripeCheckout(selected.id, effectiveQuantity);
     } catch (e) {
       setCheckoutError(e instanceof Error ? e.message : "Something went wrong");
       setCheckoutLoading(false);
@@ -159,15 +161,16 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
             <div className="space-y-4">
               <div>
                 <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                  Size
+                  {offer.id === "squishybun-mystery-dumpling" ? "Pack" : "Size"}
                 </p>
                 <div
                   className="mt-2 flex flex-wrap gap-2"
                   role="radiogroup"
-                  aria-label="Choose size"
+                  aria-label={offer.id === "squishybun-mystery-dumpling" ? "Choose pack" : "Choose size"}
                 >
                   {offer.options.map((opt) => {
                     const isOn = selected.id === opt.id;
+                    const isPackStyle = offer.id === "squishybun-mystery-dumpling";
                     return (
                       <button
                         key={opt.id}
@@ -177,14 +180,18 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                         onClick={() => setSelectedSizeId(opt.id)}
                         className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-semibold transition ${
                           isOn
-                            ? "border-violet-600 bg-violet-600 text-white shadow-md shadow-violet-600/20"
-                            : "border-slate-200 bg-white text-slate-800 hover:border-violet-300 hover:bg-violet-50/40"
+                            ? isPackStyle
+                              ? "border-pink-500 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md shadow-pink-500/25 scale-105"
+                              : "border-violet-600 bg-violet-600 text-white shadow-md shadow-violet-600/20"
+                            : isPackStyle
+                              ? "border-pink-200 bg-white text-slate-800 hover:border-pink-400 hover:bg-pink-50 hover:shadow-sm"
+                              : "border-slate-200 bg-white text-slate-800 hover:border-violet-300 hover:bg-violet-50/40"
                         }`}
                       >
                         <span>{opt.label}</span>
                         <span
                           className={`tabular-nums text-xs font-bold ${
-                            isOn ? "text-white/90" : "text-slate-500"
+                            isOn ? "text-white/90" : isPackStyle ? "text-pink-600" : "text-slate-500"
                           }`}
                         >
                           {moneyUsd(opt.priceUsd)}
@@ -195,41 +202,43 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                 </div>
               </div>
 
-              <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                  Quantity
-                </p>
-                <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white p-0.5 shadow-sm">
-                  <button
-                    type="button"
-                    onClick={() => bumpQty(-1)}
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
-                    aria-label="Decrease quantity"
-                  >
-                    −
-                  </button>
-                  <input
-                    type="number"
-                    min={1}
-                    max={99}
-                    value={quantity}
-                    onChange={(e) => {
-                      const n = Number.parseInt(e.target.value, 10);
-                      if (Number.isNaN(n)) setQuantity(1);
-                      else setQuantity(Math.min(99, Math.max(1, n)));
-                    }}
-                    className="h-9 w-12 border-0 bg-transparent text-center text-sm font-black tabular-nums text-slate-900 outline-none"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => bumpQty(1)}
-                    className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
-                    aria-label="Increase quantity"
-                  >
-                    +
-                  </button>
+              {offer.id !== "squishybun-mystery-dumpling" && (
+                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
+                    Quantity
+                  </p>
+                  <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white p-0.5 shadow-sm">
+                    <button
+                      type="button"
+                      onClick={() => bumpQty(-1)}
+                      className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
+                      aria-label="Decrease quantity"
+                    >
+                      −
+                    </button>
+                    <input
+                      type="number"
+                      min={1}
+                      max={99}
+                      value={quantity}
+                      onChange={(e) => {
+                        const n = Number.parseInt(e.target.value, 10);
+                        if (Number.isNaN(n)) setQuantity(1);
+                        else setQuantity(Math.min(99, Math.max(1, n)));
+                      }}
+                      className="h-9 w-12 border-0 bg-transparent text-center text-sm font-black tabular-nums text-slate-900 outline-none"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => bumpQty(1)}
+                      className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
+                      aria-label="Increase quantity"
+                    >
+                      +
+                    </button>
+                  </div>
                 </div>
-              </div>
+              )}
 
               <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white">
                 <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/60 px-3 py-2.5 sm:px-4">
@@ -245,7 +254,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                     <span className="text-slate-600">
                       Subtotal
                       <span className="mt-0.5 block text-xs text-slate-400">
-                        {quantity} × {selected.label}
+                        {offer.id === "squishybun-mystery-dumpling" ? selected.label : `${quantity} × ${selected.label}`}
                       </span>
                     </span>
                     <span className="font-semibold tabular-nums text-slate-900">

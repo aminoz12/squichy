@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog-data";
 import { getSiteUrl } from "@/lib/seo";
+import { products } from "@/lib/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const base = getSiteUrl();
@@ -11,6 +12,13 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: new Date(p.publishedAt),
     changeFrequency: "monthly" as const,
     priority: 0.75,
+  }));
+
+  const productEntries: MetadataRoute.Sitemap = products.map((p) => ({
+    url: `${base}/products/${p.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.85,
   }));
 
   return [
@@ -32,6 +40,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       changeFrequency: "weekly",
       priority: 0.85,
     },
+    ...productEntries,
     ...blogEntries,
   ];
 }
