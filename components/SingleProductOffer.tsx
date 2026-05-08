@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
+import { fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
 import { qualifiesForFreeDeliverySubtotal } from "@/lib/delivery";
 import { useCartStore } from "@/lib/store/use-cart-store";
@@ -58,6 +59,7 @@ export function SingleProductOffer({
 
   async function buyNow() {
     setCheckoutLoading(true);
+    fireGtagConversion();
     try {
       await redirectToStripeCheckout(selected.id, 1);
     } catch {

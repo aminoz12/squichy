@@ -4,6 +4,7 @@ import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
+import { fireGtagConversion } from "@/lib/gtag";
 import { resolveStripeCheckoutParams } from "@/lib/cart-helpers";
 import {
   FREE_DELIVERY_THRESHOLD_USD,
@@ -75,6 +76,7 @@ export function CartDrawer() {
     
     setCheckoutError(null);
     setCheckoutLoading(true);
+    fireGtagConversion();
     try {
       // Send all items to checkout
       const cartItems = items.map((item) => ({

@@ -3,6 +3,7 @@
 import Image from "next/image";
 import { useMemo, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
+import { fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
 import {
   FREE_DELIVERY_THRESHOLD_USD,
@@ -85,6 +86,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
   async function startStripeCheckout() {
     setCheckoutError(null);
     setCheckoutLoading(true);
+    fireGtagConversion();
     try {
       await redirectToStripeCheckout(selected.id, effectiveQuantity);
     } catch (e) {
