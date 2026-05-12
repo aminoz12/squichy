@@ -213,6 +213,100 @@ export type ProductSizeOption = {
   priceUsd: number;
 };
 
+/* ── Bundle tiers for Mystery Dumpling ── */
+export type BundleTier = {
+  id: string;
+  /** Display title, e.g. "Buy One" */
+  title: string;
+  /** Subtitle line, e.g. "No duplicates" */
+  subtitle?: string;
+  /** How many items the customer pays for */
+  payQty: number;
+  /** How many free dumpling items they get */
+  freeQty: number;
+  /** Bonus product name, e.g. "NeeDoh" */
+  bonusProduct?: string;
+  /** How many bonus products */
+  bonusQty?: number;
+  /** Per-box price in USD */
+  perBoxUsd: number;
+  /** Strikethrough compare-at per-box price */
+  compareAtPerBoxUsd?: number;
+  /** Total pack price in USD (displayed as primary price) */
+  totalPriceUsd: number;
+  /** Strikethrough compare-at total price */
+  compareAtTotalUsd?: number;
+  /** Badge text, e.g. "Most Popular", "Best Value" */
+  badge?: string;
+  /** Whether this tier includes free shipping */
+  freeShipping?: boolean;
+  /** Whether this is the default selected tier */
+  defaultSelected?: boolean;
+};
+
+export const mysteryDumplingBundles: BundleTier[] = [
+  {
+    id: "bundle-1",
+    title: "BUY ONE",
+    payQty: 1,
+    freeQty: 0,
+    perBoxUsd: 18,
+    compareAtPerBoxUsd: 24,
+    totalPriceUsd: 18,
+    compareAtTotalUsd: 24,
+  },
+  {
+    id: "bundle-2-get-1",
+    title: "BUY 2, GET 1 FREE",
+    payQty: 2,
+    freeQty: 1,
+    perBoxUsd: 11.33,
+    compareAtPerBoxUsd: 24,
+    totalPriceUsd: 34,
+    compareAtTotalUsd: 72,
+    defaultSelected: true,
+  },
+  {
+    id: "bundle-4-get-2",
+    title: "BUY 4, GET 2 FREE",
+    payQty: 4,
+    freeQty: 2,
+    perBoxUsd: 10.83,
+    compareAtPerBoxUsd: 24,
+    totalPriceUsd: 65,
+    compareAtTotalUsd: 144,
+    badge: "Most Popular",
+    freeShipping: true,
+  },
+  {
+    id: "bundle-6-get-3",
+    title: "BUY 6, GET 3 FREE",
+    payQty: 6,
+    freeQty: 3,
+    perBoxUsd: 9.89,
+    compareAtPerBoxUsd: 24,
+    totalPriceUsd: 89,
+    compareAtTotalUsd: 216,
+    bonusProduct: "NeeDoh",
+    bonusQty: 1,
+    freeShipping: true,
+  },
+  {
+    id: "bundle-8-get-4",
+    title: "BUY 8, GET 4 FREE",
+    payQty: 8,
+    freeQty: 4,
+    perBoxUsd: 9,
+    compareAtPerBoxUsd: 24,
+    totalPriceUsd: 108,
+    compareAtTotalUsd: 288,
+    badge: "Best Value",
+    bonusProduct: "NeeDoh",
+    bonusQty: 2,
+    freeShipping: true,
+  },
+];
+
 export const singleProductOffer = {
   id: "squishybun-mystery-dumpling",
   name: "Crazy Fun Rainbow Squishy Bun Mystery Dumpling",

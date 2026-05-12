@@ -31,34 +31,41 @@ export function Hero() {
               Crazy Fun
             </span>
             <span className="hidden text-[11px] font-extrabold uppercase tracking-wide text-white/85 sm:inline">
-              WILDLY TRENDY · RIDICULOUSLY VIRAL
+              🔥 LIMITED TIME · BUY 2 GET 1 FREE
             </span>
           </div>
           <a
             href="/products"
-            className="text-[11px] font-extrabold uppercase tracking-wide text-white hover:text-yellow-200 sm:text-xs"
+            className="animate-pulse text-[11px] font-extrabold uppercase tracking-wide text-yellow-300 hover:text-yellow-100 sm:text-xs"
           >
-            BUY NOW
+            CLAIM OFFER →
           </a>
         </div>
 
         <div className="relative grid min-h-[340px] items-center gap-8 px-6 pb-8 pt-7 sm:min-h-[420px] sm:px-8 lg:grid-cols-[1fr_1.2fr] lg:px-10">
           <div className="relative z-10">
-            <h1 className="font-[family-name:var(--font-fredoka)] text-4xl font-black uppercase leading-[0.95] tracking-tight text-white drop-shadow-[0_3px_0_rgba(0,0,0,0.2)] sm:text-5xl lg:text-6xl">
-              DUMPLING MANIA
-              <br />
-              IS TAKING OVER!
+            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#e53e3e] px-3 py-1.5 text-xs font-black uppercase tracking-wider text-white shadow-lg sm:text-sm">
+              <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-yellow-300" />
+              Limited Stock — Selling Fast!
+            </div>
+            <h1 className="font-[family-name:var(--font-fredoka)] text-3xl font-black uppercase leading-[0.95] tracking-tight text-white drop-shadow-[0_3px_0_rgba(0,0,0,0.2)] sm:text-5xl lg:text-[3.4rem]">
+              THE SQUISHY DUMPLING YOUR KIDS WON&apos;T STOP TALKING ABOUT
             </h1>
-            <p className="mt-4 max-w-md text-sm font-semibold leading-relaxed text-white/90 sm:text-base">
-              The TikTok phenomenon you will not be able to put down. The viral
-              Squishy Bun that turns scrolling into obsession.
+            <p className="mt-4 max-w-md text-sm font-bold leading-relaxed text-yellow-200 sm:text-base">
+              It&apos;s finally here — but NOT for long. The TikTok-viral Squishy Bun everyone is
+              obsessing over. Grab yours before they&apos;re gone! 🥟
             </p>
-            <a
-              href="/products"
-              className="mt-6 inline-flex rounded-lg bg-[#ffd500] px-5 py-3 text-sm font-black uppercase tracking-wide text-[#2d2384] shadow-lg transition hover:brightness-105"
-            >
-              BUY NOW
-            </a>
+            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
+              <a
+                href="/products"
+                className="group relative inline-flex items-center gap-2 rounded-xl bg-[#ffd500] px-6 py-3.5 text-sm font-black uppercase tracking-wide text-[#2d2384] shadow-[0_4px_20px_rgba(255,213,0,0.5)] transition-all hover:scale-105 hover:shadow-[0_6px_30px_rgba(255,213,0,0.7)] sm:text-base"
+              >
+                BUY 2 GET 1 NOW
+              </a>
+              <span className="text-xs font-semibold text-white/70">
+                ⭐ 12,400+ happy families
+              </span>
+            </div>
           </div>
 
           <motion.div

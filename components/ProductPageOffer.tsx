@@ -5,11 +5,14 @@ import { useMemo, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import { fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
+import { mysteryDumplingBundles } from "@/lib/data";
+import type { BundleTier } from "@/lib/data";
 import {
   FREE_DELIVERY_THRESHOLD_USD,
   qualifiesForFreeDeliverySubtotal,
 } from "@/lib/delivery";
 import { useCartStore } from "@/lib/store/use-cart-store";
+import { BundleTierSelector } from "@/components/BundleTierSelector";
 
 export type ProductPageOfferData = {
   id: string;
@@ -48,12 +51,22 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
+  const isMysteryDumpling = offer.id === "squishybun-mystery-dumpling";
+
+  /* ── Bundle tier state (mystery dumpling only) ── */
+  const defaultBundle = mysteryDumplingBundles.find((b) => b.defaultSelected) ?? mysteryDumplingBundles[0];
+  const [selectedBundleId, setSelectedBundleId] = useState(defaultBundle.id);
+  const selectedBundle = useMemo(
+    () => mysteryDumplingBundles.find((b) => b.id === selectedBundleId) ?? defaultBundle,
+    [selectedBundleId, defaultBundle],
+  );
+
   const selected = useMemo(
     () => offer.options.find((o) => o.id === selectedSizeId) ?? offer.options[0],
     [offer.options, selectedSizeId],
   );
 
-  if (!selected) return null;
+  if (!selected && !isMysteryDumpling) return null;
 
   const primaryImage = offer.images[0];
   const secondaryImages = offer.images.slice(1);
@@ -62,18 +75,28 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
     setQuantity((q) => Math.min(99, Math.max(1, q + delta)));
   };
 
-  const isMysteryDumpling = offer.id === "squishybun-mystery-dumpling";
+  /* ── Pricing logic ── */
   const effectiveQuantity = isMysteryDumpling ? 1 : quantity;
-  const subtotalUsd = selected.priceUsd * effectiveQuantity;
-  const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
+  const bundleTotalItems = isMysteryDumpling ? selectedBundle.payQty + selectedBundle.freeQty : 0;
+  const subtotalUsd = isMysteryDumpling ? selectedBundle.totalPriceUsd : (selected?.priceUsd ?? 0) * effectiveQuantity;
+  const deliveryFree = isMysteryDumpling ? !!selectedBundle.freeShipping : qualifiesForFreeDeliverySubtotal(subtotalUsd);
   const deliveryLineUsd = deliveryFree ? 0 : offer.deliveryUsd;
   const estimatedTotalUsd = subtotalUsd + deliveryLineUsd;
   const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD_USD - subtotalUsd);
 
   function addToCart() {
     setCheckoutError(null);
+    if (isMysteryDumpling) {
+      putLine({
+        id: selectedBundle.id,
+        name: `${offer.name} (${selectedBundle.title})`,
+        unitPriceUsd: subtotalUsd,
+        quantity: 1,
+      });
+      return;
+    }
     const opt =
-      offer.options.find((o) => o.id === selected.id) ?? offer.options[0];
+      offer.options.find((o) => o.id === selected!.id) ?? offer.options[0];
     if (!opt) return;
     putLine({
       id: opt.id,
@@ -88,7 +111,8 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
     setCheckoutLoading(true);
     fireGtagConversion();
     try {
-      await redirectToStripeCheckout(selected.id, effectiveQuantity);
+      const checkoutId = isMysteryDumpling ? selectedBundle.id : selected!.id;
+      await redirectToStripeCheckout(checkoutId, effectiveQuantity);
     } catch (e) {
       setCheckoutError(e instanceof Error ? e.message : "Something went wrong");
       setCheckoutLoading(false);
@@ -161,149 +185,156 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
 
           <div className="mt-4 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-slate-50/50 to-white p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] sm:p-5">
             <div className="space-y-4">
-              <div>
-                <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                  {offer.id === "squishybun-mystery-dumpling" ? "Pack" : "Size"}
-                </p>
-                <div
-                  className="mt-2 flex flex-wrap gap-2"
-                  role="radiogroup"
-                  aria-label={offer.id === "squishybun-mystery-dumpling" ? "Choose pack" : "Choose size"}
-                >
-                  {offer.options.map((opt) => {
-                    const isOn = selected.id === opt.id;
-                    const isPackStyle = offer.id === "squishybun-mystery-dumpling";
-                    return (
-                      <button
-                        key={opt.id}
-                        type="button"
-                        role="radio"
-                        aria-checked={isOn}
-                        onClick={() => setSelectedSizeId(opt.id)}
-                        className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-semibold transition ${
-                          isOn
-                            ? isPackStyle
-                              ? "border-pink-500 bg-gradient-to-r from-pink-500 to-rose-500 text-white shadow-md shadow-pink-500/25 scale-105"
-                              : "border-violet-600 bg-violet-600 text-white shadow-md shadow-violet-600/20"
-                            : isPackStyle
-                              ? "border-pink-200 bg-white text-slate-800 hover:border-pink-400 hover:bg-pink-50 hover:shadow-sm"
-                              : "border-slate-200 bg-white text-slate-800 hover:border-violet-300 hover:bg-violet-50/40"
-                        }`}
-                      >
-                        <span>{opt.label}</span>
-                        <span
-                          className={`tabular-nums text-xs font-bold ${
-                            isOn ? "text-white/90" : isPackStyle ? "text-pink-600" : "text-slate-500"
-                          }`}
-                        >
-                          {moneyUsd(opt.priceUsd)}
-                        </span>
-                      </button>
-                    );
-                  })}
-                </div>
-              </div>
 
-              {offer.id !== "squishybun-mystery-dumpling" && (
-                <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                    Quantity
-                  </p>
-                  <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white p-0.5 shadow-sm">
-                    <button
-                      type="button"
-                      onClick={() => bumpQty(-1)}
-                      className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
-                      aria-label="Decrease quantity"
+              {/* ── Mystery Dumpling: Bundle Tiers ── */}
+              {isMysteryDumpling ? (
+                <BundleTierSelector
+                  tiers={mysteryDumplingBundles}
+                  selectedId={selectedBundleId}
+                  onSelect={setSelectedBundleId}
+                />
+              ) : (
+                <>
+                  <div>
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
+                      Size
+                    </p>
+                    <div
+                      className="mt-2 flex flex-wrap gap-2"
+                      role="radiogroup"
+                      aria-label="Choose size"
                     >
-                      −
-                    </button>
-                    <input
-                      type="number"
-                      min={1}
-                      max={99}
-                      value={quantity}
-                      onChange={(e) => {
-                        const n = Number.parseInt(e.target.value, 10);
-                        if (Number.isNaN(n)) setQuantity(1);
-                        else setQuantity(Math.min(99, Math.max(1, n)));
-                      }}
-                      className="h-9 w-12 border-0 bg-transparent text-center text-sm font-black tabular-nums text-slate-900 outline-none"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => bumpQty(1)}
-                      className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
-                      aria-label="Increase quantity"
-                    >
-                      +
-                    </button>
+                      {offer.options.map((opt) => {
+                        const isOn = selected?.id === opt.id;
+                        return (
+                          <button
+                            key={opt.id}
+                            type="button"
+                            role="radio"
+                            aria-checked={isOn}
+                            onClick={() => setSelectedSizeId(opt.id)}
+                            className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-semibold transition ${
+                              isOn
+                                ? "border-violet-600 bg-violet-600 text-white shadow-md shadow-violet-600/20"
+                                : "border-slate-200 bg-white text-slate-800 hover:border-violet-300 hover:bg-violet-50/40"
+                            }`}
+                          >
+                            <span>{opt.label}</span>
+                            <span
+                              className={`tabular-nums text-xs font-bold ${
+                                isOn ? "text-white/90" : "text-slate-500"
+                              }`}
+                            >
+                              {moneyUsd(opt.priceUsd)}
+                            </span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
-                </div>
+
+                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
+                      Quantity
+                    </p>
+                    <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white p-0.5 shadow-sm">
+                      <button
+                        type="button"
+                        onClick={() => bumpQty(-1)}
+                        className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
+                        aria-label="Decrease quantity"
+                      >
+                        −
+                      </button>
+                      <input
+                        type="number"
+                        min={1}
+                        max={99}
+                        value={quantity}
+                        onChange={(e) => {
+                          const n = Number.parseInt(e.target.value, 10);
+                          if (Number.isNaN(n)) setQuantity(1);
+                          else setQuantity(Math.min(99, Math.max(1, n)));
+                        }}
+                        className="h-9 w-12 border-0 bg-transparent text-center text-sm font-black tabular-nums text-slate-900 outline-none"
+                      />
+                      <button
+                        type="button"
+                        onClick={() => bumpQty(1)}
+                        className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
+                        aria-label="Increase quantity"
+                      >
+                        +
+                      </button>
+                    </div>
+                  </div>
+                </>
               )}
 
-              <div className="overflow-hidden rounded-xl border border-slate-200/80 bg-white">
-                <div className="flex items-center justify-between border-b border-slate-100 bg-slate-50/60 px-3 py-2.5 sm:px-4">
-                  <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                    Summary
-                  </p>
-                  <span className="text-[10px] font-semibold text-slate-400">
+              <div className="overflow-hidden rounded-2xl border-2 border-slate-100 bg-white shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
+                <div className="bg-slate-50/80 px-4 py-2 text-center border-b border-slate-100">
+                  <p className="text-[9px] font-black uppercase tracking-[0.2em] text-slate-400">
                     Taxes included where applicable
-                  </span>
+                  </p>
                 </div>
-                <div className="space-y-2.5 px-3 py-3 sm:px-4 sm:py-4">
-                  <div className="flex items-start justify-between gap-3 text-sm">
-                    <span className="text-slate-600">
-                      Subtotal
-                      <span className="mt-0.5 block text-xs text-slate-400">
-                        {offer.id === "squishybun-mystery-dumpling" ? selected.label : `${quantity} × ${selected.label}`}
+                <div className="p-4 space-y-5">
+                  {/* Subtotal */}
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Subtotal</span>
+                      <span className="h-px flex-1 mx-3 bg-slate-100 border-t border-dashed border-slate-200"></span>
+                      <span className="text-sm font-black text-slate-900 tabular-nums">
+                        {moneyUsd(subtotalUsd)}
                       </span>
-                    </span>
-                    <span className="font-semibold tabular-nums text-slate-900">
-                      {moneyUsd(subtotalUsd)}
-                    </span>
+                    </div>
+                    <p className="text-xs font-bold text-slate-600">
+                      {isMysteryDumpling ? selectedBundle.title : `${quantity} × ${selected!.label}`}
+                    </p>
                   </div>
-                  <div className="flex items-center justify-between gap-3 text-sm">
-                    <span className="flex items-center gap-2 text-slate-600">
-                      <span
-                        className="flex h-7 w-7 items-center justify-center rounded-lg bg-violet-50 text-sm"
-                        aria-hidden
-                      >
-                        🚚
-                      </span>
-                      Delivery
-                    </span>
-                    {deliveryFree ? (
-                      <span className="rounded-full bg-emerald-50 px-2 py-0.5 text-xs font-bold uppercase tracking-wide text-emerald-800 ring-1 ring-emerald-100">
-                        Free
-                      </span>
-                    ) : (
-                      <span className="font-semibold tabular-nums text-slate-900">
-                        {moneyUsd(offer.deliveryUsd)}
-                      </span>
+
+                  {/* Delivery */}
+                  <div className="flex flex-col gap-1">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm" aria-hidden>🚚</span>
+                        <span className="text-[10px] font-bold uppercase tracking-widest text-slate-400">Delivery</span>
+                      </div>
+                      <span className="h-px flex-1 mx-3 bg-slate-100 border-t border-dashed border-slate-200"></span>
+                      {deliveryFree ? (
+                        <span className="text-xs font-black text-emerald-600 uppercase tracking-wider">Free</span>
+                      ) : (
+                        <span className="text-sm font-black text-slate-900 tabular-nums">
+                          {moneyUsd(offer.deliveryUsd)}
+                        </span>
+                      )}
+                    </div>
+                    {!deliveryFree && amountToFreeDelivery > 0 && (
+                      <p className="flex items-center gap-1.5 text-xs font-black text-amber-600 uppercase tracking-tight">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-amber-100 text-[10px]">!</span>
+                        Only {moneyUsd(amountToFreeDelivery)} for free delivery
+                      </p>
+                    )}
+                    {deliveryFree && (
+                      <p className="flex items-center gap-1.5 text-xs font-black text-emerald-600 uppercase tracking-tight">
+                        <span className="flex h-4 w-4 items-center justify-center rounded-full bg-emerald-100 text-[10px]">✓</span>
+                        Free delivery applied to this order.
+                      </p>
                     )}
                   </div>
-                  {!deliveryFree && amountToFreeDelivery > 0 && (
-                    <p className="rounded-lg bg-violet-50/90 px-2.5 py-2 text-[11px] leading-snug text-violet-950 ring-1 ring-violet-100">
-                      <span className="font-semibold">Free delivery</span> from{" "}
-                      {moneyUsd(FREE_DELIVERY_THRESHOLD_USD)} subtotal — add{" "}
-                      <span className="font-bold tabular-nums">
-                        {moneyUsd(amountToFreeDelivery)}
-                      </span>{" "}
-                      more.
-                    </p>
-                  )}
-                  {deliveryFree && (
-                    <p className="flex items-center gap-2 rounded-lg bg-emerald-50/90 px-2.5 py-2 text-[11px] font-medium text-emerald-900 ring-1 ring-emerald-100">
-                      <span aria-hidden>✓</span>
-                      Free delivery applied to this order.
-                    </p>
-                  )}
-                  <div className="flex items-baseline justify-between border-t border-dashed border-slate-200 pt-3">
-                    <span className="text-sm font-bold text-slate-800">Total</span>
-                    <span className="text-xl font-black tabular-nums text-slate-900 sm:text-2xl">
-                      {moneyUsd(estimatedTotalUsd)}
-                    </span>
+
+                  {/* Total Section */}
+                  <div className="mt-2 pt-4 border-t border-slate-100">
+                    <div className="flex items-center justify-between">
+                      <div className="space-y-0.5">
+                        <span className="block text-base font-black uppercase tracking-tighter text-slate-900">Total</span>
+                        <span className="block text-[10px] font-bold text-slate-400 uppercase tracking-widest">No hidden fees</span>
+                      </div>
+                      <div className="text-right">
+                        <span className="text-3xl font-black tabular-nums tracking-tight text-slate-900">
+                          {moneyUsd(estimatedTotalUsd)}
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -318,9 +349,9 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                 <button
                   type="button"
                   onClick={addToCart}
-                  className="inline-flex min-h-[3rem] w-full items-center justify-center gap-2 rounded-xl border-2 border-slate-200 bg-white px-5 py-3 text-sm font-bold text-slate-800 shadow-sm transition hover:border-violet-300 hover:bg-violet-50/40 enabled:active:scale-[0.98]"
+                  className="inline-flex min-h-[3rem] w-full items-center justify-center gap-2 rounded-xl bg-amber-500 px-5 py-3 text-sm font-black uppercase tracking-wide text-white shadow-lg shadow-amber-400/20 transition hover:bg-amber-600 hover:shadow-amber-500/30 enabled:active:scale-[0.98]"
                 >
-                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 002 1.61h9.72a2 2 0 002-1.61L23 6H6"/></svg>
                   Add to cart
                 </button>
                 <button
