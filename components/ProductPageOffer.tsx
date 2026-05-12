@@ -54,8 +54,8 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
   /* ── Bundle tier state ── */
   const bundles = useMemo(() => {
     if (isMysteryDumpling) return mysteryDumplingBundles;
-    return getProductBundles(offer.options[0]?.priceUsd || 0);
-  }, [isMysteryDumpling, offer.options]);
+    return getProductBundles(offer.id, offer.options[0]?.priceUsd || 0);
+  }, [isMysteryDumpling, offer.id, offer.options]);
 
   const defaultBundle = bundles.find((b) => b.defaultSelected) ?? bundles[0];
   const [selectedBundleId, setSelectedBundleId] = useState(defaultBundle.id);

@@ -68,8 +68,16 @@ export async function POST(request: Request) {
     let option: typeof products[number]["options"][number] | undefined;
     let product: typeof products[number] | undefined;
     
+    // Legacy ID mapping for Mystery Dumpling bundles
+    let searchId = cartItem.id;
+    if (searchId === "bundle-1") searchId = "mystery-b1";
+    if (searchId === "bundle-2-get-1") searchId = "mystery-b21";
+    if (searchId === "bundle-4-get-2") searchId = "mystery-b42";
+    if (searchId === "bundle-6-get-3") searchId = "mystery-b63";
+    if (searchId === "bundle-8-get-4") searchId = "mystery-b84";
+
     for (const p of products) {
-      const opt = p.options.find((o) => o.id === cartItem.id);
+      const opt = p.options.find((o) => o.id === searchId);
       if (opt) {
         option = opt;
         product = p;

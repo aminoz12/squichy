@@ -246,7 +246,7 @@ export type BundleTier = {
 
 export const mysteryDumplingBundles: BundleTier[] = [
   {
-    id: "bundle-1",
+    id: "mystery-b1",
     title: "BUY ONE",
     payQty: 1,
     freeQty: 0,
@@ -256,7 +256,7 @@ export const mysteryDumplingBundles: BundleTier[] = [
     compareAtTotalUsd: 24,
   },
   {
-    id: "bundle-2-get-1",
+    id: "mystery-b21",
     title: "BUY 2, GET 1 FREE",
     payQty: 2,
     freeQty: 1,
@@ -267,7 +267,7 @@ export const mysteryDumplingBundles: BundleTier[] = [
     defaultSelected: true,
   },
   {
-    id: "bundle-4-get-2",
+    id: "mystery-b42",
     title: "BUY 4, GET 2 FREE",
     payQty: 4,
     freeQty: 2,
@@ -279,7 +279,7 @@ export const mysteryDumplingBundles: BundleTier[] = [
     freeShipping: true,
   },
   {
-    id: "bundle-6-get-3",
+    id: "mystery-b63",
     title: "BUY 6, GET 3 FREE",
     payQty: 6,
     freeQty: 3,
@@ -292,7 +292,7 @@ export const mysteryDumplingBundles: BundleTier[] = [
     freeShipping: true,
   },
   {
-    id: "bundle-8-get-4",
+    id: "mystery-b84",
     title: "BUY 8, GET 4 FREE",
     payQty: 8,
     freeQty: 4,
@@ -311,11 +311,11 @@ export const mysteryDumplingBundles: BundleTier[] = [
  * Standard bundles for other products 
  * Offers: BUY 2 GET 1 FREE, BUY 3 GET 1 FREE, BUY 4 GET 2 FREE
  */
-export function getProductBundles(basePrice: number, baseCompareAt?: number): BundleTier[] {
+export function getProductBundles(productId: string, basePrice: number, baseCompareAt?: number): BundleTier[] {
   const compareAt = baseCompareAt || Math.round(basePrice * 1.33);
   return [
     {
-      id: "bundle-1",
+      id: `${productId}-b1`,
       title: "BUY ONE",
       payQty: 1,
       freeQty: 0,
@@ -325,7 +325,7 @@ export function getProductBundles(basePrice: number, baseCompareAt?: number): Bu
       compareAtTotalUsd: compareAt,
     },
     {
-      id: "bundle-2-get-1",
+      id: `${productId}-b21`,
       title: "BUY 2, GET 1 FREE",
       payQty: 2,
       freeQty: 1,
@@ -336,7 +336,7 @@ export function getProductBundles(basePrice: number, baseCompareAt?: number): Bu
       defaultSelected: true,
     },
     {
-      id: "bundle-3-get-1",
+      id: `${productId}-b31`,
       title: "BUY 3, GET 1 FREE",
       payQty: 3,
       freeQty: 1,
@@ -347,7 +347,7 @@ export function getProductBundles(basePrice: number, baseCompareAt?: number): Bu
       badge: "Most Popular",
     },
     {
-      id: "bundle-4-get-2",
+      id: `${productId}-b42`,
       title: "BUY 4, GET 2 FREE",
       payQty: 4,
       freeQty: 2,
@@ -391,36 +391,12 @@ export const singleProductOffer = {
     { label: "Weight", value: "Approx. 0.2 kg per piece." },
   ],
   options: [
-    {
-      id: "pack-1",
-      label: "1 PCS",
+    ...mysteryDumplingBundles.map(b => ({
+      id: b.id,
+      label: b.title,
       sizeCm: 10,
-      priceUsd: 16,
-    },
-    {
-      id: "pack-2",
-      label: "2 PCS",
-      sizeCm: 10,
-      priceUsd: 32,
-    },
-    {
-      id: "pack-4",
-      label: "4 PCS",
-      sizeCm: 10,
-      priceUsd: 63,
-    },
-    {
-      id: "pack-6",
-      label: "6 PCS",
-      sizeCm: 10,
-      priceUsd: 87,
-    },
-    {
-      id: "pack-8",
-      label: "8 PCS",
-      sizeCm: 10,
-      priceUsd: 107,
-    },
+      priceUsd: b.totalPriceUsd,
+    }))
   ] as ProductSizeOption[],
 } as const;
 
@@ -471,14 +447,12 @@ export const products: ProductOffer[] = [
       { label: "Weight", value: "Approx. 0.2 kg" },
     ],
     accentColor: "#fff1f2", // Rose 50
-    options: [
-      {
-        id: "apple-standard",
-        label: "6cm large, 7cm tall",
-        sizeCm: 7,
-        priceUsd: 16,
-      },
-    ],
+    options: getProductBundles("apple-squishy", 16).map(b => ({
+      id: b.id,
+      label: b.title,
+      sizeCm: 7,
+      priceUsd: b.totalPriceUsd,
+    })),
   },
   {
     ...singleProductOffer,
@@ -506,14 +480,12 @@ export const products: ProductOffer[] = [
     ],
     accentColor: "#fffbeb", // Amber 50
     badge: "Trending",
-    options: [
-      {
-        id: "cheese-standard",
-        label: "12cm x 14cm x 16cm",
-        sizeCm: 16,
-        priceUsd: 23,
-      },
-    ],
+    options: getProductBundles("cheese-square", 23).map(b => ({
+      id: b.id,
+      label: b.title,
+      sizeCm: 16,
+      priceUsd: b.totalPriceUsd,
+    })),
   },
   {
     ...singleProductOffer,
@@ -540,26 +512,12 @@ export const products: ProductOffer[] = [
       { label: "Weight", value: "Approx. 0.3 kg" },
     ],
     accentColor: "#f0fdf4", // Green 50
-    options: [
-      {
-        id: "needoh-2pcs",
-        label: "2pcs",
-        sizeCm: 6,
-        priceUsd: 22,
-      },
-      {
-        id: "needoh-3pcs",
-        label: "3pcs",
-        sizeCm: 6,
-        priceUsd: 30,
-      },
-      {
-        id: "needoh-4pcs",
-        label: "4pcs",
-        sizeCm: 6,
-        priceUsd: 38,
-      },
-    ],
+    options: getProductBundles("needoh", 22).map(b => ({
+      id: b.id,
+      label: b.title,
+      sizeCm: 6,
+      priceUsd: b.totalPriceUsd,
+    })),
   },
   {
     ...singleProductOffer,
@@ -586,14 +544,12 @@ export const products: ProductOffer[] = [
       { label: "Weight", value: "0.4 kg" },
     ],
     accentColor: "#fffbeb", // Amber 50
-    options: [
-      {
-        id: "butter-standard",
-        label: "28 cm tall",
-        sizeCm: 28,
-        priceUsd: 26,
-      },
-    ],
+    options: getProductBundles("butter-squishy", 26).map(b => ({
+      id: b.id,
+      label: b.title,
+      sizeCm: 28,
+      priceUsd: b.totalPriceUsd,
+    })),
   },
 ];
 
