@@ -5,7 +5,7 @@ import { useMemo, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import { fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
-import { mysteryDumplingBundles } from "@/lib/data";
+import { mysteryDumplingBundles, getProductBundles } from "@/lib/data";
 import type { BundleTier } from "@/lib/data";
 import {
   FREE_DELIVERY_THRESHOLD_USD,
@@ -46,63 +46,50 @@ function isVideoAsset(src: string) {
 
 export function ProductPageOffer({ id, className = "", offer }: ProductPageOfferProps) {
   const putLine = useCartStore((s) => s.putLine);
-  const [selectedSizeId, setSelectedSizeId] = useState(offer.options[0]?.id ?? "");
-  const [quantity, setQuantity] = useState(1);
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
   const isMysteryDumpling = offer.id === "squishybun-mystery-dumpling";
 
-  /* ── Bundle tier state (mystery dumpling only) ── */
-  const defaultBundle = mysteryDumplingBundles.find((b) => b.defaultSelected) ?? mysteryDumplingBundles[0];
+  /* ── Bundle tier state ── */
+  const bundles = useMemo(() => {
+    if (isMysteryDumpling) return mysteryDumplingBundles;
+    return getProductBundles(offer.options[0]?.priceUsd || 0);
+  }, [isMysteryDumpling, offer.options]);
+
+  const defaultBundle = bundles.find((b) => b.defaultSelected) ?? bundles[0];
   const [selectedBundleId, setSelectedBundleId] = useState(defaultBundle.id);
+
+  // Sync selected bundle if bundles change (e.g. product change)
+  useMemo(() => {
+    if (!bundles.find(b => b.id === selectedBundleId)) {
+      setSelectedBundleId(defaultBundle.id);
+    }
+    return null;
+  }, [bundles, defaultBundle.id, selectedBundleId]);
+
   const selectedBundle = useMemo(
-    () => mysteryDumplingBundles.find((b) => b.id === selectedBundleId) ?? defaultBundle,
-    [selectedBundleId, defaultBundle],
+    () => bundles.find((b) => b.id === selectedBundleId) ?? defaultBundle,
+    [selectedBundleId, bundles, defaultBundle],
   );
-
-  const selected = useMemo(
-    () => offer.options.find((o) => o.id === selectedSizeId) ?? offer.options[0],
-    [offer.options, selectedSizeId],
-  );
-
-  if (!selected && !isMysteryDumpling) return null;
 
   const primaryImage = offer.images[0];
   const secondaryImages = offer.images.slice(1);
 
-  const bumpQty = (delta: number) => {
-    setQuantity((q) => Math.min(99, Math.max(1, q + delta)));
-  };
-
   /* ── Pricing logic ── */
-  const effectiveQuantity = isMysteryDumpling ? 1 : quantity;
-  const bundleTotalItems = isMysteryDumpling ? selectedBundle.payQty + selectedBundle.freeQty : 0;
-  const subtotalUsd = isMysteryDumpling ? selectedBundle.totalPriceUsd : (selected?.priceUsd ?? 0) * effectiveQuantity;
-  const deliveryFree = isMysteryDumpling ? !!selectedBundle.freeShipping : qualifiesForFreeDeliverySubtotal(subtotalUsd);
+  const subtotalUsd = selectedBundle.totalPriceUsd;
+  const deliveryFree = !!selectedBundle.freeShipping || qualifiesForFreeDeliverySubtotal(subtotalUsd);
   const deliveryLineUsd = deliveryFree ? 0 : offer.deliveryUsd;
   const estimatedTotalUsd = subtotalUsd + deliveryLineUsd;
   const amountToFreeDelivery = Math.max(0, FREE_DELIVERY_THRESHOLD_USD - subtotalUsd);
 
   function addToCart() {
     setCheckoutError(null);
-    if (isMysteryDumpling) {
-      putLine({
-        id: selectedBundle.id,
-        name: `${offer.name} (${selectedBundle.title})`,
-        unitPriceUsd: subtotalUsd,
-        quantity: 1,
-      });
-      return;
-    }
-    const opt =
-      offer.options.find((o) => o.id === selected!.id) ?? offer.options[0];
-    if (!opt) return;
     putLine({
-      id: opt.id,
-      name: `${offer.name} (${opt.label})`,
-      unitPriceUsd: opt.priceUsd,
-      quantity: effectiveQuantity,
+      id: selectedBundle.id,
+      name: `${offer.name} (${selectedBundle.title})`,
+      unitPriceUsd: subtotalUsd,
+      quantity: 1,
     });
   }
 
@@ -111,8 +98,8 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
     setCheckoutLoading(true);
     fireGtagConversion();
     try {
-      const checkoutId = isMysteryDumpling ? selectedBundle.id : selected!.id;
-      await redirectToStripeCheckout(checkoutId, effectiveQuantity);
+      const checkoutId = selectedBundle.id;
+      await redirectToStripeCheckout(checkoutId, 1);
     } catch (e) {
       setCheckoutError(e instanceof Error ? e.message : "Something went wrong");
       setCheckoutLoading(false);
@@ -186,90 +173,12 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
           <div className="mt-4 rounded-2xl border border-slate-200/70 bg-gradient-to-b from-slate-50/50 to-white p-4 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] sm:p-5">
             <div className="space-y-4">
 
-              {/* ── Mystery Dumpling: Bundle Tiers ── */}
-              {isMysteryDumpling ? (
-                <BundleTierSelector
-                  tiers={mysteryDumplingBundles}
-                  selectedId={selectedBundleId}
-                  onSelect={setSelectedBundleId}
-                />
-              ) : (
-                <>
-                  <div>
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                      Size
-                    </p>
-                    <div
-                      className="mt-2 flex flex-wrap gap-2"
-                      role="radiogroup"
-                      aria-label="Choose size"
-                    >
-                      {offer.options.map((opt) => {
-                        const isOn = selected?.id === opt.id;
-                        return (
-                          <button
-                            key={opt.id}
-                            type="button"
-                            role="radio"
-                            aria-checked={isOn}
-                            onClick={() => setSelectedSizeId(opt.id)}
-                            className={`inline-flex items-center gap-2 rounded-full border px-3.5 py-2 text-sm font-semibold transition ${
-                              isOn
-                                ? "border-violet-600 bg-violet-600 text-white shadow-md shadow-violet-600/20"
-                                : "border-slate-200 bg-white text-slate-800 hover:border-violet-300 hover:bg-violet-50/40"
-                            }`}
-                          >
-                            <span>{opt.label}</span>
-                            <span
-                              className={`tabular-nums text-xs font-bold ${
-                                isOn ? "text-white/90" : "text-slate-500"
-                              }`}
-                            >
-                              {moneyUsd(opt.priceUsd)}
-                            </span>
-                          </button>
-                        );
-                      })}
-                    </div>
-                  </div>
-
-                  <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-                    <p className="text-[10px] font-extrabold uppercase tracking-[0.18em] text-slate-500">
-                      Quantity
-                    </p>
-                    <div className="inline-flex w-fit items-center rounded-full border border-slate-200 bg-white p-0.5 shadow-sm">
-                      <button
-                        type="button"
-                        onClick={() => bumpQty(-1)}
-                        className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
-                        aria-label="Decrease quantity"
-                      >
-                        −
-                      </button>
-                      <input
-                        type="number"
-                        min={1}
-                        max={99}
-                        value={quantity}
-                        onChange={(e) => {
-                          const n = Number.parseInt(e.target.value, 10);
-                          if (Number.isNaN(n)) setQuantity(1);
-                          else setQuantity(Math.min(99, Math.max(1, n)));
-                        }}
-                        className="h-9 w-12 border-0 bg-transparent text-center text-sm font-black tabular-nums text-slate-900 outline-none"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => bumpQty(1)}
-                        className="flex h-9 w-9 items-center justify-center rounded-full text-lg font-bold text-slate-600 transition hover:bg-slate-100"
-                        aria-label="Increase quantity"
-                      >
-                        +
-                      </button>
-                    </div>
-                  </div>
-                </>
-              )}
+              {/* ── Bundle Tiers (All Products) ── */}
+              <BundleTierSelector
+                tiers={bundles}
+                selectedId={selectedBundleId}
+                onSelect={setSelectedBundleId}
+              />
 
               <div className="overflow-hidden rounded-2xl border-2 border-slate-100 bg-white shadow-[0_4px_20px_-4px_rgba(0,0,0,0.05)]">
                 <div className="bg-slate-50/80 px-4 py-2 text-center border-b border-slate-100">
@@ -288,7 +197,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       </span>
                     </div>
                     <p className="text-xs font-bold text-slate-600">
-                      {isMysteryDumpling ? selectedBundle.title : `${quantity} × ${selected!.label}`}
+                      {selectedBundle.title}
                     </p>
                   </div>
 
