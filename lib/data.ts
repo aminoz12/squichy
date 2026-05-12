@@ -447,7 +447,7 @@ export const products: ProductOffer[] = [
       { label: "Weight", value: "Approx. 0.2 kg" },
     ],
     accentColor: "#fff1f2", // Rose 50
-    options: getProductBundles("apple-squishy", 16).map(b => ({
+    options: getProductBundles("apple-squishy", 12).map(b => ({
       id: b.id,
       label: b.title,
       sizeCm: 7,
@@ -480,7 +480,7 @@ export const products: ProductOffer[] = [
     ],
     accentColor: "#fffbeb", // Amber 50
     badge: "Trending",
-    options: getProductBundles("cheese-square", 23).map(b => ({
+    options: getProductBundles("cheese-square", 18).map(b => ({
       id: b.id,
       label: b.title,
       sizeCm: 16,
@@ -490,7 +490,7 @@ export const products: ProductOffer[] = [
   {
     ...singleProductOffer,
     id: "needoh",
-    name: "NeeDoh",
+    name: "NeeDoh 3 Pcs",
     slug: "needoh",
     categoryName: "NeeDoh Squishy",
     categoryImage: "/needoh.png",
@@ -544,7 +544,7 @@ export const products: ProductOffer[] = [
       { label: "Weight", value: "0.4 kg" },
     ],
     accentColor: "#fffbeb", // Amber 50
-    options: getProductBundles("butter-squishy", 26).map(b => ({
+    options: getProductBundles("butter-squishy", 18).map(b => ({
       id: b.id,
       label: b.title,
       sizeCm: 28,
@@ -653,7 +653,7 @@ export const productDetails: ProductDetail[] = [
     id: "apple-squishy",
     name: "Apple Squishy",
     size: "6cm large, 7cm tall",
-    price: 16,
+    price: 12,
     description: "Sweet, squishy, and satisfying Apple Squishy. A perfect addition to your collection.",
     details: [
       "Premium slow-rise PU foam material.",
@@ -676,7 +676,7 @@ export const productDetails: ProductDetail[] = [
     id: "cheese-square",
     name: "Cheese Square",
     size: "12cm x 14cm x 16cm",
-    price: 23,
+    price: 18,
     description: "The cheesiest squishy around! Soft, slow-rise Cheese Square that you'll want to squeeze all day.",
     details: [
       "Realistic Swiss cheese design with crater holes.",
@@ -699,7 +699,7 @@ export const productDetails: ProductDetail[] = [
     id: "butter-squishy",
     name: "Butter Squishy",
     size: "28 cm tall",
-    price: 26,
+    price: 18,
     description: "Smooth, satisfying, and oh-so-squishy! The Butter Squishy is the ultimate sensory delight.",
     details: [
       "Ultra-soft slow-rise material designed to look like a butter stick.",
@@ -720,7 +720,7 @@ export const productDetails: ProductDetail[] = [
   },
   {
     id: "needoh",
-    name: "NeeDoh",
+    name: "NeeDoh 3 Pcs",
     size: "2.35 inches per cube",
     price: 22,
     description: "Experience extreme relaxation with our vibrant cubes: pink, blue, green, and purple, designed to evoke a sense of calm and tranquility. These brightly colored soft squares offer a soothing tactile experience, perfect for individuals seeking stress relief, including those with ADD/ADHD, OCD, autism, or high anxiety. Whether you're in the office, classroom, traveling, or aboard an airplane, these anxiety relief toys keep you focused and entertained. Mellow and cool to the touch, their soft, durable exteriors encase a high-density groovy goo filling. Wash with water after frequent use and it will be as good as new!",
