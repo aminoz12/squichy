@@ -35,7 +35,7 @@ export function Hero() {
             </span>
           </div>
           <a
-            href="/products"
+            href="/products/mystery-dumpling"
             className="animate-pulse text-[11px] font-extrabold uppercase tracking-wide text-yellow-300 hover:text-yellow-100 sm:text-xs"
           >
             CLAIM OFFER →
@@ -57,7 +57,7 @@ export function Hero() {
             </p>
             <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
               <a
-                href="/products"
+                href="/products/mystery-dumpling"
                 className="group relative inline-flex items-center gap-2 rounded-xl bg-[#ffd500] px-6 py-3.5 text-sm font-black uppercase tracking-wide text-[#2d2384] shadow-[0_4px_20px_rgba(255,213,0,0.5)] transition-all hover:scale-105 hover:shadow-[0_6px_30px_rgba(255,213,0,0.7)] sm:text-base"
               >
                 BUY 2 GET 1 NOW

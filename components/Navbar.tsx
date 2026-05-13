@@ -83,7 +83,7 @@ export function Navbar() {
               Blog
             </Link>
             <Link
-              href="/products"
+              href="/products/mystery-dumpling"
               className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
             >
               Buy
@@ -100,10 +100,10 @@ export function Navbar() {
         <div className="flex items-center gap-2">
           {!isProductsPage && (
             <Link
-              href="/products"
+              href="/products/mystery-dumpling"
               className="hidden rounded-xl bg-[#ffd500] px-4 py-2 text-sm font-black text-[#2b2282] shadow-md shadow-amber-400/40 transition-transform hover:scale-[1.03] hover:brightness-105 active:scale-[0.98] sm:inline-flex"
             >
-              BUY NOW
+              BUY 2 GET 1 NOW
             </Link>
           )}
           <button

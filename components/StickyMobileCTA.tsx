@@ -17,10 +17,10 @@ export function StickyMobileCTA() {
     >
       <div className="mx-auto flex max-w-lg items-center gap-2">
         <a
-          href="/products"
+          href="/products/mystery-dumpling"
           className="flex-1 rounded-2xl bg-accent py-3.5 text-center text-sm font-extrabold text-white shadow-md shadow-accent/30"
         >
-          Buy now
+          BUY 2 GET 1 NOW
         </a>
         <a
           href="/#faq"
