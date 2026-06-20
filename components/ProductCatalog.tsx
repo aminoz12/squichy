@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { ProductDetail } from "@/lib/data";
 import { singleProductOffer } from "@/lib/data";
@@ -230,12 +231,12 @@ export function ProductCatalog({
           >
             Add to cart
           </button>
-          <a
+          <Link
             href="/products#offer"
             className="w-full rounded-2xl border-2 border-pink-200 py-3 text-center text-sm font-extrabold text-foreground transition hover:border-accent/50"
           >
             Buy now
-          </a>
+          </Link>
         </div>
       </article>
     </section>

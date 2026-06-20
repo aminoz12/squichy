@@ -1,3 +1,4 @@
+/* eslint-disable @next/next/next-script-for-ga */
 import type { Metadata } from "next";
 import { Fredoka, Montserrat, Nunito } from "next/font/google";
 import Script from "next/script";
@@ -36,19 +37,9 @@ export default function RootLayout({
   return (
     <html
       lang="en-US"
+      data-scroll-behavior="smooth"
       className={`${fredoka.variable} ${nunito.variable} ${montserrat.variable} h-full antialiased`}
     >
-      <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
-new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
-j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
-'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
-})(window,document,'script','dataLayer','GTM-NKKN7FLH');`
-          }}
-        />
-      </head>
       <body className="relative min-h-full flex flex-col font-sans">
         <noscript
           dangerouslySetInnerHTML={{
@@ -56,7 +47,16 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 height="0" width="0" style="display:none;visibility:hidden"></iframe>`
           }}
         />
-        <Script id="meta-pixel" strategy="afterInteractive">
+        <Script id="gtm" strategy="lazyOnload">
+          {`
+(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
+new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
+j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
+'https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f);
+})(window,document,'script','dataLayer','GTM-NKKN7FLH');
+          `}
+        </Script>
+        <Script id="meta-pixel" strategy="lazyOnload">
           {`
 !function(f,b,e,v,n,t,s)
 {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -73,9 +73,9 @@ fbq('track', 'PageView');
         {/* Google tag (gtag.js) */}
         <Script
           src="https://www.googletagmanager.com/gtag/js?id=AW-18147745818"
-          strategy="afterInteractive"
+          strategy="lazyOnload"
         />
-        <Script id="google-gtag" strategy="afterInteractive">
+        <Script id="google-gtag" strategy="lazyOnload">
           {`
   window.dataLayer = window.dataLayer || [];
   function gtag(){dataLayer.push(arguments);}
@@ -84,7 +84,8 @@ fbq('track', 'PageView');
           `}
         </Script>
         <noscript>
-          <img height="1" width="1" style={{ display: 'none' }}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img height="1" width="1" alt="" style={{ display: 'none' }}
             src="https://www.facebook.com/tr?id=2675340019517731&ev=PageView&noscript=1"
           />
         </noscript>

@@ -127,6 +127,7 @@ export function BundleTierSelector({ tiers, selectedId, onSelect }: Props) {
                     width={28}
                     height={28}
                     className="rounded object-contain"
+                    style={{ width: "auto", height: "auto" }}
                   />
                   <span className="text-xs font-bold text-white">
                     Guaranteed: {tier.bonusQty} {tier.bonusProduct}

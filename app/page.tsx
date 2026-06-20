@@ -14,9 +14,9 @@ import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { UrgencyBar } from "@/components/UrgencyBar";
 import { buzzReelVideos } from "@/lib/data";
 import {
+  breadcrumbJsonLd,
   faqPageJsonLd,
   organizationJsonLd,
-  SITE_NAME,
   SITE_TAGLINE,
   websiteJsonLd,
 } from "@/lib/seo";
@@ -25,7 +25,7 @@ export const metadata: Metadata = {
   alternates: { canonical: "/" },
   openGraph: {
     url: "/",
-    title: `${SITE_NAME} — Mystery squishy dumplings`,
+    title: "Mystery Squishy Toys | SquishyBun",
     description: SITE_TAGLINE,
   },
 };
@@ -35,7 +35,12 @@ export default function Home() {
   return (
     <>
       <JsonLd
-        data={[organizationJsonLd(), websiteJsonLd(), faqPageJsonLd()]}
+        data={[
+          organizationJsonLd(),
+          websiteJsonLd(),
+          faqPageJsonLd(),
+          breadcrumbJsonLd([{ name: "Home", path: "/" }]),
+        ]}
       />
       <Navbar />
       <UrgencyBar />

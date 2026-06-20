@@ -1,6 +1,5 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -39,10 +38,7 @@ export function Navbar() {
   );
 
   return (
-    <motion.header
-      initial={{ y: -16, opacity: 0 }}
-      animate={{ y: 0, opacity: 1 }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+    <header
       className="sticky top-0 z-40 border-b border-violet-200/60 bg-white/85 shadow-[0_8px_30px_-18px_rgba(124,58,237,0.55)] backdrop-blur-xl"
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
@@ -83,17 +79,23 @@ export function Navbar() {
               Blog
             </Link>
             <Link
-              href="/products/mystery-dumpling"
+              href="/shipping"
               className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
             >
-              Buy
+              Shipping
             </Link>
-            <a
-              href="/#faq"
+            <Link
+              href="/about"
+              className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
+            >
+              About
+            </Link>
+            <Link
+              href="/contact"
               className="px-4 py-2 font-bold text-foreground transition-colors last:pr-5 hover:bg-pink-50/80 hover:text-accent"
             >
-              FAQ
-            </a>
+              Contact
+            </Link>
           </nav>
         )}
 
@@ -121,6 +123,6 @@ export function Navbar() {
           </button>
         </div>
       </div>
-    </motion.header>
+    </header>
   );
 }

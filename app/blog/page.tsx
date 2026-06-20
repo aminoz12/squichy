@@ -8,15 +8,16 @@ import { StickyMobileCTA } from "@/components/StickyMobileCTA";
 import { blogPosts } from "@/lib/blog-data";
 import {
   blogIndexJsonLd,
+  breadcrumbJsonLd,
   getMetadataBase,
   SITE_NAME,
 } from "@/lib/seo";
 
 const blogDescription =
-  "Squishy guides, shipping tips for the USA, Canada & UK, and mystery dumpling ideas — written to help you shop Crazy Fun rainbow squishy buns with confidence.";
+  "Squishy guides, USA/Canada/UK shipping tips, and mystery dumpling ideas to help you shop Crazy Fun rainbow squishy buns with confidence.";
 
 export const metadata: Metadata = {
-  title: "Blog — mystery squishy dumplings, shipping & gift ideas",
+  title: "Squishy Toy Guides",
   description: blogDescription,
   alternates: {
     canonical: "/blog",
@@ -27,17 +28,10 @@ export const metadata: Metadata = {
       "en-GB": "/blog",
     },
   },
-  keywords: [
-    "squishy blog",
-    "mystery dumpling guide",
-    "USA Canada UK toy shipping",
-    "Crazy Fun squishy",
-    "fidget toy articles",
-  ],
   openGraph: {
     type: "website",
     url: "/blog",
-    title: `Blog | ${SITE_NAME}`,
+    title: `Squishy Toy Guides | ${SITE_NAME}`,
     description: blogDescription,
     images: [
       {
@@ -47,7 +41,7 @@ export const metadata: Metadata = {
     ],
   },
   twitter: {
-    title: `Blog | ${SITE_NAME}`,
+    title: `Squishy Toy Guides | ${SITE_NAME}`,
     description: blogDescription,
   },
 };
@@ -59,7 +53,18 @@ export default function BlogIndexPage() {
 
   return (
     <>
-      <JsonLd data={blogIndexJsonLd()} />
+      <JsonLd
+        data={[
+          blogIndexJsonLd(),
+          breadcrumbJsonLd(
+            [
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+            ],
+            "/blog#breadcrumb",
+          ),
+        ]}
+      />
       <Navbar />
       <main className="flex-1 border-t border-pink-100/80 bg-gradient-to-b from-white to-[#fff5fb] pb-24 md:pb-12">
         <div className="mx-auto max-w-6xl px-4 py-10 sm:px-6 sm:py-14">

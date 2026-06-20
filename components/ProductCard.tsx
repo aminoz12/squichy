@@ -1,6 +1,6 @@
 "use client";
 
-import { motion, useReducedMotion } from "framer-motion";
+import Link from "next/link";
 import type { PricingTier } from "@/lib/data";
 import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
@@ -20,17 +20,12 @@ type ProductCardProps = {
 /**
  * Single pricing tier: add-to-cart (Zustand); checkout uses /api/checkout sessions.
  */
-export function ProductCard({ tier, index }: ProductCardProps) {
+export function ProductCard({ tier }: ProductCardProps) {
   const putLine = useCartStore((s) => s.putLine);
   const defaultSize = singleProductOffer.options[0]!;
-  const reduce = useReducedMotion();
 
   return (
-    <motion.article
-      initial={reduce ? false : { opacity: 0, y: 20 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={{ delay: index * 0.06, duration: 0.45 }}
+    <article
       className={`relative flex flex-col rounded-3xl border bg-card p-6 shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl ${
         tier.highlight
           ? "border-accent/50 ring-2 ring-accent/20 md:scale-[1.02]"
@@ -78,13 +73,13 @@ export function ProductCard({ tier, index }: ProductCardProps) {
         >
           Add to cart
         </button>
-        <a
+        <Link
           href="/products#offer"
           className="w-full rounded-2xl border-2 border-pink-200 py-3 text-center text-sm font-extrabold text-foreground transition hover:border-accent/50"
         >
           Buy now
-        </a>
+        </Link>
       </div>
-    </motion.article>
+    </article>
   );
 }

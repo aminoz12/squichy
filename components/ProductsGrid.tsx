@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { products, type ProductOffer } from "@/lib/data";
-import { motion } from "framer-motion";
 import { useState, useMemo } from "react";
 
 const categories = ["All", ...Array.from(new Set(products.map((p) => p.categoryName)))];
@@ -13,7 +12,7 @@ export function ProductsGrid() {
   const [sortBy, setSortBy] = useState<"price-low" | "price-high" | "name">("name");
 
   const filteredProducts = useMemo(() => {
-    let result = selectedCategory === "All" 
+    const result = selectedCategory === "All" 
       ? [...products] 
       : products.filter((p) => p.categoryName === selectedCategory);
 
@@ -56,28 +55,20 @@ export function ProductsGrid() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
         <div className="text-center mb-12">
-          <motion.h1 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
+          <h1 
             className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 mb-4 font-[family-name:var(--font-fredoka)] tracking-tight"
           >
-            Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-pink-500">Collection</span>
-          </motion.h1>
-          <motion.p 
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.1 }}
+            Squishy Toys <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-pink-500">Collection</span>
+          </h1>
+          <p 
             className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto"
           >
             Discover our full range of premium squishy toys. Find your perfect dopamine hit!
-          </motion.p>
+          </p>
         </div>
 
         {/* Filters & Sort */}
-        <motion.div 
-          initial={{ opacity: 0, y: 10 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 0.2 }}
+        <div 
           className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-10"
         >
           {/* Category Filters */}
@@ -107,12 +98,12 @@ export function ProductsGrid() {
             <option value="price-low">Price: Low to High</option>
             <option value="price-high">Price: High to Low</option>
           </select>
-        </motion.div>
+        </div>
 
         {/* Products Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product, idx) => (
-            <ProductCard key={product.id} product={product} index={idx} />
+          {filteredProducts.map((product) => (
+            <ProductCard key={product.id} product={product} />
           ))}
         </div>
 
@@ -127,7 +118,7 @@ export function ProductsGrid() {
   );
 }
 
-function ProductCard({ product, index }: { product: ProductOffer; index: number }) {
+function ProductCard({ product }: { product: ProductOffer }) {
   const mainImage = product.images[0];
   const minPrice = Math.min(...product.options.map((o) => o.priceUsd));
   const maxPrice = Math.max(...product.options.map((o) => o.priceUsd));
@@ -136,10 +127,7 @@ function ProductCard({ product, index }: { product: ProductOffer; index: number 
     : `$${minPrice} - $${maxPrice}`;
 
   return (
-    <motion.article
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ delay: index * 0.05 }}
+    <article
       className="group bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
     >
       <Link href={`/products/${product.slug}`} className="block">
@@ -187,6 +175,6 @@ function ProductCard({ product, index }: { product: ProductOffer; index: number 
           </div>
         </div>
       </Link>
-    </motion.article>
+    </article>
   );
 }

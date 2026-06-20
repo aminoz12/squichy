@@ -1,7 +1,14 @@
 import type { Metadata } from "next";
 import type { BlogPost } from "@/lib/blog-data";
 import { blogPosts } from "@/lib/blog-data";
-import { faqItems, singleProductOffer, siteIconPath, social } from "@/lib/data";
+import {
+  faqItems,
+  productPageReviews,
+  products,
+  siteIconPath,
+  social,
+  type ProductOffer,
+} from "@/lib/data";
 
 export const SITE_NAME = "SquishyBun Dumplings";
 export const SITE_TAGLINE =
@@ -22,13 +29,21 @@ export function getMetadataBase(): URL {
 }
 
 const OG_IMAGE_PATH = "/herosqueeze.png";
+const META_DESCRIPTION_MAX = 155;
+
+export function truncateDescription(text: string, max = META_DESCRIPTION_MAX): string {
+  const clean = text.replace(/\s+/g, " ").trim();
+  if (clean.length <= max) return clean;
+  const clipped = clean.slice(0, max - 3);
+  const lastSpace = clipped.lastIndexOf(" ");
+  return `${clipped.slice(0, lastSpace > 80 ? lastSpace : clipped.length).trim()}...`;
+}
 
 export function rootMetadataExtras(): Pick<
   Metadata,
   | "metadataBase"
   | "title"
   | "description"
-  | "keywords"
   | "authors"
   | "creator"
   | "openGraph"
@@ -44,34 +59,10 @@ export function rootMetadataExtras(): Pick<
   return {
     metadataBase: base,
     title: {
-      default: `${SITE_NAME} | Mystery Squishy Dumpling Toys | USA, Canada & UK`,
-      template: `%s | ${SITE_NAME}`,
+      default: "SquishyBun | Mystery Squishy Toys",
+      template: "%s | SquishyBun",
     },
     description: SITE_TAGLINE,
-    keywords: [
-      "squishy toy",
-      "fidget toy",
-      "sensory toy",
-      "mystery dumpling",
-      "bao bun squishy",
-      "Crazy Fun",
-      "blind box toy",
-      "squishy packs",
-      "1 PCS squishy",
-      "2 PCS squishy bundle",
-      "4 PCS squishy pack",
-      "6 PCS mystery box",
-      "8 PCS squishy set",
-      "USA",
-      "USA shipping",
-      "United Kingdom",
-      "UK",
-      "Worldwide shipping",
-      "stress relief toy",
-      "buy online",
-      "collectible squishy",
-      "TikTok squishy",
-    ],
     authors: [{ name: SITE_NAME }],
     creator: SITE_NAME,
     category: "toys",
@@ -96,7 +87,7 @@ export function rootMetadataExtras(): Pick<
       locale: "en_US",
       alternateLocale: ["en_CA", "en_GB"],
       siteName: SITE_NAME,
-      title: SITE_NAME,
+      title: `${SITE_NAME} | Mystery squishy toys`,
       description: SITE_TAGLINE,
       url: base,
       images: [
@@ -108,7 +99,7 @@ export function rootMetadataExtras(): Pick<
     },
     twitter: {
       card: "summary_large_image",
-      title: SITE_NAME,
+      title: `${SITE_NAME} | Mystery squishy toys`,
       description: SITE_TAGLINE,
       images: [ogImage.toString()],
     },
@@ -121,10 +112,21 @@ export function rootMetadataExtras(): Pick<
   };
 }
 
-function absoluteUrl(path: string): string {
+export function absoluteUrl(path: string): string {
   const base = getSiteUrl().replace(/\/$/, "");
   const p = path.startsWith("/") ? path : `/${path}`;
   return `${base}${p}`;
+}
+
+function specificSocialProfiles(): string[] {
+  return [social.tiktok, social.instagram].filter((url) => {
+    try {
+      const parsed = new URL(url);
+      return parsed.pathname.replace(/\/$/, "") !== "";
+    } catch {
+      return false;
+    }
+  });
 }
 
 export function organizationJsonLd() {
@@ -135,7 +137,14 @@ export function organizationJsonLd() {
     name: SITE_NAME,
     url,
     logo: absoluteUrl(OG_IMAGE_PATH),
-    sameAs: [social.tiktok, social.instagram],
+    ...(specificSocialProfiles().length ? { sameAs: specificSocialProfiles() } : {}),
+    contactPoint: {
+      "@type": "ContactPoint" as const,
+      email: social.email,
+      url: absoluteUrl("/contact"),
+      contactType: "customer support",
+      availableLanguage: ["English"],
+    },
   };
 }
 
@@ -189,6 +198,23 @@ export function productBreadcrumbJsonLd() {
   };
 }
 
+export function breadcrumbJsonLd(
+  items: Array<{ name: string; path: string }>,
+  idPath = "/#breadcrumb",
+) {
+  const url = getSiteUrl();
+  return {
+    "@type": "BreadcrumbList" as const,
+    "@id": `${url}${idPath}`,
+    itemListElement: items.map((item, index) => ({
+      "@type": "ListItem" as const,
+      position: index + 1,
+      name: item.name,
+      item: absoluteUrl(item.path),
+    })),
+  };
+}
+
 export function blogIndexJsonLd() {
   const url = getSiteUrl();
   const blogUrl = `${url}/blog`;
@@ -235,43 +261,178 @@ export function blogPostingJsonLd(post: BlogPost) {
   };
 }
 
-function isRasterImagePath(src: string) {
+function reviewAverage() {
+  if (productPageReviews.length === 0) return 0;
+  const total = productPageReviews.reduce((sum, review) => sum + review.rating, 0);
+  return Number((total / productPageReviews.length).toFixed(1));
+}
+
+function reviewJsonLd() {
+  return productPageReviews.map((review) => ({
+    "@type": "Review" as const,
+    name: review.title,
+    reviewBody: review.body ?? review.title,
+    datePublished: review.reviewPosted,
+    author: {
+      "@type": "Person" as const,
+      name: review.author,
+    },
+    reviewRating: {
+      "@type": "Rating" as const,
+      ratingValue: review.rating,
+      bestRating: 5,
+      worstRating: 1,
+    },
+  }));
+}
+
+export function isRasterImagePath(src: string) {
   return /\.(png|jpe?g|gif|webp|avif)(\?.*)?$/i.test(src);
 }
 
-export function productJsonLd() {
+function getProductBrand(product: ProductOffer): string {
+  return product.specs.find((row) => row.label.toLowerCase() === "brand")?.value ?? "Crazy Fun";
+}
+
+function merchantReturnPolicyJsonLd() {
+  return {
+    "@type": "MerchantReturnPolicy" as const,
+    applicableCountry: ["US", "CA", "GB"],
+    returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+    merchantReturnDays: 14,
+    returnMethod: "https://schema.org/ReturnByMail",
+    returnFees: "https://schema.org/FreeReturn",
+    merchantReturnLink: absoluteUrl("/returns"),
+  };
+}
+
+function shippingDetailsJsonLd(product: ProductOffer) {
+  const shippingRate = {
+    "@type": "MonetaryAmount" as const,
+    value: product.deliveryUsd,
+    currency: "USD",
+  };
+
+  return [
+    { country: "US", minDays: 3, maxDays: 7 },
+    { country: "CA", minDays: 5, maxDays: 10 },
+    { country: "GB", minDays: 7, maxDays: 14 },
+  ].map((region) => ({
+    "@type": "OfferShippingDetails" as const,
+    shippingRate,
+    shippingDestination: {
+      "@type": "DefinedRegion" as const,
+      addressCountry: region.country,
+    },
+    deliveryTime: {
+      "@type": "ShippingDeliveryTime" as const,
+      handlingTime: {
+        "@type": "QuantitativeValue" as const,
+        minValue: 1,
+        maxValue: 2,
+        unitCode: "DAY",
+      },
+      transitTime: {
+        "@type": "QuantitativeValue" as const,
+        minValue: region.minDays,
+        maxValue: region.maxDays,
+        unitCode: "DAY",
+      },
+    },
+  }));
+}
+
+export function productMetaDescription(product: ProductOffer): string {
+  return truncateDescription(
+    `${product.description} Ships to the USA, Canada, the UK, and select European destinations.`,
+    150,
+  );
+}
+
+export function productJsonLd(product: ProductOffer) {
   const url = getSiteUrl();
-  const prices = singleProductOffer.options.map((o) => o.priceUsd);
+  const prices = product.options.map((o) => o.priceUsd);
   const low = Math.min(...prices);
   const high = Math.max(...prices);
-  const productUrl = `${url}/products`;
-  const productImages = singleProductOffer.images
+  const productUrl = `${url}/products/${product.slug}`;
+  const productImages = product.images
     .filter(isRasterImagePath)
     .map((src) => absoluteUrl(src));
 
   return {
     "@type": "Product" as const,
     "@id": `${productUrl}#product`,
-    name: singleProductOffer.name,
-    description: singleProductOffer.description,
+    name: product.name,
+    description: product.description,
     image: productImages,
     brand: {
       "@type": "Brand" as const,
-      name: "Crazy Fun",
+      name: getProductBrand(product),
     },
-    sku: singleProductOffer.id,
+    sku: product.id,
+    category: product.categoryName,
+    additionalProperty: product.specs.map((row) => ({
+      "@type": "PropertyValue" as const,
+      name: row.label,
+      value: row.value,
+    })),
+    aggregateRating: {
+      "@type": "AggregateRating" as const,
+      ratingValue: reviewAverage(),
+      reviewCount: productPageReviews.length,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    review: reviewJsonLd(),
     offers: {
       "@type": "AggregateOffer" as const,
       url: productUrl,
       priceCurrency: "USD",
       lowPrice: low,
       highPrice: high,
-      offerCount: singleProductOffer.options.length,
+      offerCount: product.options.length,
       availability: "https://schema.org/InStock",
+      itemCondition: "https://schema.org/NewCondition",
+      seller: { "@id": `${url}/#organization` },
+      shippingDetails: shippingDetailsJsonLd(product),
+      hasMerchantReturnPolicy: merchantReturnPolicyJsonLd(),
     },
     audience: {
       "@type": "PeopleAudience" as const,
       suggestedMinAge: 3,
+    },
+  };
+}
+
+export function productDetailBreadcrumbJsonLd(product: ProductOffer) {
+  return breadcrumbJsonLd(
+    [
+      { name: "Home", path: "/" },
+      { name: "Shop", path: "/products" },
+      { name: product.name, path: `/products/${product.slug}` },
+    ],
+    `/products/${product.slug}#breadcrumb`,
+  );
+}
+
+export function productsCollectionJsonLd() {
+  const url = getSiteUrl();
+  return {
+    "@type": "CollectionPage" as const,
+    "@id": `${url}/products#collection`,
+    url: `${url}/products`,
+    name: "Squishy toy collection",
+    description:
+      "Mystery dumpling squishies, apple squishies, cheese squishies, butter squishies, and NeeDoh-style sensory toys for shoppers in the USA, Canada, UK, and Europe.",
+    isPartOf: { "@id": `${url}/#website` },
+    mainEntity: {
+      "@type": "ItemList" as const,
+      itemListElement: products.map((product, index) => ({
+        "@type": "ListItem" as const,
+        position: index + 1,
+        url: `${url}/products/${product.slug}`,
+        name: product.name,
+      })),
     },
   };
 }

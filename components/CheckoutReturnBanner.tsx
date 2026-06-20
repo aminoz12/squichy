@@ -1,7 +1,7 @@
 "use client";
 
 import { useRouter, useSearchParams } from "next/navigation";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useEffect, useReducer } from "react";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 type SessionPayload = {
@@ -12,6 +12,25 @@ type SessionPayload = {
   customer_email: string | null;
   error?: string;
 };
+
+type CheckoutBannerState = {
+  state: "idle" | "loading" | "success" | "cancel" | "pending" | "error";
+  message: string | null;
+  detail: string | null;
+};
+
+const idleState: CheckoutBannerState = {
+  state: "idle",
+  message: null,
+  detail: null,
+};
+
+function checkoutBannerReducer(
+  _state: CheckoutBannerState,
+  nextState: CheckoutBannerState,
+): CheckoutBannerState {
+  return nextState;
+}
 
 function formatPaidTotal(cents: number | null, currency: string | null) {
   if (cents == null) return null;
@@ -44,11 +63,10 @@ export function CheckoutReturnBanner() {
   const checkout = searchParams.get("checkout");
   const sessionId = searchParams.get("session_id");
 
-  const [state, setState] = useState<
-    "idle" | "loading" | "success" | "cancel" | "pending" | "error"
-  >("idle");
-  const [message, setMessage] = useState<string | null>(null);
-  const [detail, setDetail] = useState<string | null>(null);
+  const [{ state, message, detail }, dispatch] = useReducer(
+    checkoutBannerReducer,
+    idleState,
+  );
 
   const dismiss = useCallback(() => {
     router.replace("/products");
@@ -56,35 +74,36 @@ export function CheckoutReturnBanner() {
 
   useEffect(() => {
     if (!checkout) {
-      setState("idle");
+      dispatch(idleState);
       return;
     }
 
     if (checkout === "cancel") {
-      setState("cancel");
-      setMessage("Checkout canceled");
-      setDetail("You can change size or quantity and try again.");
+      dispatch({
+        state: "cancel",
+        message: "Checkout canceled",
+        detail: "You can change size or quantity and try again.",
+      });
       return;
     }
 
     if (checkout !== "success") {
-      setState("idle");
+      dispatch(idleState);
       return;
     }
 
     if (!sessionId) {
-      setState("pending");
-      setMessage("Return from checkout");
-      setDetail(
-        "We couldn’t read your session id. Check your email for Stripe’s receipt, or open the order link from your inbox.",
-      );
+      dispatch({
+        state: "pending",
+        message: "Return from checkout",
+        detail:
+          "We couldn’t read your session id. Check your email for Stripe’s receipt, or open the order link from your inbox.",
+      });
       return;
     }
 
     let cancelled = false;
-    setState("loading");
-    setMessage(null);
-    setDetail(null);
+    dispatch({ state: "loading", message: null, detail: null });
 
     fetch(`/api/checkout/session?session_id=${encodeURIComponent(sessionId)}`)
       .then(async (res) => {
@@ -95,39 +114,50 @@ export function CheckoutReturnBanner() {
         if (cancelled) return;
 
         if (data.payment_status === "paid") {
-          setState("success");
-          setMessage("Payment successful");
           const total = formatPaidTotal(data.amount_total, data.currency);
-          setDetail(
-            [
-              total ? `Total paid: ${total}` : null,
-              data.customer_email
-                ? `Confirmation sent to ${data.customer_email}`
-                : null,
-            ]
-              .filter(Boolean)
-              .join(" · ") || "Thank you for your order.",
-          );
+          dispatch({
+            state: "success",
+            message: "Payment successful",
+            detail:
+              [
+                total ? `Total paid: ${total}` : null,
+                data.customer_email
+                  ? `Confirmation sent to ${data.customer_email}`
+                  : null,
+              ]
+                .filter(Boolean)
+                .join(" · ") || "Thank you for your order.",
+          });
           clearCart();
           return;
         }
 
         if (data.payment_status === "unpaid" || data.status === "open") {
-          setState("pending");
-          setMessage("Payment not completed");
-          setDetail("This session is still open or unpaid. You can return to checkout from Stripe if needed.");
+          dispatch({
+            state: "pending",
+            message: "Payment not completed",
+            detail:
+              "This session is still open or unpaid. You can return to checkout from Stripe if needed.",
+          });
           return;
         }
 
-        setState("error");
-        setMessage("Payment status unclear");
-        setDetail(`Status: ${data.payment_status ?? data.status ?? "unknown"}`);
+        dispatch({
+          state: "error",
+          message: "Payment status unclear",
+          detail: `Status: ${data.payment_status ?? data.status ?? "unknown"}`,
+        });
       })
       .catch((e: unknown) => {
         if (cancelled) return;
-        setState("error");
-        setMessage("Could not verify payment");
-        setDetail(e instanceof Error ? e.message : "Try again or check your Stripe Dashboard.");
+        dispatch({
+          state: "error",
+          message: "Could not verify payment",
+          detail:
+            e instanceof Error
+              ? e.message
+              : "Try again or check your Stripe Dashboard.",
+        });
       });
 
     return () => {

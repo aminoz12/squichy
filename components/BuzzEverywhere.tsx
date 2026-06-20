@@ -1,14 +1,24 @@
 "use client";
 
-import { useInView } from "framer-motion";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 const BUZZ_ORANGE = "#FF7700";
 
 function ReelCard({ src }: { src: string }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
-  const inView = useInView(wrapRef, { amount: 0.35, margin: "-10% 0px" });
+  const [inView, setInView] = useState(false);
+
+  useEffect(() => {
+    const el = wrapRef.current;
+    if (!el) return;
+    const observer = new IntersectionObserver(
+      ([entry]) => setInView(entry.isIntersecting),
+      { rootMargin: "-10% 0px", threshold: 0.35 },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
 
   useEffect(() => {
     const v = videoRef.current;
@@ -36,7 +46,7 @@ function ReelCard({ src }: { src: string }) {
           muted
           loop
           playsInline
-          preload="auto"
+          preload="metadata"
         />
       </div>
     </div>

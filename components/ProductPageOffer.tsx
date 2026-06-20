@@ -6,7 +6,6 @@ import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import { fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
 import { mysteryDumplingBundles, getProductBundles } from "@/lib/data";
-import type { BundleTier } from "@/lib/data";
 import {
   FREE_DELIVERY_THRESHOLD_USD,
   qualifiesForFreeDeliverySubtotal,
@@ -59,14 +58,6 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
 
   const defaultBundle = bundles.find((b) => b.defaultSelected) ?? bundles[0];
   const [selectedBundleId, setSelectedBundleId] = useState(defaultBundle.id);
-
-  // Sync selected bundle if bundles change (e.g. product change)
-  useMemo(() => {
-    if (!bundles.find(b => b.id === selectedBundleId)) {
-      setSelectedBundleId(defaultBundle.id);
-    }
-    return null;
-  }, [bundles, defaultBundle.id, selectedBundleId]);
 
   const selectedBundle = useMemo(
     () => bundles.find((b) => b.id === selectedBundleId) ?? defaultBundle,
@@ -140,6 +131,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       playsInline
                       loop
                       autoPlay
+                      preload="metadata"
                       aria-label={`${offer.name} — ${i + 2}`}
                     />
                   ) : (
@@ -162,9 +154,9 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
             <span className="inline-flex w-fit rounded-full bg-violet-100 px-2.5 py-0.5 text-[10px] font-bold uppercase tracking-wider text-violet-800">
               In stock
             </span>
-            <h2 className="font-[family-name:var(--font-fredoka)] text-2xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-3xl">
+            <h1 className="font-[family-name:var(--font-fredoka)] text-2xl font-bold leading-[1.15] tracking-tight text-slate-900 sm:text-3xl">
               {offer.name}
-            </h2>
+            </h1>
             <p className="max-w-xl text-sm leading-relaxed text-slate-600 sm:text-[0.9375rem]">
               {offer.description}
             </p>
@@ -176,7 +168,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
               {/* ── Bundle Tiers (All Products) ── */}
               <BundleTierSelector
                 tiers={bundles}
-                selectedId={selectedBundleId}
+                selectedId={selectedBundle.id}
                 onSelect={setSelectedBundleId}
               />
 
@@ -286,6 +278,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       width={28}
                       height={18}
                       className="object-contain"
+                      style={{ width: "auto", height: "auto" }}
                     />
                   </div>
                   {/* Apple Pay */}
@@ -296,6 +289,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       width={28}
                       height={18}
                       className="object-contain"
+                      style={{ width: "auto", height: "auto" }}
                     />
                   </div>
                   {/* Visa */}
@@ -306,6 +300,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       width={28}
                       height={18}
                       className="object-contain"
+                      style={{ width: "auto", height: "auto" }}
                     />
                   </div>
                   {/* Mastercard */}
@@ -316,6 +311,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       width={28}
                       height={18}
                       className="object-contain"
+                      style={{ width: "auto", height: "auto" }}
                     />
                   </div>
                   {/* American Express */}
@@ -326,6 +322,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                       width={28}
                       height={18}
                       className="object-contain"
+                      style={{ width: "auto", height: "auto" }}
                     />
                   </div>
                 </div>

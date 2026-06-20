@@ -1,13 +1,11 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import { useState } from "react";
 import { SectionReveal } from "@/components/SectionReveal";
 import { faqItems } from "@/lib/data";
 
 export function FAQ() {
   const [open, setOpen] = useState<number | null>(0);
-  const reduce = useReducedMotion();
 
   return (
     <SectionReveal
@@ -47,21 +45,13 @@ export function FAQ() {
                   {isOpen ? "−" : "+"}
                 </span>
               </button>
-              <AnimatePresence initial={false}>
-                {isOpen && (
-                  <motion.div
-                    className="overflow-hidden"
-                    initial={reduce ? false : { height: 0, opacity: 0 }}
-                    animate={{ height: "auto", opacity: 1 }}
-                    exit={reduce ? undefined : { height: 0, opacity: 0 }}
-                    transition={{ duration: 0.28 }}
-                  >
-                    <p className="border-t border-pink-100 px-5 pb-4 pt-3 text-sm font-semibold leading-relaxed text-muted">
-                      {item.a}
-                    </p>
-                  </motion.div>
-                )}
-              </AnimatePresence>
+              {isOpen && (
+                <div className="overflow-hidden">
+                  <p className="border-t border-pink-100 px-5 pb-4 pt-3 text-sm font-semibold leading-relaxed text-muted">
+                    {item.a}
+                  </p>
+                </div>
+              )}
             </div>
           );
         })}

@@ -1,10 +1,15 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useSyncExternalStore } from "react";
 import { product } from "@/lib/data";
 
 function pad(n: number) {
   return n.toString().padStart(2, "0");
+}
+
+function subscribeClock(callback: () => void) {
+  const id = window.setInterval(callback, 1000);
+  return () => window.clearInterval(id);
 }
 
 /**
@@ -18,15 +23,8 @@ export function UrgencyBar() {
     return d.getTime();
   }, []);
 
-  const [mounted, setMounted] = useState(false);
-  const [now, setNow] = useState(0);
-
-  useEffect(() => {
-    setMounted(true);
-    setNow(Date.now());
-    const id = window.setInterval(() => setNow(Date.now()), 1000);
-    return () => window.clearInterval(id);
-  }, []);
+  const now = useSyncExternalStore(subscribeClock, Date.now, () => 0);
+  const mounted = now > 0;
 
   const diff = mounted ? Math.max(0, end - now) : 0;
   const h = Math.floor(diff / 3_600_000);

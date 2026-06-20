@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
-import { getStripe } from "@/lib/stripe-server";
+import { getStripe, getStripeErrorMessage } from "@/lib/stripe-server";
 
 /**
- * ConfiSquishy-Bun a Checkout Session after redirect (read-only, for UI).
+ * Confirm a Checkout Session after redirect (read-only, for UI).
  * For inventory / fulfillment, add a Stripe webhook later.
  */
 export async function GET(request: Request) {
@@ -31,7 +31,7 @@ export async function GET(request: Request) {
       customer_email:
         session.customer_details?.email ?? session.customer_email ?? null,
     });
-  } catch {
-    return NextResponse.json({ error: "Session not found" }, { status: 404 });
+  } catch (err) {
+    return NextResponse.json({ error: getStripeErrorMessage(err) }, { status: 404 });
   }
 }

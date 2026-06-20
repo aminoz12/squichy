@@ -7,7 +7,7 @@ const CLIENT_VIDEOS = [
   { src: "/dumpling-2-trimmed.mp4", label: "Happy client 2" },
   { src: "/dumpling-3-trimmed.mp4", label: "Happy client 3" },
   { src: "/videoreview.mp4", label: "Happy client 4" },
-  { src: "/dumplings-5.mp4", label: "Happy client 5" },
+  { src: "/video6.mp4", label: "Happy client 5" },
   { src: "/dumpling-3-trimmed.mp4", label: "Happy client 6" },
 ];
 
@@ -44,7 +44,36 @@ function ChevronRight({ className }: { className?: string }) {
 
 function VideoCard({ src, label }: { src: string; label: string }) {
   const videoRef = useRef<HTMLVideoElement>(null);
-  const [isPlaying, setIsPlaying] = useState(true);
+  const [isPlaying, setIsPlaying] = useState(false);
+
+  useEffect(() => {
+    const v = videoRef.current;
+    if (!v) return;
+
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      v.pause();
+      setIsPlaying(false);
+      return;
+    }
+
+    const observer = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) {
+          void v
+            .play()
+            .then(() => setIsPlaying(true))
+            .catch(() => setIsPlaying(false));
+        } else {
+          v.pause();
+          setIsPlaying(false);
+        }
+      },
+      { threshold: 0.35 },
+    );
+
+    observer.observe(v);
+    return () => observer.disconnect();
+  }, []);
 
   const togglePlay = useCallback(() => {
     const v = videoRef.current;
@@ -71,8 +100,7 @@ function VideoCard({ src, label }: { src: string; label: string }) {
         loop
         muted
         playsInline
-        autoPlay
-        preload="metadata"
+        preload="none"
         className="absolute inset-0 w-full h-full object-cover"
       />
       {/* Play overlay */}
@@ -109,7 +137,6 @@ export function HappyClients({ className = "" }: HappyClientsProps) {
   const offsetRef = useRef(0); // current translateX offset (negative = scrolled right)
   const pausedRef = useRef(false);
   const rafRef = useRef<number>(0);
-  const [, forceRender] = useState(0);
 
   // Triple the list for seamless infinite loop
   const tripled = [...CLIENT_VIDEOS, ...CLIENT_VIDEOS, ...CLIENT_VIDEOS];

@@ -201,8 +201,8 @@ export const faqItems: FaqItem[] = [
 ];
 
 export const social = {
-  tiktok: "https://www.tiktok.com/",
-  instagram: "https://www.instagram.com/",
+  tiktok: "https://www.tiktok.com/@squishybun",
+  instagram: "https://www.instagram.com/squishybun",
   email: "hello@squishybun.com",
 } as const;
 
@@ -211,6 +211,7 @@ export type ProductSizeOption = {
   label: string;
   sizeCm: number;
   priceUsd: number;
+  freeShipping?: boolean;
 };
 
 /* ── Bundle tiers for Mystery Dumpling ── */
@@ -396,6 +397,7 @@ export const singleProductOffer = {
       label: b.title,
       sizeCm: 10,
       priceUsd: b.totalPriceUsd,
+      freeShipping: b.freeShipping,
     }))
   ] as ProductSizeOption[],
 } as const;
@@ -452,6 +454,7 @@ export const products: ProductOffer[] = [
       label: b.title,
       sizeCm: 7,
       priceUsd: b.totalPriceUsd,
+      freeShipping: b.freeShipping,
     })),
   },
   {
@@ -485,6 +488,7 @@ export const products: ProductOffer[] = [
       label: b.title,
       sizeCm: 16,
       priceUsd: b.totalPriceUsd,
+      freeShipping: b.freeShipping,
     })),
   },
   {
@@ -517,6 +521,7 @@ export const products: ProductOffer[] = [
       label: b.title,
       sizeCm: 6,
       priceUsd: b.totalPriceUsd,
+      freeShipping: b.freeShipping,
     })),
   },
   {
@@ -549,6 +554,7 @@ export const products: ProductOffer[] = [
       label: b.title,
       sizeCm: 28,
       priceUsd: b.totalPriceUsd,
+      freeShipping: b.freeShipping,
     })),
   },
 ];
@@ -748,5 +754,5 @@ export const buzzReelVideos = [
   "/dumpling-1-trimmed.mp4",
   "/dumpling-2-trimmed.mp4",
   "/dumpling-3-trimmed.mp4",
-  "/dumplings-5.mp4",
+  "/video6.mp4",
 ] as const;

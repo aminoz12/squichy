@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 import { social } from "@/lib/data";
 
 const PAYMENT_ICONS = [
@@ -75,6 +76,36 @@ export function Footer() {
         </div>
 
         <p className="mt-5 border-t border-white/20 pt-4 text-center text-xs font-semibold text-white/85 sm:mt-6 sm:pt-5 sm:text-sm">
+          <Link href="/products" className="hover:text-[#2d2384]">
+            Products
+          </Link>
+          <span className="mx-2">·</span>
+          <Link href="/blog" className="hover:text-[#2d2384]">
+            Blog
+          </Link>
+          <span className="mx-2">·</span>
+          <Link href="/shipping" className="hover:text-[#2d2384]">
+            Shipping
+          </Link>
+          <span className="mx-2">·</span>
+          <Link href="/about" className="hover:text-[#2d2384]">
+            About
+          </Link>
+          <span className="mx-2">·</span>
+          <Link href="/contact" className="hover:text-[#2d2384]">
+            Contact
+          </Link>
+          <span className="mx-2">·</span>
+          <Link href="/returns" className="hover:text-[#2d2384]">
+            Returns
+          </Link>
+          <span className="mx-2">·</span>
+          <Link href="/privacy" className="hover:text-[#2d2384]">
+            Privacy
+          </Link>
+        </p>
+
+        <p className="mt-3 text-center text-xs font-semibold text-white/85 sm:text-sm">
           © {new Date().getFullYear()}
         </p>
       </div>

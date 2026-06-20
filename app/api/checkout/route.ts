@@ -2,12 +2,32 @@ import { NextResponse } from "next/server";
 import type Stripe from "stripe";
 import { products } from "@/lib/data";
 import { qualifiesForFreeDeliverySubtotal } from "@/lib/delivery";
-import { getStripe } from "@/lib/stripe-server";
+import { getStripe, getStripeErrorMessage } from "@/lib/stripe-server";
 
 type CartItem = {
   id: string;
   quantity: number;
 };
+
+function clampQuantity(quantity: unknown): number {
+  const numericQuantity = Number(quantity);
+  if (!Number.isFinite(numericQuantity)) return 1;
+  return Math.min(99, Math.max(1, Math.trunc(numericQuantity)));
+}
+
+function parseCartItem(item: unknown): CartItem | null {
+  if (typeof item !== "object" || item === null) return null;
+
+  const id = "id" in item ? String((item as { id: unknown }).id).trim() : "";
+  if (!id) return null;
+
+  return {
+    id,
+    quantity: clampQuantity(
+      "quantity" in item ? (item as { quantity: unknown }).quantity : 1,
+    ),
+  };
+}
 
 /**
  * Creates a Stripe Checkout Session (payment) for multiple products:
@@ -35,18 +55,17 @@ export async function POST(request: Request) {
   
   if (typeof body === "object" && body !== null && "items" in body && Array.isArray((body as { items: unknown }).items)) {
     // New format: array of items
-    cartItems = (body as { items: CartItem[] }).items.map((item) => ({
-      id: String(item.id),
-      quantity: Math.min(99, Math.max(1, Number(item.quantity) || 1)),
-    }));
+    cartItems = (body as { items: unknown[] }).items
+      .map(parseCartItem)
+      .filter((item): item is CartItem => item !== null);
   } else if (typeof body === "object" && body !== null && "sizeId" in body) {
     // Legacy format: single item
     const sizeId = String((body as { sizeId: unknown }).sizeId);
-    const rawQty =
+    const quantity = clampQuantity(
       typeof body === "object" && body !== null && "quantity" in body
-        ? Number((body as { quantity: unknown }).quantity)
-        : 1;
-    const quantity = Math.min(99, Math.max(1, Number.isFinite(rawQty) ? rawQty : 1));
+        ? (body as { quantity: unknown }).quantity
+        : 1,
+    );
     cartItems = [{ id: sizeId, quantity }];
   }
 
@@ -62,6 +81,7 @@ export async function POST(request: Request) {
   const lineItems: Stripe.Checkout.SessionCreateParams.LineItem[] = [];
   let subtotalUsd = 0;
   let maxDeliveryUsd = 0;
+  let includesFreeShippingBundle = false;
 
   // Build line items for each cart item
   for (const cartItem of cartItems) {
@@ -93,6 +113,7 @@ export async function POST(request: Request) {
     const itemSubtotal = option.priceUsd * cartItem.quantity;
     subtotalUsd += itemSubtotal;
     maxDeliveryUsd = Math.max(maxDeliveryUsd, product.deliveryUsd);
+    includesFreeShippingBundle ||= option.freeShipping === true;
 
     lineItems.push({
       quantity: cartItem.quantity,
@@ -108,7 +129,8 @@ export async function POST(request: Request) {
   }
 
   // Add delivery line if applicable (use max delivery cost from all products)
-  const deliveryFree = qualifiesForFreeDeliverySubtotal(subtotalUsd);
+  const deliveryFree =
+    includesFreeShippingBundle || qualifiesForFreeDeliverySubtotal(subtotalUsd);
   if (!deliveryFree && maxDeliveryUsd > 0) {
     lineItems.push({
       quantity: 1,
@@ -155,8 +177,6 @@ export async function POST(request: Request) {
     return NextResponse.json({ url: session.url });
   } catch (err) {
     console.error("[checkout]", err);
-    const message =
-      err instanceof Error ? err.message : "Stripe checkout failed";
-    return NextResponse.json({ error: message }, { status: 500 });
+    return NextResponse.json({ error: getStripeErrorMessage(err) }, { status: 500 });
   }
 }

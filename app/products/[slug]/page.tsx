@@ -7,13 +7,15 @@ import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
 import { ProductPageOffer } from "@/components/ProductPageOffer";
+import { ProductReviewsSection } from "@/components/ProductReviewsSection";
 import { HappyClients } from "@/components/HappyClients";
 import { DiscoverSquishies } from "@/components/DiscoverSquishies";
 import { products, siteIconPath } from "@/lib/data";
 import {
   getMetadataBase,
-  productBreadcrumbJsonLd,
+  productDetailBreadcrumbJsonLd,
   productJsonLd,
+  productMetaDescription,
   SITE_NAME,
 } from "@/lib/seo";
 
@@ -26,10 +28,14 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const product = products.find((p) => p.slug === slug);
   if (!product) return {};
 
-  const productDesc = `${product.description} Prices in USD. Secure Stripe checkout — we ship across the United States and Canada.`;
+  const productDesc = productMetaDescription(product);
+  const seoTitle =
+    product.id === "squishybun-mystery-dumpling"
+      ? "Mystery Dumpling Toy"
+      : product.name;
 
   return {
-    title: `Buy ${product.name}`,
+    title: seoTitle,
     description: productDesc,
     alternates: {
       canonical: `/products/${slug}`,
@@ -37,7 +43,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       type: "website",
       url: `/products/${slug}`,
-      title: `${product.name} | ${SITE_NAME}`,
+      title: `${seoTitle} | ${SITE_NAME}`,
       description: productDesc,
       images: [
         {
@@ -47,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
     },
     twitter: {
-      title: `${product.name} | ${SITE_NAME}`,
+      title: `${seoTitle} | ${SITE_NAME}`,
       description: productDesc,
     },
     icons: {
@@ -68,7 +74,7 @@ export default async function ProductPage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={[productJsonLd(), productBreadcrumbJsonLd()]} />
+      <JsonLd data={[productJsonLd(product), productDetailBreadcrumbJsonLd(product)]} />
       <Navbar />
       <Suspense fallback={null}>
         <CheckoutReturnBanner />
@@ -79,6 +85,7 @@ export default async function ProductPage({ params }: Props) {
           className="mx-auto max-w-6xl px-4 pb-8 pt-5 sm:px-6 sm:pb-10 sm:pt-7"
           offer={product}
         />
+        <ProductReviewsSection />
         <DiscoverSquishies />
         <HappyClients />
       </main>

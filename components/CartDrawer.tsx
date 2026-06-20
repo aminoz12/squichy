@@ -1,16 +1,17 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Link from "next/link";
 import { useCallback, useEffect, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import { fireGtagConversion } from "@/lib/gtag";
-import { resolveStripeCheckoutParams } from "@/lib/cart-helpers";
+import {
+  estimateCartDeliveryUsd,
+  resolveStripeCheckoutParams,
+} from "@/lib/cart-helpers";
 import {
   FREE_DELIVERY_THRESHOLD_USD,
   qualifiesForFreeDeliverySubtotal,
 } from "@/lib/delivery";
-import { singleProductOffer } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 function formatUsd(n: number) {
@@ -25,7 +26,6 @@ function formatUsd(n: number) {
  * Session) so amount and currency match the cart line — no static Payment Links.
  */
 export function CartDrawer() {
-  const reduce = useReducedMotion();
   const isOpen = useCartStore((s) => s.isOpen);
   const closeCart = useCartStore((s) => s.closeCart);
   const items = useCartStore((s) => s.items);
@@ -40,7 +40,8 @@ export function CartDrawer() {
     0,
   );
   const freeDelivery = qualifiesForFreeDeliverySubtotal(subtotalUsd);
-  const deliveryUsd = freeDelivery ? 0 : singleProductOffer.deliveryUsd;
+  const deliveryUsd = estimateCartDeliveryUsd(items);
+  const deliveryIncluded = items.length > 0 && deliveryUsd === 0;
   const estimatedTotalUsd = subtotalUsd + deliveryUsd;
 
   useEffect(() => {
@@ -79,10 +80,13 @@ export function CartDrawer() {
     fireGtagConversion();
     try {
       // Send all items to checkout
-      const cartItems = items.map((item) => ({
-        id: item.id,
-        quantity: item.quantity,
-      }));
+      const cartItems = items.map((item) => {
+        const resolved = resolveStripeCheckoutParams(item)!;
+        return {
+          id: resolved.sizeId,
+          quantity: resolved.quantity,
+        };
+      });
       await redirectToStripeCheckout(cartItems);
     } catch (e) {
       setCheckoutError(
@@ -92,28 +96,21 @@ export function CartDrawer() {
     }
   }, []);
 
+  if (!isOpen) return null;
+
   return (
-    <AnimatePresence>
-      {isOpen && (
         <>
-          <motion.button
+          <button
             type="button"
             aria-label="Close cart overlay"
             className="fixed inset-0 z-50 bg-black/40 backdrop-blur-sm"
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
             onClick={closeCart}
           />
-          <motion.aside
+          <aside
             role="dialog"
             aria-modal="true"
             aria-labelledby="cart-title"
             className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l border-pink-200 bg-card shadow-2xl"
-            initial={reduce ? false : { x: "100%" }}
-            animate={{ x: 0 }}
-            exit={reduce ? undefined : { x: "100%" }}
-            transition={{ type: "spring", damping: 28, stiffness: 320 }}
           >
             <div className="flex items-center justify-between border-b border-pink-100 px-5 py-4">
               <h2
@@ -203,12 +200,12 @@ export function CartDrawer() {
                 <div className="flex items-center justify-between text-muted">
                   <span>Delivery</span>
                   <span>
-                    {freeDelivery ? (
+                    {deliveryIncluded ? (
                       <span className="font-extrabold text-emerald-600">
                         Free
                       </span>
                     ) : (
-                      formatUsd(singleProductOffer.deliveryUsd)
+                      formatUsd(deliveryUsd)
                     )}
                   </span>
                 </div>
@@ -219,9 +216,11 @@ export function CartDrawer() {
               </div>
               {items.length > 0 && (
                 <p className="mt-2 text-xs font-semibold text-muted">
-                  Subtotals of {formatUsd(FREE_DELIVERY_THRESHOLD_USD)} or more
-                  qualify for free delivery (see top banner). Your subtotal is{" "}
-                  {formatUsd(subtotalUsd)}.
+                  {freeDelivery
+                    ? "Your subtotal qualifies for free delivery."
+                    : deliveryIncluded
+                      ? "Free delivery is included with one of your selected bundles."
+                      : `Subtotals of ${formatUsd(FREE_DELIVERY_THRESHOLD_USD)} or more qualify for free delivery (see top banner). Your subtotal is ${formatUsd(subtotalUsd)}.`}
                 </p>
               )}
               {checkoutError && (
@@ -248,9 +247,7 @@ export function CartDrawer() {
                 All items in your cart will be included in checkout. Change quantities above or remove items.
               </p>
             </div>
-          </motion.aside>
+          </aside>
         </>
-      )}
-    </AnimatePresence>
   );
 }

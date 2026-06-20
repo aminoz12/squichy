@@ -3,7 +3,6 @@
 import Image from "next/image";
 import Link from "next/link";
 import { products } from "@/lib/data";
-import { motion } from "framer-motion";
 import { useRef, useState, useEffect } from "react";
 
 export function DiscoverSquishies() {
@@ -65,23 +64,16 @@ export function DiscoverSquishies() {
 
       <div className="max-w-7xl mx-auto px-4 sm:px-6 relative z-10">
         <div className="text-center mb-12">
-          <motion.h2 
-            initial={{ opacity: 0, scale: 0.9 }}
-            whileInView={{ opacity: 1, scale: 1 }}
-            viewport={{ once: true }}
+          <h2 
             className="text-4xl md:text-5xl lg:text-6xl font-black text-slate-900 mb-6 font-[family-name:var(--font-fredoka)] tracking-tight"
           >
             Discover Our <span className="text-transparent bg-clip-text bg-gradient-to-r from-pink-500 via-violet-500 to-cyan-500">Squishies</span>
-          </motion.h2>
-          <motion.p 
-            initial={{ opacity: 0, y: 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.2 }}
-            viewport={{ once: true }}
+          </h2>
+          <p 
             className="text-xl text-slate-600 font-medium max-w-2xl mx-auto"
           >
             Find your new favorite dopamine hit. Each one is a pocket-sized bundle of joy.
-          </motion.p>
+          </p>
         </div>
 
         {/* Scrollable Categories with Navigation */}
@@ -118,13 +110,9 @@ export function DiscoverSquishies() {
             className="flex gap-6 overflow-x-auto scrollbar-hide pb-4 px-2 snap-x snap-mandatory"
             style={{ scrollbarWidth: "none", msOverflowStyle: "none" }}
           >
-            {categories.map((cat, idx) => (
-              <motion.div
+            {categories.map((cat) => (
+              <div
                 key={cat.name}
-                initial={{ opacity: 0, y: 20 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ delay: idx * 0.1 }}
-                viewport={{ once: true }}
                 className="flex-shrink-0 snap-start"
               >
                 <Link
@@ -138,6 +126,7 @@ export function DiscoverSquishies() {
                       src={cat.image}
                       alt={cat.name}
                       fill
+                      sizes="(max-width: 640px) 176px, (max-width: 1024px) 208px, 240px"
                       className="object-contain p-4 drop-shadow-lg group-hover/card:rotate-2 group-hover/card:scale-110 transition-transform duration-500"
                     />
                     
@@ -149,7 +138,7 @@ export function DiscoverSquishies() {
                     {cat.name}
                   </p>
                 </Link>
-              </motion.div>
+              </div>
             ))}
           </div>
 

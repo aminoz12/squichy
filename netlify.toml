@@ -1,0 +1,14 @@
+# Netlify configuration for this Next.js 16 (App Router) site.
+# The official Next.js Runtime turns the App Router, API routes, and
+# Image Optimization into Netlify Functions/Edge automatically.
+
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[build.environment]
+  # Match the project's engines field (>=20.9.0). Local dev uses Node 22.
+  NODE_VERSION = "22"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

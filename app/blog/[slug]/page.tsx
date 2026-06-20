@@ -6,12 +6,14 @@ import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
-import { blogPosts, getBlogPost } from "@/lib/blog-data";
+import { blogPosts, getBlogPost, getBlogSeoTitle } from "@/lib/blog-data";
 import {
   blogPostingJsonLd,
+  breadcrumbJsonLd,
   getMetadataBase,
   getSiteUrl,
   SITE_NAME,
+  truncateDescription,
 } from "@/lib/seo";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -27,11 +29,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const base = getSiteUrl();
   const canonicalUrl = `${base}/blog/${post.slug}`;
+  const metaDescription = truncateDescription(post.description);
+  const seoTitle = getBlogSeoTitle(post);
 
   return {
-    title: post.title,
-    description: post.description,
-    keywords: post.keywords,
+    title: seoTitle,
+    description: metaDescription,
     alternates: {
       canonical: canonicalUrl,
       languages: {
@@ -44,8 +47,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     openGraph: {
       type: "article",
       url: canonicalUrl,
-      title: post.title,
-      description: post.description,
+      title: seoTitle,
+      description: metaDescription,
       publishedTime: post.publishedAt,
       images: [
         {
@@ -55,8 +58,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       ],
     },
     twitter: {
-      title: post.title,
-      description: post.description,
+      title: seoTitle,
+      description: metaDescription,
       images: [new URL("/herosqueeze.png", getMetadataBase()).toString()],
     },
   };
@@ -69,7 +72,19 @@ export default async function BlogArticlePage({ params }: Props) {
 
   return (
     <>
-      <JsonLd data={blogPostingJsonLd(post)} />
+      <JsonLd
+        data={[
+          blogPostingJsonLd(post),
+          breadcrumbJsonLd(
+            [
+              { name: "Home", path: "/" },
+              { name: "Blog", path: "/blog" },
+              { name: post.title, path: `/blog/${post.slug}` },
+            ],
+            `/blog/${post.slug}#breadcrumb`,
+          ),
+        ]}
+      />
       <Navbar />
       <main className="flex-1 border-t border-pink-100/80 bg-gradient-to-b from-white to-[#fff5fb] pb-24 md:pb-12">
         <article className="mx-auto max-w-3xl px-4 py-10 sm:px-6 sm:py-14">

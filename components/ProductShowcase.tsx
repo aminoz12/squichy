@@ -1,6 +1,5 @@
 "use client";
 
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import Image from "next/image";
 import { useEffect, useState } from "react";
 import { SectionReveal } from "@/components/SectionReveal";
@@ -10,17 +9,15 @@ const ROTATE_MS = 3000;
 
 export function ProductShowcase() {
   const [index, setIndex] = useState(0);
-  const reduce = useReducedMotion();
   const slide = showcaseSlides[index] ?? showcaseSlides[0];
 
-  // Cycle slides every 3s (skip when user prefers reduced motion — use dots instead).
+  // Cycle slides every 3s; users can still choose a slide with the dots.
   useEffect(() => {
-    if (reduce) return;
     const id = window.setInterval(() => {
       setIndex((i) => (i + 1) % showcaseSlides.length);
     }, ROTATE_MS);
     return () => window.clearInterval(id);
-  }, [reduce]);
+  }, []);
 
   return (
     <SectionReveal
@@ -57,26 +54,17 @@ export function ProductShowcase() {
               aria-roledescription="carousel"
               aria-label="Product images"
             >
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={slide.src}
-                  initial={reduce ? false : { opacity: 0, x: 24 }}
-                  animate={{ opacity: 1, x: 0 }}
-                  exit={reduce ? undefined : { opacity: 0, x: -24 }}
-                  transition={{ duration: 0.35 }}
-                  className="absolute inset-0"
-                >
-                  <Image
-                    src={slide.src}
-                    alt={slide.alt}
-                    fill
-                    loading={index === 0 ? "eager" : "lazy"}
-                    priority={index === 0}
-                    sizes="(max-width: 1024px) 100vw, 50vw"
-                    className="object-cover"
-                  />
-                </motion.div>
-              </AnimatePresence>
+              <div key={slide.src} className="absolute inset-0">
+                <Image
+                  src={slide.src}
+                  alt={slide.alt}
+                  fill
+                  loading={index === 0 ? "eager" : "lazy"}
+                  priority={index === 0}
+                  sizes="(max-width: 1024px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
             </div>
             <p className="mt-3 text-center text-sm font-bold text-muted">
               {slide.caption}
