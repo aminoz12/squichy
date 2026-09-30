@@ -2,18 +2,34 @@
 
 import Image from "next/image";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import { products, type ProductOffer } from "@/lib/data";
 import { useState, useMemo } from "react";
 
 const categories = ["All", ...Array.from(new Set(products.map((p) => p.categoryName)))];
 
 export function ProductsGrid() {
-  const [selectedCategory, setSelectedCategory] = useState("All");
+  const searchParams = useSearchParams();
+  const urlCategory = searchParams.get("category");
+
+  const [selectedCategory, setSelectedCategory] = useState(
+    urlCategory && categories.includes(urlCategory) ? urlCategory : "All",
+  );
   const [sortBy, setSortBy] = useState<"price-low" | "price-high" | "name">("name");
 
+  // Deep links (?category=...) from the nav, footer, and homepage tiles:
+  // adjust state during render when the URL param changes.
+  const [lastUrlCategory, setLastUrlCategory] = useState(urlCategory);
+  if (urlCategory !== lastUrlCategory) {
+    setLastUrlCategory(urlCategory);
+    if (urlCategory && categories.includes(urlCategory)) {
+      setSelectedCategory(urlCategory);
+    }
+  }
+
   const filteredProducts = useMemo(() => {
-    const result = selectedCategory === "All" 
-      ? [...products] 
+    const result = selectedCategory === "All"
+      ? [...products]
       : products.filter((p) => p.categoryName === selectedCategory);
 
     // Always put mystery dumpling first
@@ -51,36 +67,30 @@ export function ProductsGrid() {
   }, [selectedCategory, sortBy]);
 
   return (
-    <section className="py-16 sm:py-24 bg-gradient-to-b from-white to-slate-50">
+    <section className="bg-cream py-14 sm:py-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
         {/* Header */}
-        <div className="text-center mb-12">
-          <h1 
-            className="text-4xl sm:text-5xl lg:text-6xl font-black text-slate-900 mb-4 font-[family-name:var(--font-fredoka)] tracking-tight"
-          >
-            Squishy Toys <span className="text-transparent bg-clip-text bg-gradient-to-r from-violet-600 to-pink-500">Collection</span>
+        <div className="text-center mb-10">
+          <h1 className="mb-4 font-[family-name:var(--font-fredoka)] text-4xl font-semibold tracking-tight text-ink sm:text-5xl lg:text-6xl">
+            Squishy Toys <span className="marker-word text-pink-pop">Collection</span>
           </h1>
-          <p 
-            className="text-lg sm:text-xl text-slate-600 max-w-2xl mx-auto"
-          >
+          <p className="mx-auto max-w-2xl text-lg font-semibold text-ink-2 sm:text-xl">
             Discover our full range of premium squishy toys. Find your perfect dopamine hit!
           </p>
         </div>
 
         {/* Filters & Sort */}
-        <div 
-          className="flex flex-col sm:flex-row gap-4 justify-between items-start sm:items-center mb-10"
-        >
+        <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           {/* Category Filters */}
           <div className="flex flex-wrap gap-2">
             {categories.map((cat) => (
               <button
                 key={cat}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-4 py-2 rounded-full text-sm font-bold transition-all ${
+                className={`rounded-full border-[2.5px] border-ink px-4 py-1.5 font-[family-name:var(--font-fredoka)] text-sm font-semibold transition-transform hover:-translate-y-0.5 ${
                   selectedCategory === cat
-                    ? "bg-violet-600 text-white shadow-lg shadow-violet-500/30"
-                    : "bg-white text-slate-600 border border-slate-200 hover:border-violet-300 hover:text-violet-600"
+                    ? "bg-ink text-white"
+                    : "bg-white text-ink"
                 }`}
               >
                 {cat}
@@ -92,7 +102,7 @@ export function ProductsGrid() {
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as typeof sortBy)}
-            className="px-4 py-2 rounded-xl bg-white border border-slate-200 text-sm font-semibold text-slate-700 focus:border-violet-500 focus:ring-2 focus:ring-violet-200 outline-none cursor-pointer"
+            className="cursor-pointer rounded-full border-[2.5px] border-ink bg-white px-4 py-2 font-[family-name:var(--font-fredoka)] text-sm font-semibold text-ink outline-none focus-visible:outline-[3px] focus-visible:outline-accent"
           >
             <option value="name">Sort by Name</option>
             <option value="price-low">Price: Low to High</option>
@@ -101,16 +111,18 @@ export function ProductsGrid() {
         </div>
 
         {/* Products Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
-          {filteredProducts.map((product) => (
-            <ProductCard key={product.id} product={product} />
+        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+          {filteredProducts.map((product, i) => (
+            <ProductCard key={product.id} product={product} index={i} />
           ))}
         </div>
 
         {/* Empty State */}
         {filteredProducts.length === 0 && (
-          <div className="text-center py-20">
-            <p className="text-slate-500 text-lg">No products found in this category.</p>
+          <div className="py-20 text-center">
+            <p className="font-[family-name:var(--font-fredoka)] text-xl font-semibold text-ink-2">
+              No products found in this category.
+            </p>
           </div>
         )}
       </div>
@@ -118,59 +130,53 @@ export function ProductsGrid() {
   );
 }
 
-function ProductCard({ product }: { product: ProductOffer }) {
+function ProductCard({ product, index }: { product: ProductOffer; index: number }) {
   const mainImage = product.images[0];
   const minPrice = Math.min(...product.options.map((o) => o.priceUsd));
-  const maxPrice = Math.max(...product.options.map((o) => o.priceUsd));
-  const priceDisplay = minPrice === maxPrice 
-    ? `$${minPrice}` 
-    : `$${minPrice} - $${maxPrice}`;
+  const priceDisplay =
+    product.options.length === 1 ? `$${minPrice}` : `From $${minPrice}`;
 
   return (
-    <article
-      className="group bg-white rounded-3xl overflow-hidden border border-slate-100 shadow-sm hover:shadow-xl transition-all duration-300 hover:-translate-y-1"
-    >
+    <article className="sticker-card sticker-lift group overflow-hidden">
       <Link href={`/products/${product.slug}`} className="block">
-        {/* Image Container */}
-        <div className="relative aspect-square bg-gradient-to-br from-slate-50 to-slate-100 overflow-hidden">
+        {/* Photos carry their own studio backdrop — no tint behind them */}
+        <div className="relative aspect-square overflow-hidden border-b-[2.5px] border-ink bg-white">
           <Image
             src={mainImage}
             alt={product.name}
             fill
-            className="object-contain p-6 group-hover:scale-110 transition-transform duration-500"
+            loading={index < 4 ? "eager" : undefined}
+            className="object-cover transition-transform duration-300 ease-[cubic-bezier(0.3,1.6,0.5,1)] group-hover:-rotate-2 group-hover:scale-110"
             sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
           />
-          
+
           {/* Badge */}
           {product.badge && (
-            <span className="absolute top-4 left-4 px-3 py-1 rounded-full bg-pink-500 text-white text-xs font-black uppercase tracking-wide shadow-lg">
+            <span className="absolute left-4 top-4 -rotate-3 rounded-full border-2 border-ink bg-sun px-3 py-1 font-[family-name:var(--font-fredoka)] text-xs font-semibold uppercase tracking-wide text-ink">
               {product.badge}
             </span>
           )}
-
-          {/* Hover Overlay */}
-          <div className="absolute inset-0 bg-gradient-to-t from-violet-600/20 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
         </div>
 
         {/* Content */}
         <div className="p-5">
-          <p className="text-xs font-bold text-violet-600 uppercase tracking-wider mb-2">
+          <p className="mb-1.5 text-xs font-extrabold uppercase tracking-wider text-pink-pop">
             {product.categoryName}
           </p>
-          <h3 className="font-[family-name:var(--font-fredoka)] text-lg font-bold text-slate-900 mb-2 line-clamp-1">
+          <h3 className="mb-2 line-clamp-1 font-[family-name:var(--font-fredoka)] text-lg font-semibold text-ink">
             {product.name}
           </h3>
-          <p className="text-sm text-slate-600 line-clamp-2 mb-4">
+          <p className="mb-4 line-clamp-2 text-sm font-semibold text-ink-2">
             {product.description}
           </p>
-          
+
           {/* Price & CTA */}
-          <div className="flex items-center justify-between">
-            <span className="text-xl font-black text-slate-900">
+          <div className="flex items-center justify-between gap-2">
+            <span className="font-[family-name:var(--font-fredoka)] text-xl font-semibold text-ink">
               {priceDisplay}
             </span>
-            <span className="inline-flex items-center justify-center px-5 py-2 rounded-full bg-slate-900 ring-1 ring-slate-900/10 text-white text-xs font-black tracking-wider uppercase shadow-md group-hover:bg-violet-600 group-hover:ring-violet-600/50 group-hover:shadow-violet-500/30 transition-all duration-300 transform group-hover:-translate-y-0.5">
-              BUY NOW
+            <span className="inline-flex items-center justify-center rounded-full border-2 border-ink bg-sun px-4 py-1.5 font-[family-name:var(--font-fredoka)] text-xs font-semibold uppercase tracking-wide text-ink shadow-[2px_2px_0_var(--ink)] transition-colors group-hover:bg-pink-pop group-hover:text-white">
+              Buy now
             </span>
           </div>
         </div>

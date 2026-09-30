@@ -91,7 +91,7 @@ function VideoCard({ src, label }: { src: string; label: string }) {
     <button
       type="button"
       onClick={togglePlay}
-      className="group relative flex-shrink-0 w-[160px] sm:w-[180px] md:w-[200px] aspect-[9/16] rounded-2xl overflow-hidden bg-stone-900 shadow-lg ring-1 ring-white/10 transition-transform duration-300 hover:scale-[1.03] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent cursor-pointer"
+      className="group relative flex-shrink-0 w-[160px] sm:w-[180px] md:w-[200px] aspect-[9/16] rounded-[18px] overflow-hidden border-[2.5px] border-ink bg-ink shadow-[4px_4px_0_var(--ink)] transition-transform duration-300 hover:-translate-y-1 hover:-rotate-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-pink-pop cursor-pointer"
       aria-label={label}
     >
       <video
@@ -109,21 +109,19 @@ function VideoCard({ src, label }: { src: string; label: string }) {
           isPlaying ? "opacity-0 group-hover:opacity-100" : "opacity-100"
         }`}
       >
-        <div className="w-12 h-12 rounded-full bg-white/90 backdrop-blur-sm flex items-center justify-center shadow-xl transition-transform duration-200 group-hover:scale-110">
+        <div className="w-12 h-12 rounded-full border-2 border-ink bg-white flex items-center justify-center shadow-[2px_2px_0_var(--ink)] transition-transform duration-200 group-hover:scale-110">
           {isPlaying ? (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <rect x="6" y="4" width="4" height="16" rx="1" fill="#1f1523" />
-              <rect x="14" y="4" width="4" height="16" rx="1" fill="#1f1523" />
+              <rect x="6" y="4" width="4" height="16" rx="1" fill="#2a1442" />
+              <rect x="14" y="4" width="4" height="16" rx="1" fill="#2a1442" />
             </svg>
           ) : (
             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden>
-              <path d="M8 5.14v13.72a1 1 0 001.5.86l11.04-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z" fill="#1f1523" />
+              <path d="M8 5.14v13.72a1 1 0 001.5.86l11.04-6.86a1 1 0 000-1.72L9.5 4.28A1 1 0 008 5.14z" fill="#2a1442" />
             </svg>
           )}
         </div>
       </div>
-      {/* Bottom gradient */}
-      <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-black/40 to-transparent pointer-events-none" />
     </button>
   );
 }
@@ -253,23 +251,17 @@ export function HappyClients({ className = "" }: HappyClientsProps) {
   return (
     <section
       id="happy-clients"
-      className={`relative overflow-hidden bg-gradient-to-b from-stone-50/90 to-white border-t border-stone-200/80 ${className}`.trim()}
+      className={`relative overflow-hidden bg-cream ${className}`.trim()}
     >
       <div className="mx-auto max-w-6xl px-4 py-12 sm:px-6 sm:py-16">
         {/* Heading */}
         <div className="text-center mb-8 sm:mb-10">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400">
+          <p className="eyebrow-pill text-[11px] uppercase tracking-wide">
             Social Proof
           </p>
-          <h2 className="mt-2 font-[family-name:var(--font-fredoka)] text-2xl sm:text-3xl font-bold tracking-tight text-stone-900">
+          <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
             Loved by{" "}
-            <span className="relative inline-block">
-              <span className="relative z-10">9,500+</span>
-              <span
-                className="absolute left-0 right-0 bottom-0 h-[40%] bg-primary/40 rounded-sm -z-0"
-                aria-hidden
-              />
-            </span>
+            <span className="marker-word text-pink-pop">9,500+</span>
           </h2>
         </div>
 
@@ -279,7 +271,7 @@ export function HappyClients({ className = "" }: HappyClientsProps) {
           <button
             type="button"
             onClick={() => scroll(-1)}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 backdrop-blur shadow-lg ring-1 ring-stone-900/10 transition-all duration-200 text-stone-700 hover:bg-white hover:scale-110 cursor-pointer"
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)] transition-all duration-200 hover:-translate-y-[calc(50%+2px)] active:translate-x-[2px] active:shadow-[1px_1px_0_var(--ink)] cursor-pointer"
             aria-label="Scroll left"
           >
             <ChevronLeft className="h-5 w-5" />
@@ -289,7 +281,7 @@ export function HappyClients({ className = "" }: HappyClientsProps) {
           <button
             type="button"
             onClick={() => scroll(1)}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full bg-white/90 backdrop-blur shadow-lg ring-1 ring-stone-900/10 transition-all duration-200 text-stone-700 hover:bg-white hover:scale-110 cursor-pointer"
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-20 flex h-10 w-10 items-center justify-center rounded-full border-2 border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)] transition-all duration-200 hover:-translate-y-[calc(50%+2px)] active:translate-x-[2px] active:shadow-[1px_1px_0_var(--ink)] cursor-pointer"
             aria-label="Scroll right"
           >
             <ChevronRight className="h-5 w-5" />
@@ -313,12 +305,12 @@ export function HappyClients({ className = "" }: HappyClientsProps) {
 
           {/* Left edge fade */}
           <div
-            className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-stone-50/90 to-transparent z-10"
+            className="pointer-events-none absolute left-0 top-0 bottom-0 w-16 bg-gradient-to-r from-cream to-transparent z-10"
             aria-hidden
           />
           {/* Right edge fade */}
           <div
-            className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-stone-50/90 to-transparent z-10"
+            className="pointer-events-none absolute right-0 top-0 bottom-0 w-16 bg-gradient-to-l from-cream to-transparent z-10"
             aria-hidden
           />
         </div>

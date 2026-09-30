@@ -5,36 +5,36 @@ import { reviews } from "@/lib/data";
 
 function Stars({ value }: { value: number }) {
   return (
-    <span className="text-amber-400" aria-label={`${value} out of 5 stars`}>
+    <span className="text-sun" aria-label={`${value} out of 5 stars`}>
       {"★".repeat(value)}
-      <span className="text-pink-200">{"★".repeat(5 - value)}</span>
+      <span className="text-pink-soft">{"★".repeat(5 - value)}</span>
     </span>
   );
 }
 
 export function Reviews() {
   return (
-    <SectionReveal className="mx-auto max-w-6xl px-4 py-14 sm:px-6 sm:py-16">
+    <SectionReveal className="mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20">
       <div className="mb-10 text-center">
-        <p className="text-sm font-extrabold uppercase tracking-widest text-accent">
+        <span className="eyebrow-pill text-xs uppercase tracking-wide sm:text-sm">
           Social proof
-        </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fredoka)] text-3xl font-bold text-foreground sm:text-4xl">
-          People are obsessed
+        </span>
+        <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
+          People are <span className="marker-word text-pink-pop">obsessed</span>
         </h2>
       </div>
 
-      <ul className="grid gap-4 sm:grid-cols-3">
-        {reviews.map((r) => (
+      <ul className="grid gap-6 sm:grid-cols-3">
+        {reviews.map((r, i) => (
           <li
             key={r.name}
-            className="rounded-3xl border border-pink-100 bg-card p-6 shadow-lg shadow-pink-200/30"
+            className={`sticker-card p-6 ${i % 2 === 0 ? "rotate-1" : "-rotate-1"}`}
           >
             <Stars value={r.rating} />
-            <p className="mt-3 text-sm font-semibold leading-relaxed text-foreground">
+            <p className="mt-3 text-sm font-semibold leading-relaxed text-ink">
               “{r.text}”
             </p>
-            <p className="mt-4 text-xs font-bold text-muted">
+            <p className="mt-4 text-xs font-bold text-ink-2">
               {r.name} · {r.location}
             </p>
           </li>

@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog-data";
+import { collections, collectionProducts } from "@/lib/collections";
 import { absoluteUrl, getSiteUrl, isRasterImagePath } from "@/lib/seo";
 import { products } from "@/lib/data";
 
@@ -21,6 +22,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
     changeFrequency: "weekly" as const,
     priority: 0.85,
     images: p.images.filter(isRasterImagePath).map(absoluteUrl),
+  }));
+
+  const collectionEntries: MetadataRoute.Sitemap = collections.map((c) => ({
+    url: `${base}/collections/${c.slug}`,
+    lastModified: now,
+    changeFrequency: "weekly" as const,
+    priority: 0.85,
+    images: collectionProducts(c)
+      .slice(0, 8)
+      .map((p) => p.images.find(isRasterImagePath))
+      .filter((src): src is string => Boolean(src))
+      .map(absoluteUrl),
   }));
 
   return [
@@ -83,6 +96,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.6,
       images: [absoluteUrl("/herosqueeze.png")],
     },
+    ...collectionEntries,
     ...productEntries,
     ...blogEntries,
   ];

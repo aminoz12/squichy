@@ -26,39 +26,48 @@ export function ProductCard({ tier }: ProductCardProps) {
 
   return (
     <article
-      className={`relative flex flex-col rounded-3xl border bg-card p-6 shadow-xl transition hover:-translate-y-0.5 hover:shadow-2xl ${
+      className={`sticker-card relative flex flex-col p-6 ${
         tier.highlight
-          ? "border-accent/50 ring-2 ring-accent/20 md:scale-[1.02]"
-          : "border-pink-100"
+          ? "bg-sun-soft md:-translate-y-2 md:rotate-1"
+          : "bg-card"
       }`}
     >
       {tier.badge && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-accent px-3 py-1 text-xs font-extrabold uppercase tracking-wide text-white shadow-md">
+        <span className="absolute -top-3.5 left-1/2 -translate-x-1/2 -rotate-3 whitespace-nowrap rounded-full border-2 border-ink bg-ink px-3 py-1 font-[family-name:var(--font-fredoka)] text-xs font-semibold uppercase tracking-wide text-white">
           {tier.badge}
         </span>
       )}
-      <h3 className="font-[family-name:var(--font-fredoka)] text-xl font-bold text-foreground">
+      <h3 className="font-[family-name:var(--font-fredoka)] text-xl font-semibold text-ink">
         {tier.count} dumpling{tier.count > 1 ? "s" : ""}
       </h3>
-      <p className="text-sm font-semibold text-muted">{tier.label}</p>
+      <p className="text-sm font-bold uppercase tracking-wide text-ink-2">
+        {tier.label}
+      </p>
       <div className="mt-4 flex items-baseline gap-2">
-        <span className="text-4xl font-extrabold text-foreground">
+        <span className="font-[family-name:var(--font-fredoka)] text-4xl font-semibold text-ink">
           {formatMoney(tier.price)}
         </span>
         {tier.compareAt != null && (
-          <span className="text-sm font-bold text-muted line-through">
+          <span className="text-sm font-bold text-ink-2 line-through">
             {formatMoney(tier.compareAt)}
           </span>
         )}
       </div>
 
-      <ul className="mt-4 flex-1 space-y-2 text-sm font-semibold text-foreground/90">
-        <li>✓ Mystery styles &amp; colors</li>
-        <li>✓ Slow-rise squish</li>
-        <li>✓ Gift-ready packaging</li>
+      <ul className="mt-4 flex-1 space-y-2.5 text-sm font-semibold text-ink">
+        {["Mystery styles & colors", "Slow-rise squish", "Gift-ready packaging"].map(
+          (perk) => (
+            <li key={perk} className="flex items-center gap-2.5">
+              <span className="grid h-5 w-5 flex-none place-items-center rounded-full border-2 border-ink bg-mint text-[10px] font-black text-ink">
+                ✓
+              </span>
+              {perk}
+            </li>
+          ),
+        )}
       </ul>
 
-      <div className="mt-6 flex flex-col gap-2">
+      <div className="mt-6 flex flex-col gap-3">
         <button
           type="button"
           onClick={() =>
@@ -69,14 +78,11 @@ export function ProductCard({ tier }: ProductCardProps) {
               quantity: tier.count,
             })
           }
-          className="w-full rounded-2xl bg-foreground py-3.5 text-center text-sm font-extrabold text-white shadow-lg transition hover:opacity-95 active:scale-[0.99]"
+          className="btn-squish w-full text-sm"
         >
           Add to cart
         </button>
-        <Link
-          href="/products#offer"
-          className="w-full rounded-2xl border-2 border-pink-200 py-3 text-center text-sm font-extrabold text-foreground transition hover:border-accent/50"
-        >
+        <Link href="/products#offer" className="btn-squish btn-white w-full text-sm">
           Buy now
         </Link>
       </div>

@@ -1,6 +1,6 @@
-/* eslint-disable @next/next/next-script-for-ga */
+ 
 import type { Metadata } from "next";
-import { Fredoka, Montserrat, Nunito } from "next/font/google";
+import { Figtree, Fredoka } from "next/font/google";
 import Script from "next/script";
 import { PromoMarquee } from "@/components/PromoMarquee";
 import { rootMetadataExtras } from "@/lib/seo";
@@ -12,17 +12,11 @@ const fredoka = Fredoka({
   weight: ["400", "500", "600", "700"],
 });
 
-const nunito = Nunito({
-  variable: "--font-nunito",
+/** Reference body font: Figtree (paired with Fredoka display). */
+const figtree = Figtree({
+  variable: "--font-figtree",
   subsets: ["latin"],
   weight: ["400", "500", "600", "700", "800"],
-});
-
-/** Heavy sans for the orange “Buzz” reel section (reference layout). */
-const montserrat = Montserrat({
-  variable: "--font-buzz",
-  subsets: ["latin"],
-  weight: ["800", "900"],
 });
 
 export const metadata: Metadata = {
@@ -38,7 +32,7 @@ export default function RootLayout({
     <html
       lang="en-US"
       data-scroll-behavior="smooth"
-      className={`${fredoka.variable} ${nunito.variable} ${montserrat.variable} h-full antialiased`}
+      className={`${fredoka.variable} ${figtree.variable} h-full antialiased`}
     >
       <body className="relative min-h-full flex flex-col font-sans">
         <noscript

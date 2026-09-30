@@ -10,9 +10,9 @@ import { HappyClients } from "@/components/HappyClients";
 import { breadcrumbJsonLd, productsCollectionJsonLd } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  title: "Squishy Toys",
+  title: "Squishy Toys — 58+ Slow-Rise Squishies",
   description:
-    "Shop mystery dumpling squishies, apple squishies, cheese squares, butter squishies, and sensory fidget toys for the USA, Canada, UK, and Europe.",
+    "Shop 58+ squishy toys from $7.99: mystery dumplings, crunchy ASMR fidgets, animal squishies, gift boxes and advent calendars. BUY 2 GET 1 FREE, free delivery over $50.",
   alternates: {
     canonical: "/products",
   },
@@ -45,7 +45,9 @@ export default function ProductsPage() {
         <CheckoutReturnBanner />
       </Suspense>
       <main className="flex-1">
-        <ProductsGrid />
+        <Suspense fallback={null}>
+          <ProductsGrid />
+        </Suspense>
         <HappyClients />
       </main>
       <Footer />
