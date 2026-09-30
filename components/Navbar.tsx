@@ -2,36 +2,18 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
 import { product, siteIconPath } from "@/lib/data";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
-function CartIcon({ className }: { className?: string }) {
-  return (
-    <svg
-      className={className}
-      width="22"
-      height="22"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      strokeLinecap="round"
-      strokeLinejoin="round"
-      aria-hidden
-    >
-      <circle cx="9" cy="21" r="1" />
-      <circle cx="20" cy="21" r="1" />
-      <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6" />
-    </svg>
-  );
-}
+const NAV_LINKS: { label: string; href: string; hot?: boolean }[] = [
+  { label: "Shop all", href: "/products" },
+  { label: "Dumplings", href: "/collections/dumplings" },
+  { label: "🔥 Crunchy", href: "/collections/sensory-asmr", hot: true },
+  { label: "Gift sets", href: "/collections/boxes-gift-sets" },
+  { label: "🎄 Advent", href: "/collections/advent-calendars" },
+];
 
 export function Navbar() {
-  const pathname = usePathname();
-  const path = pathname.replace(/\/$/, "") || "/";
-  const isProductsPage = path === "/products";
-
   const toggleCart = useCartStore((s) => s.toggleCart);
   const count = useCartStore((s) =>
     s.items.reduce((acc, i) => acc + i.quantity, 0),
@@ -39,89 +21,57 @@ export function Navbar() {
 
   return (
     <header
-      className="sticky top-0 z-40 border-b border-violet-200/60 bg-white/85 shadow-[0_8px_30px_-18px_rgba(124,58,237,0.55)] backdrop-blur-xl"
+      className="sticky top-0 z-40 border-b-[2.5px] border-ink bg-[rgba(255,246,234,0.92)] backdrop-blur-md"
     >
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between gap-4 px-4 sm:h-16 sm:px-6">
         <Link
           href="/"
-          className="flex items-center gap-2 sm:gap-2.5 font-[family-name:var(--font-fredoka)] text-lg font-black tracking-tight text-foreground sm:text-2xl"
+          className="flex items-center gap-2 sm:gap-2.5 font-[family-name:var(--font-fredoka)] text-lg font-semibold tracking-tight text-ink sm:text-2xl"
         >
-          <span className="relative shrink-0 drop-shadow-[0_4px_12px_rgba(0,0,0,0.12)]">
+          <span className="relative shrink-0">
             <Image
               src={siteIconPath}
               alt=""
               width={48}
               height={48}
-              className="h-10 w-10 rounded-xl object-cover sm:h-11 sm:w-11"
+              className="h-10 w-10 -rotate-6 rounded-xl border-2 border-ink object-cover sm:h-11 sm:w-11"
             />
           </span>
-          <span>
+          <span className="whitespace-nowrap">
             {product.name.split(" ").slice(0, 2).join(" ")}
-            <span className="text-primary-dark">.</span>
+            <span className="text-pink-pop">.</span>
           </span>
         </Link>
 
-        {!isProductsPage && (
-          <nav
-            aria-label="Main"
-            className="hidden items-stretch divide-x divide-pink-200/70 rounded-full border border-pink-100/90 bg-white/90 text-sm shadow-sm md:flex"
-          >
+        <nav
+          aria-label="Main"
+          className="hidden items-center gap-1 font-[family-name:var(--font-fredoka)] text-[15px] font-semibold text-ink md:flex"
+        >
+          {NAV_LINKS.map(({ label, href, hot }) => (
             <Link
-              href="/products"
-              className="px-4 py-2 font-bold text-foreground transition-colors first:pl-5 hover:bg-pink-50/80 hover:text-accent"
+              key={label}
+              href={href}
+              className={`whitespace-nowrap px-3 py-2 underline-offset-8 transition-colors hover:underline hover:decoration-pink-pop hover:decoration-4 ${
+                hot ? "text-pink-pop" : "hover:text-pink-pop"
+              }`}
             >
-              Products
+              {label}
             </Link>
-            <Link
-              href="/blog"
-              className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
-            >
-              Blog
-            </Link>
-            <Link
-              href="/shipping"
-              className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
-            >
-              Shipping
-            </Link>
-            <Link
-              href="/about"
-              className="px-4 py-2 font-bold text-foreground transition-colors hover:bg-pink-50/80 hover:text-accent"
-            >
-              About
-            </Link>
-            <Link
-              href="/contact"
-              className="px-4 py-2 font-bold text-foreground transition-colors last:pr-5 hover:bg-pink-50/80 hover:text-accent"
-            >
-              Contact
-            </Link>
-          </nav>
-        )}
+          ))}
+        </nav>
 
-        <div className="flex items-center gap-2">
-          {!isProductsPage && (
-            <Link
-              href="/products/mystery-dumpling"
-              className="hidden rounded-xl bg-[#ffd500] px-4 py-2 text-sm font-black text-[#2b2282] shadow-md shadow-amber-400/40 transition-transform hover:scale-[1.03] hover:brightness-105 active:scale-[0.98] sm:inline-flex"
-            >
-              BUY 2 GET 1 NOW
-            </Link>
-          )}
-          <button
-            type="button"
-            onClick={toggleCart}
-            className="relative flex h-10 w-10 items-center justify-center rounded-xl border border-pink-200 bg-white text-foreground shadow-sm transition hover:border-accent/40 hover:shadow-md sm:h-11 sm:w-11"
-            aria-label={count > 0 ? `Open cart, ${count} items` : "Open cart"}
-          >
-            <CartIcon className="h-[22px] w-[22px] sm:h-6 sm:w-6" />
-            {count > 0 && (
-              <span className="absolute -right-1 -top-1 flex h-5 min-w-5 items-center justify-center rounded-full bg-primary-dark px-1 text-[10px] font-extrabold text-white">
-                {count > 9 ? "9+" : count}
-              </span>
-            )}
-          </button>
-        </div>
+        <button
+          type="button"
+          onClick={toggleCart}
+          className="flex items-center gap-2 rounded-full border-[2.5px] border-ink bg-sun px-4 py-1.5 font-[family-name:var(--font-fredoka)] text-sm font-semibold text-ink shadow-[3px_3px_0_var(--ink)] transition active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_var(--ink)] sm:px-5 sm:py-2"
+          aria-label={count > 0 ? `Open bag, ${count} items` : "Open bag"}
+        >
+          <span aria-hidden>🛍️</span>
+          Bag
+          <span className="grid h-5 min-w-5 place-items-center rounded-full bg-ink px-1 text-[11px] font-bold text-white">
+            {count > 9 ? "9+" : count}
+          </span>
+        </button>
       </div>
     </header>
   );

@@ -1,79 +1,74 @@
 import Image from "next/image";
 import Link from "next/link";
+import { FREE_DELIVERY_THRESHOLD_USD } from "@/lib/delivery";
+import { products } from "@/lib/data";
 
-const HERO_IMAGE = "/herosqueeze.png";
+const HERO_IMAGE = "/hero-squish.jpg";
 
 export function Hero() {
   return (
-    <section id="top" className="relative overflow-hidden bg-[#ff8a12] px-4 pb-14 pt-8 sm:px-6 sm:pb-16 sm:pt-10">
-      <div
-        aria-hidden
-        className="pointer-events-none absolute inset-0 opacity-40"
-        style={{
-          background:
-            "radial-gradient(1200px 400px at -10% 40%, rgba(255,160,40,0.7), transparent 60%), radial-gradient(1200px 400px at 110% 70%, rgba(255,180,70,0.7), transparent 60%)",
-        }}
-      />
-
-      <div
-        className="relative mx-auto max-w-6xl overflow-hidden rounded-2xl border-2 border-[#2b2282] bg-[#4b1ec2] shadow-[0_24px_60px_-20px_rgba(43,34,130,0.65)]"
-      >
-        <div className="mx-4 mt-4 flex items-center justify-between rounded-lg bg-[#2d2384] px-4 py-3 text-white sm:mx-6 sm:mt-5 sm:px-5">
-          <div className="flex items-center gap-3">
-            <span className="rounded-md bg-[#ff2f9f] px-2 py-1 font-[family-name:var(--font-fredoka)] text-xs font-black uppercase tracking-wide sm:text-sm">
-              Crazy Fun
-            </span>
-            <span className="hidden text-[11px] font-extrabold uppercase tracking-wide text-white/85 sm:inline">
-              🔥 LIMITED TIME · BUY 2 GET 1 FREE
-            </span>
+    <section
+      id="top"
+      className="relative overflow-hidden bg-cream px-4 pb-16 pt-8 sm:px-6 sm:pb-20 sm:pt-12"
+    >
+      <div className="mx-auto grid max-w-6xl items-center gap-12 lg:grid-cols-[1.05fr_1fr] lg:gap-10">
+        <div className="relative z-10">
+          <span className="eyebrow-pill text-xs uppercase tracking-wide sm:text-sm">
+            ✦ Big squish energy
+          </span>
+          <h1 className="mt-5 font-[family-name:var(--font-fredoka)] text-[3rem] font-semibold leading-[1.02] tracking-tight text-ink sm:text-6xl lg:text-[4.5rem]">
+            A little squish.
+            <br />
+            <span className="marker-word text-pink-pop">A lot of happy.</span>
+          </h1>
+          <p className="mt-5 max-w-md text-base font-semibold leading-relaxed text-ink-2 sm:text-lg">
+            Dumplings, bakery treats, crunchy ASMR and chonky cats.{" "}
+            {products.length}+ squishy toys from just $7.99.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-4">
+            <Link
+              href="/products"
+              className="btn-squish text-base sm:text-lg"
+            >
+              Find your squishy →
+            </Link>
+            <Link
+              href="/collections/boxes-gift-sets"
+              className="btn-squish btn-sun text-sm sm:text-base"
+            >
+              🎁 Gift sets
+            </Link>
           </div>
-          <Link
-            href="/products/mystery-dumpling"
-            className="animate-pulse text-[11px] font-extrabold uppercase tracking-wide text-yellow-300 hover:text-yellow-100 sm:text-xs"
-          >
-            CLAIM OFFER →
-          </Link>
+          <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-bold text-ink">
+            <span>🚚 Free delivery ${FREE_DELIVERY_THRESHOLD_USD}+</span>
+            <span>⭐ 12,400+ happy families</span>
+          </div>
         </div>
 
-        <div className="relative grid min-h-[340px] items-center gap-8 px-6 pb-8 pt-7 sm:min-h-[420px] sm:px-8 lg:grid-cols-[1fr_1.2fr] lg:px-10">
-          <div className="relative z-10">
-            <div className="mb-3 inline-flex items-center gap-2 rounded-full bg-[#e53e3e] px-3 py-1.5 text-xs font-black uppercase tracking-wider text-white shadow-lg sm:text-sm">
-              <span className="inline-block h-2 w-2 animate-pulse rounded-full bg-yellow-300" />
-              Limited Stock — Selling Fast!
-            </div>
-            <h1 className="font-[family-name:var(--font-fredoka)] text-3xl font-black uppercase leading-[0.95] tracking-tight text-white drop-shadow-[0_3px_0_rgba(0,0,0,0.2)] sm:text-5xl lg:text-[3.4rem]">
-              THE SQUISHY DUMPLING YOUR KIDS WON&apos;T STOP TALKING ABOUT
-            </h1>
-            <p className="mt-4 max-w-md text-sm font-bold leading-relaxed text-yellow-200 sm:text-base">
-              It&apos;s finally here — but NOT for long. The TikTok-viral Squishy Bun everyone is
-              obsessing over. Grab yours before they&apos;re gone! 🥟
-            </p>
-            <div className="mt-6 flex flex-col items-start gap-3 sm:flex-row sm:items-center">
-              <Link
-                href="/products/mystery-dumpling"
-                className="group relative inline-flex items-center gap-2 rounded-xl bg-[#ffd500] px-6 py-3.5 text-sm font-black uppercase tracking-wide text-[#2d2384] shadow-[0_4px_20px_rgba(255,213,0,0.5)] transition-all hover:scale-105 hover:shadow-[0_6px_30px_rgba(255,213,0,0.7)] sm:text-base"
-              >
-                BUY 2 GET 1 NOW
-              </Link>
-              <span className="text-xs font-semibold text-white/70">
-                ⭐ 12,400+ happy families
-              </span>
+        <div className="relative z-10 mx-auto w-full max-w-[540px] px-5 pb-5 pt-8 sm:px-8">
+          <div className="rotate-2 overflow-hidden rounded-[38px] border-[3px] border-ink bg-pink-soft shadow-[10px_12px_0_var(--ink)]">
+            <div className="relative aspect-square">
+              <Image
+                src={HERO_IMAGE}
+                alt="Colorful squishy dumplings, ice cubes and a chonky kitten floating around a giant glitter dumpling being stretched by a hand"
+                fill
+                preload
+                sizes="(max-width: 1024px) 100vw, 45vw"
+                className="object-cover"
+              />
             </div>
           </div>
 
-          <div
-            className="relative z-10 mx-auto w-full max-w-[600px]"
-          >
-            <div className="relative aspect-[16/9] overflow-hidden rounded-xl">
-              <Image
-                src={HERO_IMAGE}
-                alt="Squishy Bun hero"
-                fill
-                priority
-                sizes="(max-width: 1024px) 100vw, 55vw"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#3f169f]/45 via-transparent to-transparent" />
+          <div className="absolute -top-1 right-0 grid h-28 w-28 rotate-12 place-items-center rounded-full border-[2.5px] border-ink bg-sun text-center font-[family-name:var(--font-fredoka)] text-sm font-bold leading-none text-ink shadow-[3px_3px_0_var(--ink)] sm:right-2">
+            <div>
+              from
+              <b className="mt-1 block text-2xl">$7.99</b>
+            </div>
+          </div>
+          <div className="absolute bottom-0 left-0 grid h-24 w-24 -rotate-12 place-items-center rounded-full border-[2.5px] border-ink bg-mint text-center font-[family-name:var(--font-fredoka)] text-sm font-bold leading-none text-ink shadow-[3px_3px_0_var(--ink)] sm:left-2">
+            <div>
+              2 + 1
+              <b className="mt-1 block text-xl">FREE</b>
             </div>
           </div>
         </div>

@@ -359,6 +359,10 @@ export function productJsonLd(product: ProductOffer) {
     .filter(isRasterImagePath)
     .map((src) => absoluteUrl(src));
 
+  // Review markup only on the product the reviews were written about —
+  // duplicating identical reviews across every product is a spam signal.
+  const hasOwnReviews = product.id === "squishybun-mystery-dumpling";
+
   return {
     "@type": "Product" as const,
     "@id": `${productUrl}#product`,
@@ -376,14 +380,18 @@ export function productJsonLd(product: ProductOffer) {
       name: row.label,
       value: row.value,
     })),
-    aggregateRating: {
-      "@type": "AggregateRating" as const,
-      ratingValue: reviewAverage(),
-      reviewCount: productPageReviews.length,
-      bestRating: 5,
-      worstRating: 1,
-    },
-    review: reviewJsonLd(),
+    ...(hasOwnReviews
+      ? {
+          aggregateRating: {
+            "@type": "AggregateRating" as const,
+            ratingValue: reviewAverage(),
+            reviewCount: productPageReviews.length,
+            bestRating: 5,
+            worstRating: 1,
+          },
+          review: reviewJsonLd(),
+        }
+      : {}),
     offers: {
       "@type": "AggregateOffer" as const,
       url: productUrl,
@@ -415,6 +423,33 @@ export function productDetailBreadcrumbJsonLd(product: ProductOffer) {
   );
 }
 
+export function collectionPageJsonLd(collection: {
+  slug: string;
+  title: string;
+  metaDescription: string;
+  items: Array<{ name: string; slug: string }>;
+}) {
+  const url = getSiteUrl();
+  const collectionUrl = `${url}/collections/${collection.slug}`;
+  return {
+    "@type": "CollectionPage" as const,
+    "@id": `${collectionUrl}#collection`,
+    url: collectionUrl,
+    name: collection.title,
+    description: collection.metaDescription,
+    isPartOf: { "@id": `${url}/#website` },
+    mainEntity: {
+      "@type": "ItemList" as const,
+      itemListElement: collection.items.map((item, index) => ({
+        "@type": "ListItem" as const,
+        position: index + 1,
+        url: `${url}/products/${item.slug}`,
+        name: item.name,
+      })),
+    },
+  };
+}
+
 export function productsCollectionJsonLd() {
   const url = getSiteUrl();
   return {
@@ -423,7 +458,7 @@ export function productsCollectionJsonLd() {
     url: `${url}/products`,
     name: "Squishy toy collection",
     description:
-      "Mystery dumpling squishies, apple squishies, cheese squishies, butter squishies, and NeeDoh-style sensory toys for shoppers in the USA, Canada, UK, and Europe.",
+      "58+ slow-rise squishy toys: mystery dumpling blind boxes, bakery and food squishies, crunchy ASMR sensory fidgets, animal squishies, gift boxes, and advent calendars — shipping to the USA, Canada, UK, and Europe.",
     isPartOf: { "@id": `${url}/#website` },
     mainEntity: {
       "@type": "ItemList" as const,

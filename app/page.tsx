@@ -1,16 +1,18 @@
 import type { Metadata } from "next";
+import { AdventPromo } from "@/components/AdventPromo";
 import { BuzzEverywhere } from "@/components/BuzzEverywhere";
 import { CartDrawer } from "@/components/CartDrawer";
 import { FAQ } from "@/components/FAQ";
+import { FeaturedGrid } from "@/components/FeaturedGrid";
 import { Footer } from "@/components/Footer";
 import { Hero } from "@/components/Hero";
 import { DiscoverSquishies } from "@/components/DiscoverSquishies";
-import { HowItWorks } from "@/components/HowItWorks";
 import { JsonLd } from "@/components/JsonLd";
 import { NewsletterSection } from "@/components/NewsletterSection";
 import { Navbar } from "@/components/Navbar";
 import { Reviews } from "@/components/Reviews";
 import { StickyMobileCTA } from "@/components/StickyMobileCTA";
+import { TrustStrip } from "@/components/TrustStrip";
 import { UrgencyBar } from "@/components/UrgencyBar";
 import { buzzReelVideos } from "@/lib/data";
 import {
@@ -47,9 +49,11 @@ export default function Home() {
       <main className="flex-1 pb-24 md:pb-0">
         <Hero />
         <DiscoverSquishies />
+        <FeaturedGrid />
+        <AdventPromo />
+        <TrustStrip />
         <Reviews />
         <BuzzEverywhere videos={buzzReelVideos} />
-        <HowItWorks />
         <FAQ />
         <NewsletterSection />
       </main>

@@ -26,7 +26,7 @@ function Stars({ value }: { value: number }) {
       {Array.from({ length: 5 }).map((_, i) => (
         <span
           key={i}
-          className={`text-[0.95rem] leading-none ${i < n ? "text-amber-400" : "text-stone-200"}`}
+          className={`text-[0.95rem] leading-none ${i < n ? "text-sun" : "text-ink/15"}`}
         >
           ★
         </span>
@@ -41,7 +41,7 @@ function ChevronLeft({ className }: { className?: string }) {
       <path
         d="M15 6l-6 6 6 6"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -55,7 +55,7 @@ function ChevronRight({ className }: { className?: string }) {
       <path
         d="M9 6l6 6-6 6"
         stroke="currentColor"
-        strokeWidth="2"
+        strokeWidth="2.5"
         strokeLinecap="round"
         strokeLinejoin="round"
       />
@@ -65,7 +65,7 @@ function ChevronRight({ className }: { className?: string }) {
 
 function VerifiedBadge() {
   return (
-    <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-emerald-700 ring-1 ring-emerald-100/80">
+    <span className="inline-flex -rotate-2 items-center gap-1 rounded-full border-2 border-ink bg-mint px-2 py-0.5 font-[family-name:var(--font-fredoka)] text-[10px] font-semibold uppercase tracking-wider text-ink">
       <svg className="h-3 w-3" viewBox="0 0 20 20" fill="none" aria-hidden>
         <path
           d="M6 10.2 8.6 13 14 7.5"
@@ -86,7 +86,7 @@ function ReviewSlide({ review }: { review: ProductPageReview }) {
 
   return (
     <div className="flex flex-col gap-5 sm:flex-row sm:items-start sm:gap-6">
-      <div className="relative mx-auto h-[4.5rem] w-[4.5rem] shrink-0 overflow-hidden rounded-2xl bg-stone-100 shadow-inner ring-1 ring-stone-900/5 sm:mx-0 sm:h-[5.25rem] sm:w-[5.25rem]">
+      <div className="relative mx-auto h-[4.5rem] w-[4.5rem] shrink-0 overflow-hidden rounded-[16px] border-2 border-ink bg-cream sm:mx-0 sm:h-[5.25rem] sm:w-[5.25rem]">
         <Image
           src={review.image}
           alt={`Photo shared by ${review.author}`}
@@ -99,26 +99,26 @@ function ReviewSlide({ review }: { review: ProductPageReview }) {
         <div className="flex flex-col items-center gap-2 sm:flex-row sm:flex-wrap sm:items-center sm:justify-between sm:gap-3">
           <div className="flex flex-wrap items-center justify-center gap-2 sm:justify-start">
             <Stars value={review.rating} />
-            <span className="text-sm tabular-nums text-stone-500" aria-label={`${review.rating} out of 5`}>
+            <span className="text-sm font-semibold tabular-nums text-ink-2" aria-label={`${review.rating} out of 5`}>
               {review.rating}.0
             </span>
           </div>
           <VerifiedBadge />
         </div>
 
-        <h3 className="mt-3 font-[family-name:var(--font-fredoka)] text-lg font-semibold leading-snug tracking-tight text-stone-900 sm:text-xl">
+        <h3 className="mt-3 font-[family-name:var(--font-fredoka)] text-lg font-semibold leading-snug tracking-tight text-ink sm:text-xl">
           {review.title}
         </h3>
         {review.body ? (
           <>
-            <p className="mt-2.5 hidden text-[0.9375rem] leading-relaxed text-stone-600 sm:block">
+            <p className="mt-2.5 hidden text-[0.9375rem] font-semibold leading-relaxed text-ink-2 sm:block">
               {review.body}
             </p>
             <p className="sr-only sm:hidden">{review.body}</p>
           </>
         ) : null}
 
-        <p className="mt-3 hidden text-xs leading-relaxed text-stone-400 sm:block">
+        <p className="mt-3 hidden text-xs font-semibold leading-relaxed text-ink-2 sm:block">
           {posted} · Order {purchased} · {review.author}
         </p>
         <p className="sr-only sm:hidden">
@@ -178,14 +178,14 @@ export function ProductReviewsSection({ className = "" }: ProductReviewsSectionP
   return (
     <section
       id="reviews"
-      className={`border-t border-stone-200/80 bg-gradient-to-b from-stone-50/90 to-white ${className}`.trim()}
+      className={`bg-cream ${className}`.trim()}
     >
       <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-12">
         <div className="text-center">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.2em] text-stone-400">
+          <p className="eyebrow-pill text-[11px] uppercase tracking-wide">
             Reviews
           </p>
-          <h2 className="mt-1.5 font-[family-name:var(--font-fredoka)] text-2xl font-semibold tracking-tight text-stone-900 sm:text-[1.65rem]">
+          <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
             What buyers say
           </h2>
         </div>
@@ -202,20 +202,20 @@ export function ProductReviewsSection({ className = "" }: ProductReviewsSectionP
             <button
               type="button"
               onClick={() => go(-1)}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-stone-400 transition-colors hover:bg-stone-200/60 hover:text-stone-800 active:bg-stone-200/80"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)] transition hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_var(--ink)]"
               aria-label="Previous review"
             >
               <ChevronLeft className="h-5 w-5" />
             </button>
 
-            <div className="min-w-0 flex-1 rounded-3xl bg-white p-5 shadow-[0_2px_32px_-8px_rgba(15,23,42,0.08)] ring-1 ring-stone-900/[0.04] sm:p-7">
+            <div className="sticker-card min-w-0 flex-1 p-5 sm:p-7">
               <ReviewSlide key={review.reviewPosted + review.author} review={review} />
             </div>
 
             <button
               type="button"
               onClick={() => go(1)}
-              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full text-stone-400 transition-colors hover:bg-stone-200/60 hover:text-stone-800 active:bg-stone-200/80"
+              className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border-2 border-ink bg-white text-ink shadow-[3px_3px_0_var(--ink)] transition hover:-translate-y-0.5 active:translate-x-[2px] active:translate-y-[2px] active:shadow-[1px_1px_0_var(--ink)]"
               aria-label="Next review"
             >
               <ChevronRight className="h-5 w-5" />
@@ -236,7 +236,7 @@ export function ProductReviewsSection({ className = "" }: ProductReviewsSectionP
                 aria-label={`Review ${i + 1} of ${n}, ${r.author}`}
                 onClick={() => goTo(i)}
                 className={`h-1.5 rounded-full transition-all duration-300 ease-out ${
-                  i === index ? "w-7 bg-stone-800" : "w-1.5 bg-stone-300 hover:bg-stone-400"
+                  i === index ? "w-7 bg-ink" : "w-1.5 bg-ink/20 hover:bg-ink/40"
                 }`}
               />
             ))}

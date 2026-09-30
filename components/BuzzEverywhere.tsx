@@ -2,9 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 
-const BUZZ_ORANGE = "#FF7700";
-
-function ReelCard({ src }: { src: string }) {
+function ReelCard({ src, stagger }: { src: string; stagger?: boolean }) {
   const wrapRef = useRef<HTMLDivElement>(null);
   const videoRef = useRef<HTMLVideoElement>(null);
   const [inView, setInView] = useState(false);
@@ -33,12 +31,11 @@ function ReelCard({ src }: { src: string }) {
   return (
     <div
       ref={wrapRef}
-      className="relative w-full min-w-0 sm:max-w-none"
+      className={`relative w-full min-w-0 sm:max-w-none ${
+        stagger ? "-translate-y-3" : ""
+      }`}
     >
-      <div
-        className="relative aspect-[9/16] overflow-hidden rounded-2xl shadow-[0_12px_40px_-8px_rgba(0,0,0,0.35)] ring-1 ring-black/10"
-        style={{ borderRadius: "14px" }}
-      >
+      <div className="relative aspect-[9/16] overflow-hidden rounded-[18px] border-[2.5px] border-white transition-transform duration-200 ease-[cubic-bezier(0.3,1.6,0.5,1)] hover:-rotate-1 hover:scale-[1.03]">
         <video
           ref={videoRef}
           className="h-full w-full object-cover"
@@ -58,51 +55,27 @@ type BuzzEverywhereProps = {
 };
 
 /**
- * Orange wave header + overlapping 9:16 reel row — videos only.
+ * Dark ink section with white-bordered 9:16 reel tiles — videos only.
  */
 export function BuzzEverywhere({ videos }: BuzzEverywhereProps) {
   return (
     <section
       id="buzz"
-      className="relative scroll-mt-24 bg-white pb-14 pt-0 sm:pb-20"
+      className="relative scroll-mt-24 bg-ink py-16 text-white sm:py-20"
       aria-labelledby="buzz-heading"
     >
-      <div className="relative">
-        <div
-          className="relative overflow-hidden pb-20 pt-10 sm:pb-28 sm:pt-14"
-          style={{ backgroundColor: BUZZ_ORANGE }}
-        >
-          <h2
-            id="buzz-heading"
-            className="relative z-[1] px-4 text-center font-[family-name:var(--font-buzz)] text-2xl font-black uppercase leading-tight tracking-wide text-white sm:text-4xl md:text-5xl"
-          >
-            The buzz is everywhere!
-          </h2>
+      <h2
+        id="buzz-heading"
+        className="px-4 text-center font-[family-name:var(--font-fredoka)] text-3xl font-semibold leading-tight tracking-tight text-white sm:text-4xl md:text-5xl"
+      >
+        The buzz is <span className="text-sun">everywhere!</span>
+      </h2>
 
-          <div
-            className="pointer-events-none absolute bottom-0 left-0 right-0 leading-[0]"
-            aria-hidden
-          >
-            <svg
-              className="block h-[52px] w-full sm:h-[72px]"
-              viewBox="0 0 1440 72"
-              preserveAspectRatio="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                fill="#ffffff"
-                d="M0,32 C240,72 480,0 720,32 C960,64 1200,8 1440,40 L1440,72 L0,72 Z"
-              />
-            </svg>
-          </div>
-        </div>
-
-        <div className="relative z-10 mx-auto -mt-[4.5rem] max-w-6xl px-4 sm:-mt-[5.5rem] sm:px-6">
-          <div className="grid grid-cols-2 gap-3 pb-2 sm:grid-cols-4 sm:gap-5 sm:pb-0">
-            {videos.map((src) => (
-              <ReelCard key={src} src={src} />
-            ))}
-          </div>
+      <div className="mx-auto mt-12 max-w-6xl px-4 sm:px-6">
+        <div className="grid grid-cols-2 gap-3 pb-2 sm:grid-cols-4 sm:gap-5 sm:pb-0">
+          {videos.map((src, i) => (
+            <ReelCard key={src} src={src} stagger={i === 1} />
+          ))}
         </div>
       </div>
     </section>

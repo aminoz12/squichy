@@ -122,7 +122,7 @@ export async function POST(request: Request) {
         unit_amount: unitAmount,
         product_data: {
           name: `${product.name} (${option.label})`,
-          description: `${option.sizeCm} cm`,
+          ...(option.sizeCm > 0 ? { description: `${option.sizeCm} cm` } : {}),
         },
       },
     });
@@ -149,6 +149,7 @@ export async function POST(request: Request) {
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
       line_items: lineItems,
+      allow_promotion_codes: true,
       shipping_address_collection: {
         allowed_countries: [
           "US", "CA", "AL", "AD", "AT", "BE", "BA", "BG", "HR", "CY", "CZ", "DK",

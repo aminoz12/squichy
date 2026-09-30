@@ -11,13 +11,13 @@ export function Pricing() {
       className="scroll-mt-24 mx-auto max-w-6xl px-4 py-16 sm:px-6 sm:py-20"
     >
       <div className="text-center">
-        <p className="text-sm font-extrabold uppercase tracking-widest text-accent">
+        <p className="eyebrow-pill text-sm uppercase tracking-wide">
           Pricing
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fredoka)] text-3xl font-bold text-foreground sm:text-4xl">
+        <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
           Pick your bundle. Embrace the mystery.
         </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold text-muted sm:text-base">
+        <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold text-ink-2 sm:text-base">
           Each option checks out securely with Stripe — no account required.
         </p>
       </div>

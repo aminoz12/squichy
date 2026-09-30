@@ -22,22 +22,22 @@ export function ProductShowcase() {
   return (
     <SectionReveal
       id="showcase"
-      className="scroll-mt-24 border-y border-pink-100 bg-white/60 py-14 sm:py-16"
+      className="scroll-mt-24 bg-cream py-14 sm:py-16"
     >
       <div className="mx-auto max-w-6xl px-4 sm:px-6">
         <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
           <div>
-            <p className="text-sm font-extrabold uppercase tracking-widest text-primary-dark">
+            <p className="eyebrow-pill text-sm uppercase tracking-wide">
               Product showcase
             </p>
-            <h2 className="mt-2 font-[family-name:var(--font-fredoka)] text-3xl font-bold text-foreground sm:text-4xl">
+            <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
               Soft. Squishy. Unserious.
             </h2>
-            <ul className="mt-6 space-y-3 text-base font-semibold text-foreground">
+            <ul className="mt-6 space-y-3 text-base font-semibold text-ink">
               {benefits.map((b) => (
                 <li key={b} className="flex gap-3">
                   <span
-                    className="mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full bg-primary text-sm text-foreground"
+                    className="mt-0.5 inline-flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full border-2 border-ink bg-mint text-sm font-black text-ink"
                     aria-hidden
                   >
                     ✓
@@ -50,7 +50,7 @@ export function ProductShowcase() {
 
           <div className="relative">
             <div
-              className="relative aspect-[4/3] overflow-hidden rounded-[2rem] border border-pink-200 bg-pink-50 shadow-xl"
+              className="relative aspect-[4/3] overflow-hidden rounded-[28px] border-[3px] border-ink bg-pink-soft shadow-[6px_6px_0_var(--ink)]"
               aria-roledescription="carousel"
               aria-label="Product images"
             >
@@ -66,12 +66,12 @@ export function ProductShowcase() {
                 />
               </div>
             </div>
-            <p className="mt-3 text-center text-sm font-bold text-muted">
+            <p className="mt-3 text-center text-sm font-bold text-ink-2">
               {slide.caption}
             </p>
 
             <div
-              className="mt-4 flex justify-center gap-1.5"
+              className="mt-4 flex justify-center gap-2"
               role="tablist"
               aria-label="Choose slide"
             >
@@ -83,8 +83,8 @@ export function ProductShowcase() {
                   aria-selected={i === index}
                   aria-label={`Image ${i + 1} of ${showcaseSlides.length}`}
                   onClick={() => setIndex(i)}
-                  className={`h-2.5 w-2.5 rounded-full transition ${
-                    i === index ? "bg-accent" : "bg-pink-200"
+                  className={`h-3 w-3 rounded-full border-2 border-ink transition ${
+                    i === index ? "bg-pink-pop" : "bg-white"
                   }`}
                 />
               ))}

@@ -3,6 +3,8 @@
  * Checkout uses Stripe Checkout Sessions (POST /api/checkout), not Payment Links.
  */
 
+import { catalogEntries, type CatalogFeel } from "./catalog-data";
+
 export const product = {
   name: "SquishyBun Dumplings",
   tagline: "Tiny dumplings. Huge dopamine.",
@@ -184,19 +186,35 @@ export type FaqItem = { q: string; a: string };
 export const faqItems: FaqItem[] = [
   {
     q: "What is a SquishyBun dumpling?",
-    a: "A palm-sized, slow-rise squishy toy inspired by dumplings. You won’t know the exact style or color until it arrives — that’s the fun.",
+    a: "A SquishyBun dumpling is a palm-sized, slow-rise squishy toy shaped like a steamed dumpling. Squeeze it flat and it slowly springs back into shape. Ours come as mystery blind boxes, so you won’t know the exact style or color until it arrives — that’s the fun.",
+  },
+  {
+    q: "How does the BUY 2 GET 1 FREE deal work?",
+    a: "Pick the “BUY 2, GET 1 FREE” bundle on any squishy’s product page and you pay for two while a third is included free. Bigger bundles save even more, and the discount is applied automatically at checkout — no code needed.",
   },
   {
     q: "How long does shipping take?",
-    a: "Most US and Canada orders ship within 2 business days. Transit is typically 3–7 business days depending on your region. You’ll get tracking by email.",
+    a: "Orders are packed within 1–2 business days. Delivery typically takes 3–7 business days in the United States, 5–10 in Canada, and 7–14 in the United Kingdom and Europe. You’ll receive a tracking link by email as soon as your order ships.",
+  },
+  {
+    q: "How much does delivery cost?",
+    a: "Delivery is free on orders over $50. Below that, a flat $9 rate applies at checkout, and some larger bundles include free shipping on their own. The free-delivery progress bar in your bag shows exactly how close you are.",
+  },
+  {
+    q: "Are squishy toys safe for kids?",
+    a: "Yes — our squishies are made for ages 3 and up from soft, non-toxic slow-rise foam. They contain small parts, so supervise young children, and remember they are toys, not food: they should never be chewed or eaten.",
+  },
+  {
+    q: "What is inside a mystery squishy blind box?",
+    a: "Each mystery blind box contains one surprise squishy from the collection shown on the product page — a random style and color. Some boxes hide rare pulls, like the Shimmering Starlight Dumpling, which is what makes unboxing them so fun to film.",
   },
   {
     q: "What’s your refund policy?",
-    a: "If something arrives damaged or not as described, email us within 14 days and we’ll make it right.",
+    a: "If your order arrives damaged or not as described, email us within 14 days of delivery and we’ll replace it or refund you. Returns are free — see our returns page for the step-by-step process.",
   },
   {
-    q: "Is this food?",
-    a: "No — it’s a toy. Do not eat the squishy.",
+    q: "Do you ship to the UK and Europe?",
+    a: "Yes. We ship to the United States, Canada, the United Kingdom, and most European countries. Shipping options and any costs are shown at checkout before you pay, and every order gets email tracking.",
   },
 ];
 
@@ -366,7 +384,7 @@ export const singleProductOffer = {
   id: "squishybun-mystery-dumpling",
   name: "Crazy Fun Rainbow Squishy Bun Mystery Dumpling",
   slug: "mystery-dumpling",
-  categoryName: "Dumpling Squishy",
+  categoryName: "Dumplings",
   categoryImage: "/dumpling.png",
   description:
     "Mystery squishy bao bun sensory fidget toy — slow-rise texture, blind-box fun, and a chance at the super rare Shimmering Starlight Dumpling. Ages 3+.",
@@ -417,7 +435,7 @@ export type ProductOffer = Omit<typeof singleProductOffer, "id" | "name" | "slug
   badge?: string;
 };
 
-export const products: ProductOffer[] = [
+const coreProducts: ProductOffer[] = [
   {
     ...singleProductOffer,
     id: "squishybun-mystery-dumpling",
@@ -429,7 +447,7 @@ export const products: ProductOffer[] = [
     id: "apple-squishy",
     name: "Apple Squishy",
     slug: "apple-squishy",
-    categoryName: "Apple Squishy",
+    categoryName: "Bakery & Sweets",
     categoryImage: "/apple.png",
     description: "Sweet, squishy, and satisfying Apple Squishy. A perfect addition to your collection.",
     images: ["/Apple1.png", "/Apple2.png", "/Apple3.png"],
@@ -462,7 +480,7 @@ export const products: ProductOffer[] = [
     id: "cheese-square",
     name: "Cheese Square",
     slug: "cheese-square",
-    categoryName: "Cheese Square Squishy",
+    categoryName: "Bakery & Sweets",
     categoryImage: "/cheese.png",
     description: "The cheesiest squishy around! Soft, slow-rise Cheese Square that you'll want to squeeze all day.",
     images: ["/cheese.png"],
@@ -496,7 +514,7 @@ export const products: ProductOffer[] = [
     id: "needoh",
     name: "NeeDoh 3 Pcs",
     slug: "needoh",
-    categoryName: "NeeDoh Squishy",
+    categoryName: "Sensory & ASMR",
     categoryImage: "/needoh.png",
     description: "Experience extreme relaxation with our vibrant cubes: pink, blue, green, and purple. Designed to evoke a sense of calm and tranquility.",
     images: ["/needoh1.png", "/needoh2.png", "/videoneedoh.mp4"],
@@ -529,7 +547,7 @@ export const products: ProductOffer[] = [
     id: "butter-squishy",
     name: "Butter Squishy",
     slug: "butter-squishy",
-    categoryName: "Butter Squishy",
+    categoryName: "Bakery & Sweets",
     categoryImage: "/butter.png",
     description: "Smooth, satisfying, and oh-so-squishy! The Butter Squishy is the ultimate sensory delight.",
     images: ["/butter.png"],
@@ -558,6 +576,76 @@ export const products: ProductOffer[] = [
     })),
   },
 ];
+
+/* ── Imported Squishy Bun catalog (53 products from the reference export) ── */
+
+const FEEL_LABELS: Record<CatalogFeel, string> = {
+  soft: "Soft & slow-rise",
+  gooey: "Gooey & stretchy",
+  crunchy: "Crunchy ASMR",
+  gift: "Gift-ready set",
+};
+
+const FEEL_DETAILS: Record<CatalogFeel, string[]> = {
+  soft: [
+    "Ultra-soft, slow-rise foam that springs back after every squish.",
+    "Great for quiet fidgeting at a desk or in class.",
+  ],
+  gooey: [
+    "Gooey, stretchy texture that squashes flat and snaps back.",
+    "Cool to the touch and endlessly satisfying to knead.",
+  ],
+  crunchy: [
+    "Crunchy ASMR filling that crackles with every squeeze.",
+    "A favorite for sensory play and satisfying sound.",
+  ],
+  gift: [
+    "Curated squishy set in gift-ready packaging — no wrapping needed.",
+    "A mix of fan favorites in one happy box.",
+  ],
+};
+
+/** Pastel photo tints cycled across catalog cards (matches the sticker design tokens). */
+const CATALOG_ACCENTS = ["#ffd6e6", "#fff0b8", "#cff7ea", "#e6ddff"];
+
+export const catalogProducts: ProductOffer[] = catalogEntries.map((entry, i) => ({
+  id: entry.id,
+  name: entry.name,
+  slug: entry.slug,
+  categoryName: entry.category,
+  categoryImage: entry.image,
+  description: entry.description,
+  deliveryUsd: 9,
+  images: [entry.image],
+  details: [
+    ...FEEL_DETAILS[entry.feel],
+    "Suitable for ages 3 and up.",
+    "Small parts — supervise young children.",
+  ],
+  specs: [
+    { label: "Feel", value: FEEL_LABELS[entry.feel] },
+    { label: "Collection", value: entry.category },
+    { label: "Brand", value: "Squishy Bun" },
+    { label: "Age", value: "3+" },
+  ],
+  accentColor: CATALOG_ACCENTS[i % CATALOG_ACCENTS.length],
+  badge: entry.badge,
+  // Gift boxes and advent calendars sell at a single price — no bundle tiers.
+  // sizeCm 0 = dimensions unknown for imported items; UI and checkout skip it.
+  options: (entry.category === "Boxes & Gift Sets" ||
+  entry.category === "Advent Calendars"
+    ? getProductBundles(entry.id, entry.priceUsd).slice(0, 1)
+    : getProductBundles(entry.id, entry.priceUsd)
+  ).map((b) => ({
+    id: b.id,
+    label: b.title,
+    sizeCm: 0,
+    priceUsd: b.totalPriceUsd,
+    freeShipping: b.freeShipping,
+  })),
+}));
+
+export const products: ProductOffer[] = [...coreProducts, ...catalogProducts];
 
 export type ProductDetail = {
   id: string;

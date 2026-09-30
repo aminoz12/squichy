@@ -68,25 +68,25 @@ export function SingleProductOffer({
   }
 
   const pickerPanel = showPicker && (
-    <div className="mt-5 rounded-2xl border border-pink-100 bg-pink-50/40 p-4">
-      <p className="text-sm font-extrabold uppercase tracking-wider text-foreground">
+    <div className="sticker-card mt-5 p-4">
+      <p className="font-[family-name:var(--font-fredoka)] text-sm font-semibold uppercase tracking-wider text-ink">
         Choose size
       </p>
       <div className="mt-3 grid gap-2">
         {options.map((opt) => (
           <label
             key={opt.id}
-            className={`flex cursor-pointer items-center justify-between rounded-xl border px-3 py-2 text-sm font-bold ${
+            className={`flex cursor-pointer items-center justify-between rounded-[14px] border-2 border-ink px-3 py-2 text-sm font-bold ${
               selected.id === opt.id
-                ? "border-accent bg-white text-foreground"
-                : "border-pink-100 bg-white text-muted"
+                ? "bg-sun-soft text-ink shadow-[2px_2px_0_var(--ink)]"
+                : "bg-white text-ink-2"
             }`}
           >
             <span>
               {opt.label} - {moneyUsd(opt.priceUsd)}
             </span>
             <input
-              className="h-4 w-4 accent-violet-600"
+              className="h-4 w-4 accent-pink-pop"
               type="radio"
               name="size"
               checked={selected.id === opt.id}
@@ -96,7 +96,7 @@ export function SingleProductOffer({
         ))}
       </div>
 
-      <div className="mt-4 space-y-1 text-sm font-semibold text-foreground">
+      <div className="mt-4 space-y-1 text-sm font-semibold text-ink">
         <p>
           Product: <strong>{moneyUsd(selected.priceUsd)}</strong>
         </p>
@@ -121,7 +121,7 @@ export function SingleProductOffer({
               unitPriceUsd: selected.priceUsd,
             })
           }
-          className="w-full rounded-2xl bg-foreground py-3.5 text-center text-sm font-extrabold text-white shadow-lg transition hover:opacity-95 active:scale-[0.99]"
+          className="btn-squish w-full text-sm"
         >
           Add to cart
         </button>
@@ -129,7 +129,7 @@ export function SingleProductOffer({
           type="button"
           disabled={checkoutLoading}
           onClick={buyNow}
-          className="w-full rounded-2xl border-2 border-pink-200 py-3 text-center text-sm font-extrabold text-foreground transition hover:border-accent/50 disabled:opacity-60"
+          className="btn-squish btn-white w-full text-sm"
         >
           {checkoutLoading ? "Redirecting…" : "Buy now"}
         </button>
@@ -141,9 +141,9 @@ export function SingleProductOffer({
     return (
       <section id={id} className={className}>
         <div className="mx-auto w-full max-w-xl md:max-w-2xl">
-          <div className="rounded-[2rem] border border-pink-100/90 bg-gradient-to-br from-white via-white to-primary/15 p-6 shadow-[0_24px_70px_-20px_rgba(236,72,153,0.45)] ring-1 ring-pink-100/70 sm:p-8">
+          <div className="sticker-card p-6 sm:p-8">
             <div className="flex flex-col items-stretch gap-6 md:flex-row md:items-center md:gap-10">
-              <div className="relative mx-auto aspect-square w-full max-w-[min(100%,420px)] overflow-hidden rounded-3xl border-[3px] border-white shadow-2xl shadow-pink-300/45 ring-2 ring-pink-100/90 md:mx-0 md:max-w-[420px] md:shrink-0 lg:max-w-[460px]">
+              <div className="relative mx-auto aspect-square w-full max-w-[min(100%,420px)] overflow-hidden rounded-[28px] border-[3px] border-ink bg-pink-soft shadow-[4px_4px_0_var(--ink)] md:mx-0 md:max-w-[420px] md:shrink-0 lg:max-w-[460px]">
                 <Image
                   src={heroSrc}
                   alt={name}
@@ -157,7 +157,7 @@ export function SingleProductOffer({
                 <button
                   type="button"
                   onClick={() => setShowPicker((v) => !v)}
-                  className="w-full rounded-2xl bg-accent px-8 py-5 text-center text-lg font-extrabold text-white shadow-xl shadow-accent/40 transition hover:scale-[1.02] hover:opacity-95 active:scale-[0.98] md:min-h-[4.5rem] md:text-xl"
+                  className="btn-squish w-full text-lg uppercase tracking-wide md:min-h-[4.5rem] md:text-xl"
                 >
                   Buy now
                 </button>
@@ -172,14 +172,14 @@ export function SingleProductOffer({
 
   return (
     <section id={id} className={className}>
-      <div className="rounded-3xl border border-pink-100 bg-white p-5 shadow-xl shadow-pink-200/30 sm:p-7">
-        <p className="text-sm font-extrabold uppercase tracking-widest text-accent">
+      <div className="sticker-card p-5 sm:p-7">
+        <p className="eyebrow-pill text-xs uppercase tracking-widest">
           Product
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fredoka)] text-3xl font-bold text-foreground sm:text-4xl">
+        <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-3xl font-semibold text-ink sm:text-4xl">
           {name}
         </h2>
-        <p className="mt-3 max-w-3xl text-sm font-semibold text-muted sm:text-base">
+        <p className="mt-3 max-w-3xl text-sm font-semibold text-ink-2 sm:text-base">
           {description}
         </p>
 
@@ -190,8 +190,8 @@ export function SingleProductOffer({
                 type="button"
                 key={src}
                 onClick={() => setImageIndex(i)}
-                className={`relative aspect-square overflow-hidden rounded-2xl border ${
-                  imageIndex === i ? "border-accent" : "border-pink-100"
+                className={`relative aspect-square overflow-hidden rounded-[16px] border-2 ${
+                  imageIndex === i ? "border-ink" : "border-transparent"
                 }`}
               >
                 <Image
@@ -207,7 +207,7 @@ export function SingleProductOffer({
         )}
 
         <div
-          className={`relative aspect-[4/3] overflow-hidden rounded-2xl border border-pink-100 bg-pink-50 ${
+          className={`relative aspect-[4/3] overflow-hidden rounded-[28px] border-[3px] border-ink bg-pink-soft shadow-[4px_4px_0_var(--ink)] ${
             images.length > 1 ? "mt-4" : "mt-6"
           }`}
         >
@@ -224,7 +224,7 @@ export function SingleProductOffer({
           <button
             type="button"
             onClick={() => setShowPicker((v) => !v)}
-            className="w-full rounded-2xl bg-accent py-3.5 text-center text-sm font-extrabold text-white shadow-lg shadow-accent/25 transition hover:opacity-95"
+            className="btn-squish w-full text-sm"
           >
             Buy now
           </button>

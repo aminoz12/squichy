@@ -54,13 +54,13 @@ export function ProductCatalog({
   return (
     <section id={id} className={className}>
       <div className="text-center">
-        <p className="text-sm font-extrabold uppercase tracking-widest text-accent">
+        <p className="eyebrow-pill text-sm uppercase tracking-wide">
           Products
         </p>
-        <h2 className="mt-2 font-[family-name:var(--font-fredoka)] text-3xl font-bold text-foreground sm:text-4xl">
+        <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-3xl font-semibold tracking-tight text-ink sm:text-4xl">
           {title}
         </h2>
-        <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold text-muted sm:text-base">
+        <p className="mx-auto mt-3 max-w-2xl text-sm font-semibold text-ink-2 sm:text-base">
           {subtitle}
         </p>
       </div>
@@ -74,13 +74,11 @@ export function ProductCatalog({
               setSelectedId(item.id);
               setImageIndex(0);
             }}
-            className={`overflow-hidden rounded-3xl border bg-white text-left shadow-lg transition hover:-translate-y-0.5 ${
-              selected.id === item.id
-                ? "border-accent/50 ring-2 ring-accent/20"
-                : "border-pink-100"
+            className={`sticker-card sticker-lift overflow-hidden text-left ${
+              selected.id === item.id ? "bg-sun-soft" : "bg-white"
             }`}
           >
-            <div className="relative aspect-[4/3]">
+            <div className="relative aspect-[4/3] border-b-[2.5px] border-ink">
               <Image
                 src={item.images[0]}
                 alt={item.name}
@@ -90,18 +88,18 @@ export function ProductCatalog({
               />
             </div>
             <div className="p-4">
-              <p className="text-xs font-extrabold uppercase tracking-widest text-accent">
+              <p className="text-xs font-extrabold uppercase tracking-widest text-pink-pop">
                 {item.size}
               </p>
-              <h3 className="mt-1 font-[family-name:var(--font-fredoka)] text-xl font-bold text-foreground">
+              <h3 className="mt-1 font-[family-name:var(--font-fredoka)] text-xl font-semibold text-ink">
                 {item.name}
               </h3>
               <div className="mt-2 flex items-center gap-2">
-                <span className="text-2xl font-extrabold text-foreground">
+                <span className="font-[family-name:var(--font-fredoka)] text-2xl font-semibold text-ink">
                   {formatMoney(item.price)}
                 </span>
                 {item.compareAt != null && (
-                  <span className="text-sm font-bold text-muted line-through">
+                  <span className="text-sm font-bold text-ink-2 line-through">
                     {formatMoney(item.compareAt)}
                   </span>
                 )}
@@ -111,21 +109,21 @@ export function ProductCatalog({
         ))}
       </div>
 
-      <article className="mt-8 rounded-3xl border border-pink-100 bg-white p-5 shadow-xl shadow-pink-200/30 sm:p-7">
-        <p className="text-xs font-extrabold uppercase tracking-widest text-accent">
+      <article className="sticker-card mt-8 p-5 sm:p-7">
+        <p className="eyebrow-pill text-xs uppercase tracking-wide">
           Selected product
         </p>
-        <h3 className="mt-2 font-[family-name:var(--font-fredoka)] text-2xl font-bold text-foreground sm:text-3xl">
+        <h3 className="mt-4 font-[family-name:var(--font-fredoka)] text-2xl font-semibold text-ink sm:text-3xl">
           {selected.name}
         </h3>
-        <p className="mt-1 text-sm font-bold text-primary-dark">{selected.size}</p>
+        <p className="mt-1 text-sm font-bold text-pink-pop">{selected.size}</p>
 
         <div className="mt-4 flex items-center gap-2">
-          <span className="text-3xl font-extrabold text-foreground">
+          <span className="font-[family-name:var(--font-fredoka)] text-3xl font-semibold text-ink">
             {formatMoney(selected.price)}
           </span>
           {selected.compareAt != null && (
-            <span className="text-sm font-bold text-muted line-through">
+            <span className="text-sm font-bold text-ink-2 line-through">
               {formatMoney(selected.compareAt)}
             </span>
           )}
@@ -137,8 +135,8 @@ export function ProductCatalog({
               type="button"
               key={src}
               onClick={() => setImageIndex(i)}
-              className={`relative aspect-square overflow-hidden rounded-2xl border ${
-                imageIndex === i ? "border-accent" : "border-pink-100"
+              className={`relative aspect-square overflow-hidden rounded-[16px] border-2 ${
+                imageIndex === i ? "border-ink" : "border-transparent"
               }`}
             >
               <Image
@@ -152,7 +150,7 @@ export function ProductCatalog({
           ))}
         </div>
 
-        <div className="mt-4 relative aspect-[4/3] overflow-hidden rounded-2xl border border-pink-100 bg-pink-50">
+        <div className="mt-4 relative aspect-[4/3] overflow-hidden rounded-[18px] border-[2.5px] border-ink bg-pink-soft shadow-[3px_3px_0_var(--ink)]">
           <Image
             src={selected.images[imageIndex]}
             alt={`${selected.name} preview`}
@@ -162,57 +160,57 @@ export function ProductCatalog({
           />
         </div>
 
-        <p className="mt-6 text-sm font-semibold leading-relaxed text-muted sm:text-base">
+        <p className="mt-6 text-sm font-semibold leading-relaxed text-ink-2 sm:text-base">
           {selected.description}
         </p>
 
-        <h4 className="mt-6 text-sm font-extrabold uppercase tracking-wider text-foreground">
+        <h4 className="mt-6 font-[family-name:var(--font-fredoka)] text-sm font-semibold uppercase tracking-wider text-ink">
           Product details
         </h4>
         <ul className="mt-3 space-y-2">
           {selected.details.map((line) => (
-            <li key={line} className="flex gap-2 text-sm font-semibold text-muted">
-              <span className="mt-0.5 text-primary-dark">•</span>
+            <li key={line} className="flex gap-2 text-sm font-semibold text-ink-2">
+              <span className="mt-0.5 text-pink-pop">•</span>
               <span>{line}</span>
             </li>
           ))}
         </ul>
 
-        <h4 className="mt-6 text-sm font-extrabold uppercase tracking-wider text-foreground">
+        <h4 className="mt-6 font-[family-name:var(--font-fredoka)] text-sm font-semibold uppercase tracking-wider text-ink">
           Specs
         </h4>
-        <dl className="mt-3 grid gap-2 rounded-2xl border border-pink-100 bg-pink-50/40 p-4 sm:grid-cols-2">
+        <dl className="mt-3 grid gap-2 rounded-[16px] border-2 border-ink bg-cream p-4 sm:grid-cols-2">
           <div>
-            <dt className="text-xs font-bold uppercase tracking-wide text-muted">Color</dt>
-            <dd className="text-sm font-extrabold text-foreground">{selected.specs.color}</dd>
+            <dt className="text-xs font-bold uppercase tracking-wide text-ink-2">Color</dt>
+            <dd className="text-sm font-bold text-ink">{selected.specs.color}</dd>
           </div>
           <div>
-            <dt className="text-xs font-bold uppercase tracking-wide text-muted">Theme</dt>
-            <dd className="text-sm font-extrabold text-foreground">{selected.specs.theme}</dd>
+            <dt className="text-xs font-bold uppercase tracking-wide text-ink-2">Theme</dt>
+            <dd className="text-sm font-bold text-ink">{selected.specs.theme}</dd>
           </div>
           <div>
-            <dt className="text-xs font-bold uppercase tracking-wide text-muted">Brand</dt>
-            <dd className="text-sm font-extrabold text-foreground">{selected.specs.brand}</dd>
+            <dt className="text-xs font-bold uppercase tracking-wide text-ink-2">Brand</dt>
+            <dd className="text-sm font-bold text-ink">{selected.specs.brand}</dd>
           </div>
           <div>
-            <dt className="text-xs font-bold uppercase tracking-wide text-muted">
+            <dt className="text-xs font-bold uppercase tracking-wide text-ink-2">
               Character
             </dt>
-            <dd className="text-sm font-extrabold text-foreground">
+            <dd className="text-sm font-bold text-ink">
               {selected.specs.character}
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-bold uppercase tracking-wide text-muted">
+            <dt className="text-xs font-bold uppercase tracking-wide text-ink-2">
               Dimensions
             </dt>
-            <dd className="text-sm font-extrabold text-foreground">
+            <dd className="text-sm font-bold text-ink">
               {selected.specs.dimensions}
             </dd>
           </div>
           <div>
-            <dt className="text-xs font-bold uppercase tracking-wide text-muted">Weight</dt>
-            <dd className="text-sm font-extrabold text-foreground">{selected.specs.weight}</dd>
+            <dt className="text-xs font-bold uppercase tracking-wide text-ink-2">Weight</dt>
+            <dd className="text-sm font-bold text-ink">{selected.specs.weight}</dd>
           </div>
         </dl>
 
@@ -227,13 +225,13 @@ export function ProductCatalog({
                 quantity: 1,
               })
             }
-            className="w-full rounded-2xl bg-foreground py-3.5 text-center text-sm font-extrabold text-white shadow-lg transition hover:opacity-95 active:scale-[0.99]"
+            className="btn-squish w-full text-sm"
           >
             Add to cart
           </button>
           <Link
             href="/products#offer"
-            className="w-full rounded-2xl border-2 border-pink-200 py-3 text-center text-sm font-extrabold text-foreground transition hover:border-accent/50"
+            className="btn-squish btn-white w-full text-sm"
           >
             Buy now
           </Link>

@@ -169,36 +169,36 @@ export function CheckoutReturnBanner() {
 
   const styles =
     state === "success"
-      ? "border-emerald-200 bg-emerald-50 text-emerald-950"
+      ? "bg-mint-soft"
       : state === "cancel"
-        ? "border-amber-200 bg-amber-50 text-amber-950"
+        ? "bg-sun-soft"
         : state === "pending"
-          ? "border-sky-200 bg-sky-50 text-sky-950"
+          ? "bg-lilac"
           : state === "loading"
-            ? "border-pink-200 bg-white text-foreground"
-            : "border-red-200 bg-red-50 text-red-950";
+            ? "bg-white"
+            : "bg-pink-soft";
 
   return (
     <div
-      className={`mx-auto max-w-6xl px-4 pt-4 sm:px-6 ${state === "loading" ? "animate-pulse" : ""}`}
+      className="mx-auto max-w-6xl px-4 pt-4 sm:px-6"
       role="status"
     >
       <div
-        className={`rounded-2xl border-2 p-4 shadow-md sm:flex sm:items-start sm:justify-between sm:gap-4 ${styles}`}
+        className={`rounded-[18px] border-[2.5px] border-ink p-4 text-ink shadow-[4px_4px_0_var(--ink)] sm:flex sm:items-start sm:justify-between sm:gap-4 ${styles}`}
       >
         <div>
-          <p className="font-[family-name:var(--font-fredoka)] text-lg font-bold">
+          <p className="font-[family-name:var(--font-fredoka)] text-lg font-semibold">
             {state === "loading" ? "Verifying payment…" : message}
           </p>
           {detail && state !== "loading" && (
-            <p className="mt-1 text-sm font-semibold opacity-90">{detail}</p>
+            <p className="mt-1 text-sm font-semibold text-ink-2">{detail}</p>
           )}
         </div>
         {state !== "loading" && (
           <button
             type="button"
             onClick={dismiss}
-            className="mt-3 shrink-0 rounded-xl border border-current/20 bg-white/80 px-4 py-2 text-sm font-extrabold transition hover:bg-white sm:mt-0"
+            className="btn-squish btn-white mt-3 shrink-0 text-sm sm:mt-0"
           >
             Continue
           </button>

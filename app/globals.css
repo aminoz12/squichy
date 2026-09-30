@@ -1,12 +1,23 @@
 @import "tailwindcss";
 
-/* Brand tokens: soft pastel base + punchy CTA */
+/* Sticker design system: cream base, ink outlines, hard offset shadows */
 :root {
-  --background: #fff5fb;
-  --foreground: #1f1523;
-  --muted: #6b5560;
+  --cream: #fff6ea;
+  --ink: #2a1442;
+  --ink-2: #5a4a70;
+  --pink-pop: #ff3d81;
+  --pink-soft: #ffd6e6;
+  --sun: #ffd23f;
+  --sun-soft: #fff0b8;
+  --mint: #2ed8a7;
+  --mint-soft: #cff7ea;
+  --lilac: #e6ddff;
+
+  --background: var(--cream);
+  --foreground: var(--ink);
+  --muted: var(--ink-2);
   --primary: #f9a8d4;
-  --primary-dark: #ec4899;
+  --primary-dark: var(--pink-pop);
   --accent: #7c3aed;
   --accent-bright: #a78bfa;
   --card: #ffffff;
@@ -22,7 +33,17 @@
   --color-accent: var(--accent);
   --color-accent-bright: var(--accent-bright);
   --color-card: var(--card);
-  --font-sans: var(--font-nunito);
+  --color-cream: var(--cream);
+  --color-ink: var(--ink);
+  --color-ink-2: var(--ink-2);
+  --color-pink-pop: var(--pink-pop);
+  --color-pink-soft: var(--pink-soft);
+  --color-sun: var(--sun);
+  --color-sun-soft: var(--sun-soft);
+  --color-mint: var(--mint);
+  --color-mint-soft: var(--mint-soft);
+  --color-lilac: var(--lilac);
+  --font-sans: var(--font-figtree);
   --font-display: var(--font-fredoka);
 }
 
@@ -36,15 +57,133 @@ body {
   font-family: var(--font-sans), system-ui, sans-serif;
 }
 
-/* Subtle grain for premium feel without heavy assets */
-body::before {
-  content: "";
+@layer components {
+/* Squish buttons: thick ink border, hard offset shadow, squash on press */
+.btn-squish {
+  --bg: var(--pink-pop);
+  --fg: #fff;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5em;
+  font-family: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
+  font-weight: 600;
+  padding: 0.85em 1.5em;
+  border: 2.5px solid var(--ink);
+  border-radius: 999px;
+  background: var(--bg);
+  color: var(--fg);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: 4px 4px 0 var(--ink);
+  transition:
+    transform 0.15s cubic-bezier(0.3, 1.6, 0.5, 1),
+    box-shadow 0.15s;
+}
+.btn-squish:hover {
+  transform: translate(-1px, -2px) scale(1.02);
+  box-shadow: 6px 6px 0 var(--ink);
+}
+.btn-squish:active {
+  transform: translate(3px, 3px) scale(1.04, 0.92);
+  box-shadow: 1px 1px 0 var(--ink);
+}
+.btn-squish:disabled {
+  opacity: 0.5;
   pointer-events: none;
-  position: fixed;
-  inset: 0;
-  z-index: 50;
-  opacity: 0.04;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+.btn-sun {
+  --bg: var(--sun);
+  --fg: var(--ink);
+}
+.btn-white {
+  --bg: #fff;
+  --fg: var(--ink);
+}
+.btn-ink {
+  --bg: var(--ink);
+  --fg: #fff;
+}
+
+/* Sticker cards: white panel with ink outline + hard shadow */
+.sticker-card {
+  background: var(--card);
+  border: 2.5px solid var(--ink);
+  border-radius: 22px;
+  box-shadow: 4px 4px 0 var(--ink);
+}
+.sticker-lift {
+  transition:
+    transform 0.2s cubic-bezier(0.3, 1.6, 0.5, 1),
+    box-shadow 0.2s;
+}
+.sticker-lift:hover {
+  transform: translate(-2px, -4px);
+  box-shadow: 7px 8px 0 var(--ink);
+}
+
+/* Horizontal scroller with a visible, on-theme scrollbar (upsell rows) */
+.hscroll {
+  display: flex;
+  overflow-x: auto;
+  scrollbar-width: thin;
+  scrollbar-color: var(--pink-pop) var(--pink-soft);
+  -webkit-overflow-scrolling: touch;
+}
+.hscroll::-webkit-scrollbar {
+  height: 9px;
+}
+.hscroll::-webkit-scrollbar-track {
+  background: var(--pink-soft);
+  border-radius: 99px;
+}
+.hscroll::-webkit-scrollbar-thumb {
+  background: var(--pink-pop);
+  border-radius: 99px;
+  border: 1.5px solid var(--ink);
+}
+
+/* Rotated eyebrow pill */
+.eyebrow-pill {
+  display: inline-block;
+  font-family: var(--font-fredoka), ui-rounded, system-ui, sans-serif;
+  font-weight: 600;
+  background: var(--sun);
+  border: 2px solid var(--ink);
+  border-radius: 99px;
+  padding: 0.25em 0.9em;
+  transform: rotate(-2deg);
+}
+
+/* Yellow marker stroke under a key word */
+.marker-word {
+  position: relative;
+  font-style: normal;
+  white-space: nowrap;
+}
+.marker-word::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0.04em;
+  height: 0.16em;
+  background: var(--sun);
+  border-radius: 9px;
+  transform: rotate(-1deg);
+  z-index: -1;
+}
+}
+
+/* Reference cart: modal pop-in and toast */
+@keyframes sticker-pop {
+  from {
+    transform: scale(0.7) rotate(-4deg);
+    opacity: 0;
+  }
+}
+.modal-pop {
+  animation: sticker-pop 0.4s cubic-bezier(0.3, 1.6, 0.5, 1);
 }
 
 @keyframes promo-marquee {

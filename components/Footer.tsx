@@ -9,23 +9,42 @@ const PAYMENT_ICONS = [
   { src: "/visa.png", alt: "Visa" },
 ] as const;
 
-const SOCIAL_ICON = "h-5 w-5 shrink-0 object-contain";
-const PAYMENT_ICON = "h-7 w-7 shrink-0 object-contain sm:h-8 sm:w-8";
+const SHOP_LINKS = [
+  { label: "All squishies", href: "/products" },
+  { label: "Dumplings", href: "/collections/dumplings" },
+  { label: "Bakery & Sweets", href: "/collections/bakery-sweets" },
+  { label: "Sensory & ASMR 🔥", href: "/collections/sensory-asmr" },
+  { label: "Animals", href: "/collections/animals" },
+  { label: "Mystery Minis", href: "/collections/mystery-minis" },
+] as const;
+
+const GIFT_LINKS = [
+  { label: "Gift sets", href: "/collections/boxes-gift-sets" },
+  { label: "Advent calendars", href: "/collections/advent-calendars" },
+] as const;
+
+const HELP_LINKS = [
+  { label: "FAQ", href: "/#faq" },
+  { label: "Shipping", href: "/shipping" },
+  { label: "Returns", href: "/returns" },
+  { label: "Contact", href: "/contact" },
+  { label: "About us", href: "/about" },
+  { label: "Blog", href: "/blog" },
+] as const;
 
 export function Footer() {
   return (
-    <footer className="border-t border-[#e65f00] bg-[#ff8a12] text-white shadow-[inset_0_1px_0_rgba(255,255,255,0.12)]">
-      <div className="mx-auto max-w-6xl px-4 pb-8 pt-6 sm:px-6 sm:pb-10 sm:pt-8">
-        {/*
-          Mobile: row 1 = brand | social (2 cols). Row 2 = payments full width centered.
-          md+: single row, 3 cols — brand | payments | social.
-        */}
-        <div className="grid grid-cols-[minmax(0,1fr)_auto] items-start gap-x-3 gap-y-4 md:grid-cols-[1fr_auto_1fr] md:gap-x-4 md:gap-y-0">
-          <span className="col-start-1 row-start-1 min-w-0 justify-self-start self-start pr-2 leading-tight font-[family-name:var(--font-fredoka)] text-sm font-black tracking-tight text-white sm:text-base md:pr-0">
-            SquishyBun Dumplings.
-          </span>
-
-          <div className="col-span-2 row-start-2 flex flex-wrap justify-center gap-x-2 gap-y-2 px-0 sm:gap-3 md:col-span-1 md:col-start-2 md:row-start-1 md:px-1">
+    <footer className="bg-ink pb-12 pt-14 text-[#e8dff5]">
+      <div className="mx-auto grid max-w-6xl gap-10 px-4 sm:px-6 md:grid-cols-[1.4fr_1fr_1fr_1fr]">
+        <div>
+          <p className="font-[family-name:var(--font-fredoka)] text-xl font-semibold tracking-tight text-white">
+            SquishyBun Dumplings<span className="text-pink-pop">.</span>
+          </p>
+          <p className="mt-3 max-w-[32ch] text-sm font-semibold text-[#e8dff5]/85">
+            A little squish. A lot of happy. Squishy toys for desks, gifts and
+            collections.
+          </p>
+          <div className="mt-5 flex flex-wrap gap-2.5">
             {PAYMENT_ICONS.map(({ src, alt }) => (
               <Image
                 key={src}
@@ -33,81 +52,85 @@ export function Footer() {
                 alt={alt}
                 width={32}
                 height={32}
-                className={PAYMENT_ICON}
+                className="h-7 w-7 shrink-0 object-contain"
               />
             ))}
           </div>
-
-          <nav
-            aria-label="Social"
-            className="col-start-2 row-start-1 flex min-w-0 shrink-0 flex-col items-end gap-3 self-start text-[10px] font-extrabold uppercase tracking-wide sm:gap-4 sm:text-xs md:col-start-3 md:row-start-1"
-          >
-            <a
-              href={social.instagram}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-white transition hover:text-[#2d2384]"
-            >
-              <Image
-                src="/insta.png"
-                alt=""
-                width={20}
-                height={20}
-                className={SOCIAL_ICON}
-              />
-              <span>Instagram</span>
-            </a>
-            <a
-              href={social.tiktok}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-2 text-white transition hover:text-[#2d2384]"
-            >
-              <Image
-                src="/tiktok.png"
-                alt=""
-                width={20}
-                height={20}
-                className={SOCIAL_ICON}
-              />
-              <span>TikTok</span>
-            </a>
-          </nav>
         </div>
 
-        <p className="mt-5 border-t border-white/20 pt-4 text-center text-xs font-semibold text-white/85 sm:mt-6 sm:pt-5 sm:text-sm">
-          <Link href="/products" className="hover:text-[#2d2384]">
-            Products
-          </Link>
-          <span className="mx-2">·</span>
-          <Link href="/blog" className="hover:text-[#2d2384]">
-            Blog
-          </Link>
-          <span className="mx-2">·</span>
-          <Link href="/shipping" className="hover:text-[#2d2384]">
-            Shipping
-          </Link>
-          <span className="mx-2">·</span>
-          <Link href="/about" className="hover:text-[#2d2384]">
-            About
-          </Link>
-          <span className="mx-2">·</span>
-          <Link href="/contact" className="hover:text-[#2d2384]">
-            Contact
-          </Link>
-          <span className="mx-2">·</span>
-          <Link href="/returns" className="hover:text-[#2d2384]">
-            Returns
-          </Link>
-          <span className="mx-2">·</span>
-          <Link href="/privacy" className="hover:text-[#2d2384]">
-            Privacy
-          </Link>
-        </p>
+        <nav aria-label="Shop">
+          <h4 className="mb-3 font-[family-name:var(--font-fredoka)] text-base font-semibold text-white">
+            Shop
+          </h4>
+          {SHOP_LINKS.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="block py-1 text-sm font-semibold transition hover:text-sun"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
 
-        <p className="mt-3 text-center text-xs font-semibold text-white/85 sm:text-sm">
-          © {new Date().getFullYear()}
-        </p>
+        <nav aria-label="Gifts">
+          <h4 className="mb-3 font-[family-name:var(--font-fredoka)] text-base font-semibold text-white">
+            Gifting
+          </h4>
+          {GIFT_LINKS.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="block py-1 text-sm font-semibold transition hover:text-sun"
+            >
+              {link.label}
+            </Link>
+          ))}
+          <h4 className="mb-3 mt-6 font-[family-name:var(--font-fredoka)] text-base font-semibold text-white">
+            Follow
+          </h4>
+          <a
+            href={social.instagram}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 py-1 text-sm font-semibold transition hover:text-sun"
+          >
+            <Image src="/insta.png" alt="" width={18} height={18} className="h-[18px] w-[18px] object-contain" />
+            Instagram
+          </a>
+          <a
+            href={social.tiktok}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-2 py-1 text-sm font-semibold transition hover:text-sun"
+          >
+            <Image src="/tiktok.png" alt="" width={18} height={18} className="h-[18px] w-[18px] object-contain" />
+            TikTok
+          </a>
+        </nav>
+
+        <nav aria-label="Help">
+          <h4 className="mb-3 font-[family-name:var(--font-fredoka)] text-base font-semibold text-white">
+            Help
+          </h4>
+          {HELP_LINKS.map((link) => (
+            <Link
+              key={link.label}
+              href={link.href}
+              className="block py-1 text-sm font-semibold transition hover:text-sun"
+            >
+              {link.label}
+            </Link>
+          ))}
+        </nav>
+      </div>
+
+      <div className="mx-auto mt-10 max-w-6xl border-t border-white/20 px-4 pt-6 text-xs font-semibold text-[#e8dff5]/70 sm:px-6 sm:text-sm">
+        <Link href="/privacy" className="underline-offset-2 hover:text-sun hover:underline">
+          Privacy
+        </Link>
+        {" · "}© {new Date().getFullYear()} SquishyBun Dumplings. Squishies are
+        recommended for ages 3+. Small parts — supervise young children.
       </div>
     </footer>
   );
