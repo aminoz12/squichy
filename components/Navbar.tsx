@@ -34,7 +34,7 @@ export function Navbar() {
               alt=""
               width={48}
               height={48}
-              className="h-10 w-10 -rotate-6 rounded-xl border-2 border-ink object-cover sm:h-11 sm:w-11"
+              className="h-10 w-10 -rotate-6 object-contain sm:h-11 sm:w-11"
             />
           </span>
           <span className="whitespace-nowrap">

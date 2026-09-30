@@ -59,7 +59,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     icons: {
       icon: siteIconPath,
       shortcut: siteIconPath,
-      apple: siteIconPath,
+      apple: "/apple-icon.png",
     },
   };
 }

@@ -107,7 +107,8 @@ export function rootMetadataExtras(): Pick<
     icons: {
       icon: siteIconPath,
       shortcut: siteIconPath,
-      apple: siteIconPath,
+      // Solid cream background — iOS renders transparent touch icons on black.
+      apple: "/apple-icon.png",
     },
   };
 }
