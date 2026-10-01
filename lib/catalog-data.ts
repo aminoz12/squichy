@@ -174,7 +174,7 @@ export const catalogEntries: CatalogEntry[] = [
     "priceUsd": 14.99,
     "image": "/catalog/sq-007.webp",
     "feel": "soft",
-    "description": "Slow-rise bakery squishy in baguette or croissant. It smells like nothing and feels like everything."
+    "description": "Slow-rise bakery squishy in baguette or croissant. It smells like nothing and feels like everything. Random style — one supplied."
   },
   {
     "id": "sq-008",
@@ -249,7 +249,7 @@ export const catalogEntries: CatalogEntry[] = [
     "priceUsd": 12.99,
     "image": "/catalog/sq-018.webp",
     "feel": "gooey",
-    "description": "Ice-candy shapes in heart, drop or star with that squishy, gooey stretch."
+    "description": "Ice-candy shapes in heart, drop or star with that squishy, gooey stretch. Random shape — one supplied."
   },
   {
     "id": "sq-019",

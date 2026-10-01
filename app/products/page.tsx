@@ -12,7 +12,7 @@ import { breadcrumbJsonLd, productsCollectionJsonLd } from "@/lib/seo";
 export const metadata: Metadata = {
   title: "Squishy Toys — 58+ Slow-Rise Squishies",
   description:
-    "Shop 58+ squishy toys from $7.99: mystery dumplings, crunchy ASMR fidgets, animal squishies, gift boxes and advent calendars. BUY 2 GET 1 FREE, free delivery over $50.",
+    "Shop 58+ squishy toys from $10.99: mystery dumplings, crunchy ASMR fidgets, animal squishies, gift boxes and advent calendars. BUY 2 GET 1 FREE, free delivery over $50.",
   alternates: {
     canonical: "/products",
   },
@@ -45,6 +45,17 @@ export default function ProductsPage() {
         <CheckoutReturnBanner />
       </Suspense>
       <main className="flex-1">
+        {/* Server-rendered header so H1 + intro are in the initial HTML (C14) */}
+        <div className="bg-cream pt-14 sm:pt-20">
+          <div className="mx-auto max-w-7xl px-4 text-center sm:px-6">
+            <h1 className="mb-4 font-[family-name:var(--font-fredoka)] text-4xl font-semibold tracking-tight text-ink sm:text-5xl lg:text-6xl">
+              Squishy Toys <span className="marker-word text-pink-pop">Collection</span>
+            </h1>
+            <p className="mx-auto mb-10 max-w-2xl text-lg font-semibold text-ink-2 sm:text-xl">
+              Discover our full range of premium squishy toys. Find your perfect dopamine hit!
+            </p>
+          </div>
+        </div>
         <Suspense fallback={null}>
           <ProductsGrid />
         </Suspense>

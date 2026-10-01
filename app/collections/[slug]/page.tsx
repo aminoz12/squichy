@@ -12,7 +12,12 @@ import {
   getCollection,
 } from "@/lib/collections";
 import type { ProductOffer } from "@/lib/data";
-import { breadcrumbJsonLd, collectionPageJsonLd } from "@/lib/seo";
+import {
+  absoluteUrl,
+  breadcrumbJsonLd,
+  collectionPageJsonLd,
+  ogImageUrl,
+} from "@/lib/seo";
 
 type Props = {
   params: Promise<{ slug: string }>;
@@ -23,6 +28,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const collection = getCollection(slug);
   if (!collection) return {};
 
+  const firstImage = collectionProducts(collection)[0]?.images[0];
+
   return {
     title: collection.title,
     description: collection.metaDescription,
@@ -32,6 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `/collections/${slug}`,
       title: `${collection.title} | SquishyBun`,
       description: collection.metaDescription,
+      images: [firstImage ? absoluteUrl(firstImage) : ogImageUrl()],
     },
   };
 }
@@ -125,7 +133,9 @@ function CollectionCard({
 }) {
   const minPrice = Math.min(...product.options.map((o) => o.priceUsd));
   const priceDisplay =
-    product.options.length === 1 ? `$${minPrice}` : `From $${minPrice}`;
+    product.options.length === 1
+      ? `$${minPrice.toFixed(2)}`
+      : `From $${minPrice.toFixed(2)}`;
 
   return (
     <article className="sticker-card sticker-lift group overflow-hidden">

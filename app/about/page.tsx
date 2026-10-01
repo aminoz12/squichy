@@ -4,7 +4,7 @@ import { CartDrawer } from "@/components/CartDrawer";
 import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
-import { breadcrumbJsonLd, getSiteUrl, SITE_NAME } from "@/lib/seo";
+import { breadcrumbJsonLd, getSiteUrl, SITE_NAME, ogImageUrl } from "@/lib/seo";
 
 const title = "About SquishyBun";
 const description =
@@ -19,6 +19,7 @@ export const metadata: Metadata = {
     url: "/about",
     title: `${title} | ${SITE_NAME}`,
     description,
+    images: [ogImageUrl()],
   },
 };
 

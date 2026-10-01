@@ -63,23 +63,6 @@ function ChevronRight({ className }: { className?: string }) {
   );
 }
 
-function VerifiedBadge() {
-  return (
-    <span className="inline-flex -rotate-2 items-center gap-1 rounded-full border-2 border-ink bg-mint px-2 py-0.5 font-[family-name:var(--font-fredoka)] text-[10px] font-semibold uppercase tracking-wider text-ink">
-      <svg className="h-3 w-3" viewBox="0 0 20 20" fill="none" aria-hidden>
-        <path
-          d="M6 10.2 8.6 13 14 7.5"
-          stroke="currentColor"
-          strokeWidth="1.6"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-      </svg>
-      Verified
-    </span>
-  );
-}
-
 function ReviewSlide({ review }: { review: ProductPageReview }) {
   const posted = formatReviewDate(review.reviewPosted);
   const purchased = formatReviewDate(review.purchaseDate);
@@ -103,7 +86,6 @@ function ReviewSlide({ review }: { review: ProductPageReview }) {
               {review.rating}.0
             </span>
           </div>
-          <VerifiedBadge />
         </div>
 
         <h3 className="mt-3 font-[family-name:var(--font-fredoka)] text-lg font-semibold leading-snug tracking-tight text-ink sm:text-xl">
@@ -183,11 +165,14 @@ export function ProductReviewsSection({ className = "" }: ProductReviewsSectionP
       <div className="mx-auto max-w-2xl px-4 py-10 sm:px-6 sm:py-12">
         <div className="text-center">
           <p className="eyebrow-pill text-[11px] uppercase tracking-wide">
-            Reviews
+            Store reviews
           </p>
           <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-2xl font-semibold tracking-tight text-ink sm:text-[1.65rem]">
-            What buyers say
+            What SquishyBun customers say
           </h2>
+          <p className="mt-2 text-xs font-semibold text-ink-2">
+            Reviews from SquishyBun orders across the shop.
+          </p>
         </div>
 
         <div

@@ -11,6 +11,9 @@ export const dynamic = "force-static";
  */
 export function GET() {
   const base = getSiteUrl();
+  const minPriceUsd = Math.min(
+    ...products.flatMap((p) => p.options.map((o) => o.priceUsd)),
+  ).toFixed(2);
   const bestsellers = products
     .filter((p) => p.badge)
     .slice(0, 8)
@@ -30,7 +33,7 @@ export function GET() {
 
   const body = `# SquishyBun Dumplings
 
-> SquishyBun is an online squishy-toy store selling ${products.length} slow-rise squishies: mystery dumpling blind boxes, bakery and food squishies, crunchy ASMR sensory toys, animal squishies, gift boxes, and advent calendars. Prices start at $7.99. BUY 2 GET 1 FREE bundles on every squishy; free delivery on orders over $${FREE_DELIVERY_THRESHOLD_USD}. Ships to the United States, Canada, the United Kingdom, and most of Europe. Recommended for ages 3+.
+> SquishyBun is an online squishy-toy store selling ${products.length} slow-rise squishies: mystery dumpling blind boxes, bakery and food squishies, crunchy ASMR sensory toys, animal squishies, gift boxes, and advent calendars. Prices start at $${minPriceUsd}. BUY 2 GET 1 FREE bundles on most squishies; free delivery on orders over $${FREE_DELIVERY_THRESHOLD_USD}. Ships to the United States, Canada, the United Kingdom, and most of Europe. Recommended for ages 3+.
 
 ## Shop
 

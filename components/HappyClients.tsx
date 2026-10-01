@@ -261,7 +261,7 @@ export function HappyClients({ className = "" }: HappyClientsProps) {
           </p>
           <h2 className="mt-4 font-[family-name:var(--font-fredoka)] text-2xl sm:text-3xl font-semibold tracking-tight text-ink">
             Loved by{" "}
-            <span className="marker-word text-pink-pop">9,500+</span>
+            <span className="marker-word text-pink-pop">thousands</span>
           </h2>
         </div>
 

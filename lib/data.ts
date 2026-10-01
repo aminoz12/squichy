@@ -332,6 +332,15 @@ export const mysteryDumplingBundles: BundleTier[] = [
  */
 export function getProductBundles(productId: string, basePrice: number, baseCompareAt?: number): BundleTier[] {
   const compareAt = baseCompareAt || Math.round(basePrice * 1.33);
+  // One source of truth per tier: the final (rounded) total. The per-box
+  // price is always derived from it, so total ÷ pieces matches what we show.
+  const perBox = (totalUsd: number, pieces: number) =>
+    Math.round((totalUsd / pieces) * 100) / 100;
+  const totals = {
+    b21: Math.round(basePrice * 2 * 0.95),
+    b31: Math.round(basePrice * 3 * 0.9),
+    b42: Math.round(basePrice * 4 * 0.85),
+  };
   return [
     {
       id: `${productId}-b1`,
@@ -348,9 +357,9 @@ export function getProductBundles(productId: string, basePrice: number, baseComp
       title: "BUY 2, GET 1 FREE",
       payQty: 2,
       freeQty: 1,
-      perBoxUsd: Math.round(((basePrice * 2 * 0.95) / 3) * 100) / 100,
+      perBoxUsd: perBox(totals.b21, 3),
       compareAtPerBoxUsd: compareAt,
-      totalPriceUsd: Math.round(basePrice * 2 * 0.95),
+      totalPriceUsd: totals.b21,
       compareAtTotalUsd: compareAt * 3,
       defaultSelected: true,
     },
@@ -359,9 +368,9 @@ export function getProductBundles(productId: string, basePrice: number, baseComp
       title: "BUY 3, GET 1 FREE",
       payQty: 3,
       freeQty: 1,
-      perBoxUsd: Math.round(((basePrice * 3 * 0.9) / 4) * 100) / 100,
+      perBoxUsd: perBox(totals.b31, 4),
       compareAtPerBoxUsd: compareAt,
-      totalPriceUsd: Math.round(basePrice * 3 * 0.9),
+      totalPriceUsd: totals.b31,
       compareAtTotalUsd: compareAt * 4,
       badge: "Most Popular",
     },
@@ -370,9 +379,9 @@ export function getProductBundles(productId: string, basePrice: number, baseComp
       title: "BUY 4, GET 2 FREE",
       payQty: 4,
       freeQty: 2,
-      perBoxUsd: Math.round(((basePrice * 4 * 0.85) / 6) * 100) / 100,
+      perBoxUsd: perBox(totals.b42, 6),
       compareAtPerBoxUsd: compareAt,
-      totalPriceUsd: Math.round(basePrice * 4 * 0.85),
+      totalPriceUsd: totals.b42,
       compareAtTotalUsd: compareAt * 6,
       badge: "Best Value",
       freeShipping: true,
@@ -401,7 +410,7 @@ export const singleProductOffer = {
   specs: [
     { label: "Color", value: "Mystery" },
     { label: "Theme", value: "Mystery Dumpling" },
-    { label: "Brand", value: "Squishy-Bun" },
+    { label: "Brand", value: "Crazy Fun" },
     { label: "Character", value: "Dumpling" },
     {
       label: "Dimensions",

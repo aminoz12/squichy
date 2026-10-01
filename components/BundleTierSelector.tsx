@@ -18,14 +18,6 @@ function moneyUsd(n: number) {
   }).format(n);
 }
 
-function moneyWhole(n: number) {
-  return new Intl.NumberFormat("en-US", {
-    style: "currency",
-    currency: "USD",
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0,
-  }).format(n);
-}
 
 export function BundleTierSelector({ tiers, selectedId, onSelect }: Props) {
   return (
@@ -95,11 +87,11 @@ export function BundleTierSelector({ tiers, selectedId, onSelect }: Props) {
                   <div className="text-right">
                     <div className="flex items-baseline justify-end gap-1.5">
                       <p className="font-[family-name:var(--font-fredoka)] text-base font-semibold tabular-nums text-ink sm:text-lg">
-                        {moneyWhole(tier.totalPriceUsd)}
+                        {moneyUsd(tier.totalPriceUsd)}
                       </p>
                       {tier.compareAtTotalUsd && (
                         <p className="text-xs tabular-nums text-ink-2 line-through">
-                          {moneyWhole(tier.compareAtTotalUsd)}
+                          {moneyUsd(tier.compareAtTotalUsd)}
                         </p>
                       )}
                     </div>

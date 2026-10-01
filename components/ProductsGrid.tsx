@@ -40,19 +40,18 @@ export function ProductsGrid() {
     }
 
     switch (sortBy) {
+      // Price sorts must stay monotonic — no pinned product (audit C11).
       case "price-low":
-        result.sort((a, b) => {
-          if (a.id === "squishybun-mystery-dumpling") return -1;
-          if (b.id === "squishybun-mystery-dumpling") return 1;
-          return Math.min(...a.options.map(o => o.priceUsd)) - Math.min(...b.options.map(o => o.priceUsd));
-        });
+        result.sort(
+          (a, b) =>
+            Math.min(...a.options.map(o => o.priceUsd)) - Math.min(...b.options.map(o => o.priceUsd)),
+        );
         break;
       case "price-high":
-        result.sort((a, b) => {
-          if (a.id === "squishybun-mystery-dumpling") return -1;
-          if (b.id === "squishybun-mystery-dumpling") return 1;
-          return Math.max(...b.options.map(o => o.priceUsd)) - Math.max(...a.options.map(o => o.priceUsd));
-        });
+        result.sort(
+          (a, b) =>
+            Math.max(...b.options.map(o => o.priceUsd)) - Math.max(...a.options.map(o => o.priceUsd)),
+        );
         break;
       case "name":
         result.sort((a, b) => {
@@ -67,18 +66,8 @@ export function ProductsGrid() {
   }, [selectedCategory, sortBy]);
 
   return (
-    <section className="bg-cream py-14 sm:py-20">
+    <section className="bg-cream pb-14 sm:pb-20">
       <div className="max-w-7xl mx-auto px-4 sm:px-6">
-        {/* Header */}
-        <div className="text-center mb-10">
-          <h1 className="mb-4 font-[family-name:var(--font-fredoka)] text-4xl font-semibold tracking-tight text-ink sm:text-5xl lg:text-6xl">
-            Squishy Toys <span className="marker-word text-pink-pop">Collection</span>
-          </h1>
-          <p className="mx-auto max-w-2xl text-lg font-semibold text-ink-2 sm:text-xl">
-            Discover our full range of premium squishy toys. Find your perfect dopamine hit!
-          </p>
-        </div>
-
         {/* Filters & Sort */}
         <div className="mb-10 flex flex-col items-start justify-between gap-4 sm:flex-row sm:items-center">
           {/* Category Filters */}
@@ -134,7 +123,9 @@ function ProductCard({ product, index }: { product: ProductOffer; index: number 
   const mainImage = product.images[0];
   const minPrice = Math.min(...product.options.map((o) => o.priceUsd));
   const priceDisplay =
-    product.options.length === 1 ? `$${minPrice}` : `From $${minPrice}`;
+    product.options.length === 1
+      ? `$${minPrice.toFixed(2)}`
+      : `From $${minPrice.toFixed(2)}`;
 
   return (
     <article className="sticker-card sticker-lift group overflow-hidden">

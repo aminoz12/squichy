@@ -20,8 +20,7 @@ import {
   faqPageJsonLd,
   organizationJsonLd,
   SITE_TAGLINE,
-  websiteJsonLd,
-} from "@/lib/seo";
+  websiteJsonLd, ogImageUrl } from "@/lib/seo";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/" },
@@ -29,6 +28,7 @@ export const metadata: Metadata = {
     url: "/",
     title: "Mystery Squishy Toys | SquishyBun",
     description: SITE_TAGLINE,
+    images: [ogImageUrl()],
   },
 };
 

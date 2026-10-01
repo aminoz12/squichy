@@ -1,9 +1,10 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState, useSyncExternalStore } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
+import { christmasCutoffNotice } from "@/lib/campaigns";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
-import { fireGtagConversion } from "@/lib/gtag";
+import { fireEcomEvent, fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
 import { mysteryDumplingBundles, getProductBundles } from "@/lib/data";
 import {
@@ -51,12 +52,21 @@ function ArrivalEstimate() {
   start.setDate(start.getDate() + 4);
   const end = new Date();
   end.setDate(end.getDate() + 9);
+  const cutoff = christmasCutoffNotice();
 
   return (
-    <p className="flex items-center gap-1.5 text-xs font-black uppercase tracking-tight text-ink">
-      <span aria-hidden className="text-sm">📦</span>
-      Order today → arrives {fmt(start)}–{fmt(end)} (US)
-    </p>
+    <>
+      <p className="flex items-center gap-1.5 text-xs font-black uppercase tracking-tight text-ink">
+        <span aria-hidden className="text-sm">📦</span>
+        Order today → arrives {fmt(start)}–{fmt(end)} (US)
+      </p>
+      {cutoff && (
+        <p className="flex items-center gap-1.5 text-xs font-black uppercase tracking-tight text-pink-pop">
+          <span aria-hidden className="text-sm">🎄</span>
+          {cutoff}
+        </p>
+      )}
+    </>
   );
 }
 
@@ -97,6 +107,20 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
   const primaryImage = offer.images[0];
   const secondaryImages = offer.images.slice(1);
 
+  // GA4: one view_item per product page view (external system — no state).
+  useEffect(() => {
+    const base = bundles[0];
+    if (!base) return;
+    fireEcomEvent("view_item", base.totalPriceUsd, [
+      {
+        item_id: offer.id,
+        item_name: offer.name,
+        price: base.totalPriceUsd,
+        quantity: 1,
+      },
+    ]);
+  }, [offer.id, offer.name, bundles]);
+
   /* ── Pricing logic ── */
   const subtotalUsd = selectedBundle.totalPriceUsd;
   const deliveryFree = !!selectedBundle.freeShipping || qualifiesForFreeDeliverySubtotal(subtotalUsd);
@@ -112,12 +136,28 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
       unitPriceUsd: subtotalUsd,
       quantity: 1,
     });
+    fireEcomEvent("add_to_cart", subtotalUsd, [
+      {
+        item_id: selectedBundle.id,
+        item_name: `${offer.name} (${selectedBundle.title})`,
+        price: subtotalUsd,
+        quantity: 1,
+      },
+    ]);
   }
 
   async function startStripeCheckout() {
     setCheckoutError(null);
     setCheckoutLoading(true);
     fireGtagConversion();
+    fireEcomEvent("begin_checkout", subtotalUsd, [
+      {
+        item_id: selectedBundle.id,
+        item_name: `${offer.name} (${selectedBundle.title})`,
+        price: subtotalUsd,
+        quantity: 1,
+      },
+    ]);
     try {
       const checkoutId = selectedBundle.id;
       await redirectToStripeCheckout(checkoutId, 1);
@@ -298,7 +338,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
               </div>
 
               {/* Payment method icons */}
-              <div className="flex items-center justify-center gap-3 pt-1">
+              <div className="flex flex-wrap items-center justify-center gap-3 pt-1">
                 <span className="text-[10px] font-bold text-ink-2 uppercase tracking-wider">Secure checkout</span>
                 <div className="flex items-center gap-2">
                   {/* Google Pay */}
@@ -394,6 +434,27 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
               </dl>
             </div>
           </div>
+        </div>
+      </div>
+
+      {/* Mobile sticky buy bar — synced to the selected bundle (audit C09) */}
+      <div className="fixed inset-x-0 bottom-0 z-40 border-t-[2.5px] border-ink bg-[rgba(255,246,234,0.96)] p-3 backdrop-blur-md md:hidden">
+        <div className="mx-auto flex max-w-lg items-center gap-3">
+          <div className="min-w-0 flex-1 leading-tight">
+            <p className="truncate text-[11px] font-bold uppercase tracking-wide text-ink-2">
+              {selectedBundle.title}
+            </p>
+            <p className="font-[family-name:var(--font-fredoka)] text-lg font-semibold text-ink">
+              {moneyUsd(estimatedTotalUsd)}
+            </p>
+          </div>
+          <button
+            type="button"
+            onClick={addToCart}
+            className="btn-squish shrink-0 text-sm uppercase tracking-wide"
+          >
+            Add to cart
+          </button>
         </div>
       </div>
     </section>

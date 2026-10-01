@@ -4,7 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
-import { fireGtagConversion } from "@/lib/gtag";
+import { fireEcomEvent, fireGtagConversion } from "@/lib/gtag";
 import {
   estimateCartDeliveryUsd,
   resolveStripeCheckoutParams,
@@ -38,6 +38,13 @@ const feelOf = (p: ProductOffer) =>
   p.specs.find((s) => s.label === "Feel")?.value;
 /** Short display name, as the reference does: drop a trailing " Squishy". */
 const shortName = (p: ProductOffer) => p.name.replace(/ Squishy(?!\w)/, "");
+
+/** Pieces per bundle, parsed from the option label ("BUY 2, GET 1 FREE" → 3). */
+function bundlePieces(label: string): number {
+  const m = label.match(/BUY (\d+), GET (\d+)/i);
+  if (m) return Number(m[1]) + Number(m[2]);
+  return 1;
+}
 
 /**
  * Reference `recs()` scoring: top sellers +2, matching feel +1, a collection
@@ -151,6 +158,14 @@ export function CartDrawer() {
         unitPriceUsd: buyOne.priceUsd,
         quantity: (existing?.quantity ?? 0) + 1,
       });
+      fireEcomEvent("add_to_cart", buyOne.priceUsd, [
+        {
+          item_id: buyOne.id,
+          item_name: `${p.name} (${buyOne.label})`,
+          price: buyOne.priceUsd,
+          quantity: 1,
+        },
+      ]);
       setToast("Added to your bag ✨");
       if (toastTimer.current) window.clearTimeout(toastTimer.current);
       toastTimer.current = window.setTimeout(() => setToast(null), 2400);
@@ -177,6 +192,16 @@ export function CartDrawer() {
     setCheckoutError(null);
     setCheckoutLoading(true);
     fireGtagConversion();
+    fireEcomEvent(
+      "begin_checkout",
+      items.reduce((acc, l) => acc + l.unitPriceUsd * l.quantity, 0),
+      items.map((l) => ({
+        item_id: l.id,
+        item_name: l.name,
+        price: l.unitPriceUsd,
+        quantity: l.quantity,
+      })),
+    );
     try {
       // Send all items to checkout
       const cartItems = items.map((item) => {
@@ -283,6 +308,7 @@ export function CartDrawer() {
                   <ul className="space-y-3">
                     {items.map((line) => {
                       const product = productByOptionId.get(line.id);
+                      const pieces = bundlePieces(line.name);
                       return (
                         <li
                           key={line.id}
@@ -309,6 +335,12 @@ export function CartDrawer() {
                                 {formatUsd(line.unitPriceUsd * line.quantity)}
                               </p>
                             </div>
+                            {pieces > 1 && (
+                              <p className="mt-0.5 text-xs font-bold text-ink-2">
+                                {line.quantity} bundle{line.quantity > 1 ? "s" : ""} ·{" "}
+                                {pieces * line.quantity} squishies total
+                              </p>
+                            )}
                             <div className="mt-2 flex items-center justify-between">
                               <span className="inline-flex items-center rounded-full border-2 border-ink bg-white">
                                 <button

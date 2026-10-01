@@ -21,14 +21,16 @@ export function getSiteUrl(): string {
   }
   const fromEnv = process.env.NEXT_PUBLIC_SITE_URL?.trim();
   if (fromEnv) return fromEnv.replace(/\/$/, "");
-  return "https://www.squishy-bun.com";
+  // The live site serves on the apex domain (www 301s here) — canonicals,
+  // sitemap, og:url and JSON-LD must all point at the non-redirecting host.
+  return "https://squishy-bun.com";
 }
 
 export function getMetadataBase(): URL {
   return new URL(`${getSiteUrl()}/`);
 }
 
-const OG_IMAGE_PATH = "/herosqueeze.png";
+const OG_IMAGE_PATH = "/hero-squish.jpg";
 const META_DESCRIPTION_MAX = 155;
 
 export function truncateDescription(text: string, max = META_DESCRIPTION_MAX): string {
@@ -111,6 +113,11 @@ export function rootMetadataExtras(): Pick<
       apple: "/apple-icon.png",
     },
   };
+}
+
+/** Default social-share image for pages that override `openGraph`. */
+export function ogImageUrl(): string {
+  return absoluteUrl(OG_IMAGE_PATH);
 }
 
 export function absoluteUrl(path: string): string {

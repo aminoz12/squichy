@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { products } from "@/lib/data";
+import { fireEcomEvent } from "@/lib/gtag";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 /** Reference homepage picks: four fan favorites, mystery dumpling first. */
@@ -69,6 +70,14 @@ function FeaturedCard({ product }: { product: (typeof products)[number] }) {
       unitPriceUsd: buyOne.priceUsd,
       quantity: 1,
     });
+    fireEcomEvent("add_to_cart", buyOne.priceUsd, [
+      {
+        item_id: buyOne.id,
+        item_name: `${product.name} (${buyOne.label})`,
+        price: buyOne.priceUsd,
+        quantity: 1,
+      },
+    ]);
     setAdded(true);
     window.setTimeout(() => setAdded(false), 1500);
   };
@@ -108,7 +117,7 @@ function FeaturedCard({ product }: { product: (typeof products)[number] }) {
         </h3>
         <div className="mt-auto flex items-center justify-between gap-2 pt-2">
           <span className="font-[family-name:var(--font-fredoka)] text-xl font-semibold text-ink">
-            ${buyOne.priceUsd}
+            ${buyOne.priceUsd.toFixed(2)}
           </span>
           <button
             type="button"

@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import { useCallback, useEffect, useReducer } from "react";
+import { firePurchase } from "@/lib/gtag";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
 type SessionPayload = {
@@ -128,6 +129,10 @@ export function CheckoutReturnBanner() {
                 .filter(Boolean)
                 .join(" · ") || "Thank you for your order.",
           });
+          firePurchase(
+            sessionId ?? "",
+            data.amount_total != null ? data.amount_total / 100 : null,
+          );
           clearCart();
           return;
         }

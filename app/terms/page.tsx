@@ -6,7 +6,7 @@ import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
 import { social } from "@/lib/data";
 import { FREE_DELIVERY_THRESHOLD_USD } from "@/lib/delivery";
-import { breadcrumbJsonLd, getSiteUrl, SITE_NAME } from "@/lib/seo";
+import { breadcrumbJsonLd, getSiteUrl, SITE_NAME, ogImageUrl } from "@/lib/seo";
 
 const title = "Terms of Service";
 const description =
@@ -16,7 +16,7 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: "/terms" },
-  openGraph: { type: "website", url: "/terms", title, description },
+  openGraph: { type: "website", url: "/terms", title, description, images: [ogImageUrl()] },
 };
 
 const SECTIONS: { heading: string; body: string[] }[] = [

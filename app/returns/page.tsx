@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
 import { social } from "@/lib/data";
-import { breadcrumbJsonLd, getSiteUrl, SITE_NAME } from "@/lib/seo";
+import { breadcrumbJsonLd, getSiteUrl, SITE_NAME, ogImageUrl } from "@/lib/seo";
 
 const title = "Returns";
 const description =
@@ -20,21 +20,22 @@ export const metadata: Metadata = {
     url: "/returns",
     title: `${title} | ${SITE_NAME}`,
     description,
+    images: [ogImageUrl()],
   },
 };
 
 const policies = [
   {
-    heading: "14-day support window",
-    copy: "Email support within 14 days of delivery if a product arrives damaged, incomplete, or not as described.",
+    heading: "14-day window — free replacement or refund",
+    copy: "Email support within 14 days of delivery if a product arrives damaged, incomplete, or not as described. We'll replace it or refund you, and returns are free — you never pay to send an eligible item back.",
   },
   {
-    heading: "Photos help us review faster",
-    copy: "Include your order number and clear photos of the product, packaging, and shipping label when relevant.",
+    heading: "Photos help us resolve it faster",
+    copy: "Include your order number and clear photos of the product, packaging, and shipping label when relevant. Most cases are resolved from photos alone, without mailing anything back.",
   },
   {
     heading: "Do not send items back first",
-    copy: "Wait for support instructions before mailing anything. That keeps the return route and refund review tied to your order.",
+    copy: "Wait for support instructions before mailing anything. That keeps the return route tied to your order and your free replacement or refund on track.",
   },
 ] as const;
 

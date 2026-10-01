@@ -5,7 +5,7 @@ import { Footer } from "@/components/Footer";
 import { JsonLd } from "@/components/JsonLd";
 import { Navbar } from "@/components/Navbar";
 import { social } from "@/lib/data";
-import { breadcrumbJsonLd, getSiteUrl, SITE_NAME } from "@/lib/seo";
+import { breadcrumbJsonLd, getSiteUrl, SITE_NAME, ogImageUrl } from "@/lib/seo";
 
 const title = "Contact";
 const description =
@@ -20,6 +20,7 @@ export const metadata: Metadata = {
     url: "/contact",
     title: `${title} | ${SITE_NAME}`,
     description,
+    images: [ogImageUrl()],
   },
 };
 

@@ -6,6 +6,11 @@ import { products } from "@/lib/data";
 const HERO_IMAGE = "/hero-squish.jpg";
 
 export function Hero() {
+  // Real cheapest purchasable option — never a stale marketing number (C03).
+  const minPriceUsd = Math.min(
+    ...products.flatMap((p) => p.options.map((o) => o.priceUsd)),
+  );
+
   return (
     <section
       id="top"
@@ -23,7 +28,7 @@ export function Hero() {
           </h1>
           <p className="mt-5 max-w-md text-base font-semibold leading-relaxed text-ink-2 sm:text-lg">
             Dumplings, bakery treats, crunchy ASMR and chonky cats.{" "}
-            {products.length}+ squishy toys from just $7.99.
+            {products.length}+ squishy toys from just ${minPriceUsd.toFixed(2)}.
           </p>
           <div className="mt-8 flex flex-wrap items-center gap-4">
             <Link
@@ -41,7 +46,7 @@ export function Hero() {
           </div>
           <div className="mt-8 flex flex-wrap gap-x-6 gap-y-2 text-sm font-bold text-ink">
             <span>🚚 Free delivery ${FREE_DELIVERY_THRESHOLD_USD}+</span>
-            <span>⭐ 12,400+ happy families</span>
+            <span>⭐ Loved by thousands of families</span>
           </div>
         </div>
 
@@ -62,7 +67,7 @@ export function Hero() {
           <div className="absolute -top-1 right-0 grid h-28 w-28 rotate-12 place-items-center rounded-full border-[2.5px] border-ink bg-sun text-center font-[family-name:var(--font-fredoka)] text-sm font-bold leading-none text-ink shadow-[3px_3px_0_var(--ink)] sm:right-2">
             <div>
               from
-              <b className="mt-1 block text-2xl">$7.99</b>
+              <b className="mt-1 block text-2xl">${minPriceUsd.toFixed(2)}</b>
             </div>
           </div>
           <div className="absolute bottom-0 left-0 grid h-24 w-24 -rotate-12 place-items-center rounded-full border-[2.5px] border-ink bg-mint text-center font-[family-name:var(--font-fredoka)] text-sm font-bold leading-none text-ink shadow-[3px_3px_0_var(--ink)] sm:left-2">
