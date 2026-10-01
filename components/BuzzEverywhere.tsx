@@ -22,10 +22,13 @@ function ReelCard({ src, stagger }: { src: string; stagger?: boolean }) {
     const v = videoRef.current;
     if (!v) return;
     if (inView) {
-      void v.play().catch(() => {});
-    } else {
-      v.pause();
+      // play() can reject before media data is ready — retry once loadable.
+      const tryPlay = () => void v.play().catch(() => {});
+      tryPlay();
+      v.addEventListener("canplay", tryPlay);
+      return () => v.removeEventListener("canplay", tryPlay);
     }
+    v.pause();
   }, [inView]);
 
   return (
@@ -40,10 +43,12 @@ function ReelCard({ src, stagger }: { src: string; stagger?: boolean }) {
           ref={videoRef}
           className="h-full w-full object-cover"
           src={src}
+          autoPlay
           muted
           loop
           playsInline
-          preload="metadata"
+          disablePictureInPicture
+          preload="auto"
         />
       </div>
     </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useMemo, useState } from "react";
+import { useMemo, useState, useSyncExternalStore } from "react";
 import { redirectToStripeCheckout } from "@/lib/checkout-client";
 import { fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
@@ -29,6 +29,36 @@ type ProductPageOfferProps = {
   className?: string;
   offer: ProductPageOfferData;
 };
+
+const emptySubscribe = () => () => {};
+
+/**
+ * "Order today → arrives Oct 8–12" (US estimate: 1–2 days packing + 3–7 days
+ * transit). Pages are statically generated, so the dates are computed on the
+ * client after hydration — never baked stale into the build.
+ */
+function ArrivalEstimate() {
+  const hydrated = useSyncExternalStore(
+    emptySubscribe,
+    () => true,
+    () => false,
+  );
+  if (!hydrated) return null;
+
+  const fmt = (d: Date) =>
+    d.toLocaleDateString("en-US", { month: "short", day: "numeric" });
+  const start = new Date();
+  start.setDate(start.getDate() + 4);
+  const end = new Date();
+  end.setDate(end.getDate() + 9);
+
+  return (
+    <p className="flex items-center gap-1.5 text-xs font-black uppercase tracking-tight text-ink">
+      <span aria-hidden className="text-sm">📦</span>
+      Order today → arrives {fmt(start)}–{fmt(end)} (US)
+    </p>
+  );
+}
 
 function moneyUsd(n: number) {
   return new Intl.NumberFormat("en-US", {
@@ -221,6 +251,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
                         Free delivery applied to this order.
                       </p>
                     )}
+                    <ArrivalEstimate />
                   </div>
 
                   {/* Total Section */}

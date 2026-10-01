@@ -43,6 +43,17 @@ function mergeEnvExample() {
 
 mergeEnvExample();
 
+/** Renamed product slugs → 301s so old links and indexed URLs keep working. */
+const RENAMED_PRODUCT_SLUGS: Record<string, string> = {
+  needoh: "gooey-groovy-cubes",
+  "catalog-adv-02": "reindeer-snowman-squishy-advent-calendar",
+  "catalog-adv-05": "ice-cube-squishy-advent-calendar-2026",
+  "catalog-adv-07": "viral-bun-squishy-advent-calendar",
+  "catalog-adv-08": "24-day-christmas-bun-squishy-set",
+  "catalog-adv-10": "pull-tab-squishy-advent-calendar",
+  "catalog-box-adv-24": "squishy-advent-calendar-24-days",
+};
+
 const nextConfig: NextConfig = {
   images: {
     remotePatterns: [
@@ -52,6 +63,13 @@ const nextConfig: NextConfig = {
         pathname: "/**",
       },
     ],
+  },
+  async redirects() {
+    return Object.entries(RENAMED_PRODUCT_SLUGS).map(([from, to]) => ({
+      source: `/products/${from}`,
+      destination: `/products/${to}`,
+      permanent: true,
+    }));
   },
 };
 

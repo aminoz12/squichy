@@ -243,7 +243,7 @@ export type BundleTier = {
   payQty: number;
   /** How many free dumpling items they get */
   freeQty: number;
-  /** Bonus product name, e.g. "NeeDoh" */
+  /** Bonus product name, e.g. "Gooey Cube" */
   bonusProduct?: string;
   /** How many bonus products */
   bonusQty?: number;
@@ -306,7 +306,7 @@ export const mysteryDumplingBundles: BundleTier[] = [
     compareAtPerBoxUsd: 24,
     totalPriceUsd: 87,
     compareAtTotalUsd: 216,
-    bonusProduct: "NeeDoh",
+    bonusProduct: "Gooey Cube",
     bonusQty: 1,
     freeShipping: true,
   },
@@ -320,7 +320,7 @@ export const mysteryDumplingBundles: BundleTier[] = [
     totalPriceUsd: 106,
     compareAtTotalUsd: 288,
     badge: "Best Value",
-    bonusProduct: "NeeDoh",
+    bonusProduct: "Gooey Cube",
     bonusQty: 2,
     freeShipping: true,
   },
@@ -512,25 +512,25 @@ const coreProducts: ProductOffer[] = [
   {
     ...singleProductOffer,
     id: "needoh",
-    name: "NeeDoh 3 Pcs",
-    slug: "needoh",
+    name: "Gooey Groovy Cubes (3 Pcs)",
+    slug: "gooey-groovy-cubes",
     categoryName: "Sensory & ASMR",
     categoryImage: "/needoh.png",
-    description: "Experience extreme relaxation with our vibrant cubes: pink, blue, green, and purple. Designed to evoke a sense of calm and tranquility.",
+    description: "Three gooey, squeezable sensory cubes in bright colors — squash them flat, knead them, and watch them slowly snap back. A quiet, satisfying fidget for desks, classrooms, and travel.",
     images: ["/needoh1.png", "/needoh2.png", "/videoneedoh.mp4"],
     details: [
-      "Vibrant cubes: pink, blue, green, and purple.",
-      "Helps deter habits like fidgeting, skin and nail picking, and finger cracking.",
-      "Soft, durable exteriors enclose a high-density groovy goo filling.",
-      "Silent and satisfying fidget experience that won't disturb others.",
-      "Wash with water after frequent use to keep them as good as new!",
+      "Set of 3 soft sensory cubes in bright assorted colors.",
+      "Gooey, high-density filling inside a smooth, cool-touch shell.",
+      "Completely silent to squeeze — won't disturb anyone nearby.",
+      "Rinse with water now and then to keep them like new.",
+      "Suitable for ages 3 and up.",
     ],
     specs: [
-      { label: "Color", value: "Pink, blue, green, purple" },
-      { label: "Material", value: "Soft exterior with high-density groovy goo filling" },
+      { label: "Color", value: "Assorted brights" },
+      { label: "Material", value: "Soft shell with gooey filling" },
       { label: "Theme", value: "Sensory Fidget" },
       { label: "Brand", value: "Crazy Fun" },
-      { label: "Dimensions", value: "2.35 inches per cube" },
+      { label: "Dimensions", value: "6 cm per cube" },
       { label: "Weight", value: "Approx. 0.3 kg" },
     ],
     accentColor: "#f0fdf4", // Green 50
@@ -814,23 +814,23 @@ export const productDetails: ProductDetail[] = [
   },
   {
     id: "needoh",
-    name: "NeeDoh 3 Pcs",
-    size: "2.35 inches per cube",
+    name: "Gooey Groovy Cubes (3 Pcs)",
+    size: "6 cm per cube",
     price: 22,
-    description: "Experience extreme relaxation with our vibrant cubes: pink, blue, green, and purple, designed to evoke a sense of calm and tranquility. These brightly colored soft squares offer a soothing tactile experience, perfect for individuals seeking stress relief, including those with ADD/ADHD, OCD, autism, or high anxiety. Whether you're in the office, classroom, traveling, or aboard an airplane, these anxiety relief toys keep you focused and entertained. Mellow and cool to the touch, their soft, durable exteriors encase a high-density groovy goo filling. Wash with water after frequent use and it will be as good as new!",
+    description: "Three gooey, squeezable sensory cubes in bright colors — squash them flat, knead them, and watch them slowly snap back. Cool to the touch and completely silent, they make a satisfying desk, classroom, or travel fidget. Rinse with water now and then to keep them like new.",
     details: [
-      "Vibrant cubes: pink, blue, green, and purple.",
-      "Helps deter habits like fidgeting, skin and nail picking, and finger cracking.",
-      "Soft, durable exteriors enclose a high-density groovy goo filling.",
-      "Silent and satisfying fidget experience that won't disturb others.",
-      "Wash with water after frequent use to keep them as good as new!",
+      "Set of 3 soft sensory cubes in bright assorted colors.",
+      "Gooey, high-density filling inside a smooth, cool-touch shell.",
+      "Completely silent to squeeze — won't disturb anyone nearby.",
+      "Rinse with water now and then to keep them like new.",
+      "Suitable for ages 3 and up.",
     ],
     specs: {
-      color: "Pink, blue, green, purple",
+      color: "Assorted brights",
       theme: "Sensory Fidget",
       brand: "Crazy Fun",
       character: "Cube",
-      dimensions: "2.35 inches per cube",
+      dimensions: "6 cm per cube",
       weight: "0.3 kg",
     },
     images: ["/needoh1.png", "/needoh2.png", "/videoneedoh.mp4"],

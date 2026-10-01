@@ -129,6 +129,10 @@ export function Footer() {
         <Link href="/privacy" className="underline-offset-2 hover:text-sun hover:underline">
           Privacy
         </Link>
+        {" · "}
+        <Link href="/terms" className="underline-offset-2 hover:text-sun hover:underline">
+          Terms
+        </Link>
         {" · "}© {new Date().getFullYear()} SquishyBun Dumplings. Squishies are
         recommended for ages 3+. Small parts — supervise young children.
       </div>

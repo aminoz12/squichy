@@ -80,6 +80,44 @@ export default function ShippingPage() {
             {description}
           </p>
 
+          <section className="mt-10 overflow-hidden rounded-[22px] border-[2.5px] border-ink bg-white shadow-[4px_4px_0_var(--ink)]">
+            <h2 className="border-b-[2.5px] border-ink bg-sun px-5 py-3 font-[family-name:var(--font-fredoka)] text-xl font-semibold text-ink">
+              Delivery times & cost
+            </h2>
+            <div className="overflow-x-auto">
+              <table className="w-full text-left text-sm">
+                <thead>
+                  <tr className="border-b-2 border-ink/15 text-xs font-extrabold uppercase tracking-wide text-ink-2">
+                    <th className="px-5 py-3">Destination</th>
+                    <th className="px-5 py-3">Packing</th>
+                    <th className="px-5 py-3">Transit</th>
+                    <th className="px-5 py-3">Total estimate</th>
+                  </tr>
+                </thead>
+                <tbody className="font-semibold text-ink">
+                  {[
+                    ["United States", "1–2 business days", "3–7 business days", "4–9 business days"],
+                    ["Canada", "1–2 business days", "5–10 business days", "6–12 business days"],
+                    ["United Kingdom", "1–2 business days", "7–14 business days", "8–16 business days"],
+                    ["Europe", "1–2 business days", "7–14 business days", "8–16 business days"],
+                  ].map((row) => (
+                    <tr key={row[0]} className="border-b border-ink/10 last:border-0">
+                      {row.map((cell, i) => (
+                        <td key={i} className={`px-5 py-3 ${i === 0 ? "font-bold" : ""}`}>
+                          {cell}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <p className="border-t-2 border-ink/10 bg-cream px-5 py-3 text-sm font-bold text-ink">
+              🚚 Delivery is <span className="text-pink-pop">free over $50</span> — otherwise a flat $9 at
+              checkout. Every order gets an email tracking link as soon as it ships.
+            </p>
+          </section>
+
           <section className="mt-10 grid gap-4 sm:grid-cols-2">
             {regions.map((region) => (
               <div

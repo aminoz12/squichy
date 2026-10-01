@@ -524,7 +524,7 @@ export const catalogEntries: CatalogEntry[] = [
   {
     "id": "box-adv-24",
     "name": "Squishy Advent Calendar – 24 Days of Squish",
-    "slug": "catalog-box-adv-24",
+    "slug": "squishy-advent-calendar-24-days",
     "category": "Advent Calendars",
     "priceUsd": 29.99,
     "image": "/catalog/box-adv-24.webp",
@@ -535,7 +535,7 @@ export const catalogEntries: CatalogEntry[] = [
   {
     "id": "adv-02",
     "name": "Reindeer & Snowman Squishy Advent Calendar (Poke Box)",
-    "slug": "catalog-adv-02",
+    "slug": "reindeer-snowman-squishy-advent-calendar",
     "category": "Advent Calendars",
     "priceUsd": 24.99,
     "image": "/catalog/adv-02.webp",
@@ -546,7 +546,7 @@ export const catalogEntries: CatalogEntry[] = [
   {
     "id": "adv-05",
     "name": "Ice Cube Squishy Advent Calendar 2026",
-    "slug": "catalog-adv-05",
+    "slug": "ice-cube-squishy-advent-calendar-2026",
     "category": "Advent Calendars",
     "priceUsd": 32.99,
     "image": "/catalog/adv-05.webp",
@@ -557,7 +557,7 @@ export const catalogEntries: CatalogEntry[] = [
   {
     "id": "adv-07",
     "name": "Viral Bun Squishy Advent Calendar",
-    "slug": "catalog-adv-07",
+    "slug": "viral-bun-squishy-advent-calendar",
     "category": "Advent Calendars",
     "priceUsd": 24.99,
     "image": "/catalog/adv-07.webp",
@@ -568,7 +568,7 @@ export const catalogEntries: CatalogEntry[] = [
   {
     "id": "adv-08",
     "name": "24-Day Christmas Bun Squishy Set",
-    "slug": "catalog-adv-08",
+    "slug": "24-day-christmas-bun-squishy-set",
     "category": "Advent Calendars",
     "priceUsd": 27.99,
     "image": "/catalog/adv-08.webp",
@@ -579,7 +579,7 @@ export const catalogEntries: CatalogEntry[] = [
   {
     "id": "adv-10",
     "name": "Pull-Tab Squishy Advent Calendar",
-    "slug": "catalog-adv-10",
+    "slug": "pull-tab-squishy-advent-calendar",
     "category": "Advent Calendars",
     "priceUsd": 19.99,
     "image": "/catalog/adv-10.webp",

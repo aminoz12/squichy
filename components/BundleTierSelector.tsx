@@ -32,7 +32,7 @@ export function BundleTierSelector({ tiers, selectedId, onSelect }: Props) {
     <fieldset className="space-y-0">
       <legend className="mx-auto mb-5 flex -rotate-1 items-center justify-center gap-3 rounded-full border-2 border-ink bg-pink-pop px-5 py-2.5 font-[family-name:var(--font-fredoka)] text-[11px] font-semibold uppercase tracking-[0.1em] text-white shadow-[3px_3px_0_var(--ink)]">
         <span className="h-2 w-2 rounded-full bg-white"></span>
-        Low Stock ~ Selling Fast
+        Bundle & save — pick your pack
         <span className="h-2 w-2 rounded-full bg-white"></span>
       </legend>
 
@@ -125,6 +125,7 @@ export function BundleTierSelector({ tiers, selectedId, onSelect }: Props) {
                   />
                   <span className="text-xs font-bold text-white">
                     Guaranteed: {tier.bonusQty} {tier.bonusProduct}
+                    {tier.bonusQty > 1 ? "s" : ""}
                   </span>
                 </div>
               )}

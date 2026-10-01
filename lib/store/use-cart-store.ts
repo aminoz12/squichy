@@ -1,6 +1,7 @@
 "use client";
 
 import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 export type CartLine = {
   /** `size-17` / `size-24` for Checkout API, or legacy tier id `single`/`triple`/`five` */
@@ -25,7 +26,13 @@ type CartState = {
   clearCart: () => void;
 };
 
-export const useCartStore = create<CartState>((set) => ({
+/**
+ * Cart survives reloads/new tabs via localStorage. `skipHydration` keeps SSR
+ * HTML (empty cart) stable; Navbar rehydrates after mount.
+ */
+export const useCartStore = create<CartState>()(
+  persist(
+    (set) => ({
   isOpen: false,
   items: [],
 
@@ -76,4 +83,11 @@ export const useCartStore = create<CartState>((set) => ({
     })),
 
   clearCart: () => set({ items: [], isOpen: false }),
-}));
+    }),
+    {
+      name: "squishybun-cart",
+      partialize: (s) => ({ items: s.items }),
+      skipHydration: true,
+    },
+  ),
+);

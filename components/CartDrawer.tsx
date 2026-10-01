@@ -197,10 +197,12 @@ export function CartDrawer() {
   }, []);
 
   /**
-   * Reference flow: checkout first opens the "last chance" upsell step —
-   * but only once per session. A shopper who already dismissed it goes
-   * straight to payment on every later click.
+   * "Last chance" upsell step before payment — only when one small add-on
+   * would unlock free delivery (gap ≤ $10), and only once per session.
+   * Everyone else goes straight to payment.
    */
+  const showLastChanceWorthIt = gapUsd > 0 && gapUsd <= 10;
+
   const onCheckoutClick = useCallback(() => {
     let seen = false;
     try {
@@ -209,7 +211,7 @@ export function CartDrawer() {
       /* storage unavailable — treat as seen to avoid blocking checkout */
       seen = true;
     }
-    if (!seen && lastChancePicks.length > 0) {
+    if (!seen && showLastChanceWorthIt && lastChancePicks.length > 0) {
       try {
         sessionStorage.setItem("sb-lc-seen", "1");
       } catch {
@@ -219,7 +221,7 @@ export function CartDrawer() {
     } else {
       void startCheckout();
     }
-  }, [lastChancePicks.length, startCheckout]);
+  }, [lastChancePicks.length, showLastChanceWorthIt, startCheckout]);
 
   if (!isOpen) return null;
 
@@ -228,14 +230,14 @@ export function CartDrawer() {
           <button
             type="button"
             aria-label="Close cart overlay"
-            className="fixed inset-0 z-50 bg-ink/55"
+            className="fixed inset-0 z-[70] bg-ink/55"
             onClick={closeCart}
           />
           <aside
             role="dialog"
             aria-modal="true"
             aria-labelledby="cart-title"
-            className="fixed inset-y-0 right-0 z-50 flex w-full max-w-md flex-col border-l-[3px] border-ink bg-cream"
+            className="fixed inset-y-0 right-0 z-[75] flex w-full max-w-md flex-col border-l-[3px] border-ink bg-cream"
           >
             <div className="flex items-center justify-between border-b-[2.5px] border-ink bg-sun px-5 py-4">
               <h2
@@ -293,6 +295,7 @@ export function CartDrawer() {
                                 alt=""
                                 fill
                                 sizes="64px"
+                                loading="eager"
                                 className="object-cover"
                               />
                             )}
@@ -433,7 +436,7 @@ export function CartDrawer() {
 
           {showLastChance && (
             <div
-              className="fixed inset-0 z-[60] grid place-items-center bg-ink/60 p-4"
+              className="fixed inset-0 z-[85] grid place-items-center bg-ink/60 p-4"
               onClick={(e) => {
                 if (e.target === e.currentTarget) setShowLastChance(false);
               }}
@@ -492,7 +495,7 @@ export function CartDrawer() {
           {toast && (
             <div
               role="status"
-              className="fixed bottom-6 left-1/2 z-[70] -translate-x-1/2 rounded-full border-[2.5px] border-ink bg-ink px-5 py-2.5 font-[family-name:var(--font-fredoka)] text-sm font-semibold text-white shadow-[3px_3px_0_rgba(42,20,66,0.35)]"
+              className="fixed bottom-6 left-1/2 z-[90] -translate-x-1/2 rounded-full border-[2.5px] border-ink bg-ink px-5 py-2.5 font-[family-name:var(--font-fredoka)] text-sm font-semibold text-white shadow-[3px_3px_0_rgba(42,20,66,0.35)]"
             >
               {toast}
             </div>
@@ -541,6 +544,7 @@ function UpsellCard({
           alt={product.name}
           fill
           sizes="118px"
+          loading="eager"
           className="object-cover"
         />
       </div>
