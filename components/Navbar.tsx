@@ -16,6 +16,7 @@ const NAV_LINKS: { label: string; href: string; hot?: boolean }[] = [
 
 /** Full list for the mobile panel — every collection plus help links. */
 const MOBILE_LINKS: { label: string; href: string }[] = [
+  { label: "🔍 Search", href: "/search" },
   { label: "Shop all", href: "/products" },
   { label: "Dumplings", href: "/collections/dumplings" },
   { label: "Bakery & Sweets", href: "/collections/bakery-sweets" },

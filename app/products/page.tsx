@@ -56,7 +56,8 @@ export default function ProductsPage() {
             </p>
           </div>
         </div>
-        <Suspense fallback={null}>
+        {/* Reserve the grid's space so hydration doesn't shift the page (CLS) */}
+        <Suspense fallback={<div aria-hidden className="min-h-[120vh] bg-cream" />}>
           <ProductsGrid />
         </Suspense>
         <HappyClients />

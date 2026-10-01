@@ -161,6 +161,16 @@ export async function POST(request: Request) {
       phone_number_collection: {
         enabled: true,
       },
+      // Optional gift note, collected on the Stripe page and stored on the
+      // session — shows up in the dashboard and webhooks with the order.
+      custom_fields: [
+        {
+          key: "gift_message",
+          label: { type: "custom", custom: "Gift message (optional)" },
+          type: "text",
+          optional: true,
+        },
+      ],
       success_url: `${origin}/products?checkout=success&session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${origin}/products?checkout=cancel`,
       metadata: {

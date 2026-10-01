@@ -24,6 +24,8 @@ const GIFT_LINKS = [
 ] as const;
 
 const HELP_LINKS = [
+  { label: "Search", href: "/search" },
+  { label: "Track your order", href: "/track-order" },
   { label: "FAQ", href: "/#faq" },
   { label: "Shipping", href: "/shipping" },
   { label: "Returns", href: "/returns" },

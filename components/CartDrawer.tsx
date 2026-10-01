@@ -102,6 +102,16 @@ export function CartDrawer() {
   const [showLastChance, setShowLastChance] = useState(false);
   const [toast, setToast] = useState<string | null>(null);
   const toastTimer = useRef<number | null>(null);
+  const closeBtnRef = useRef<HTMLButtonElement>(null);
+  const lcContinueRef = useRef<HTMLButtonElement>(null);
+
+  // Keyboard users land inside the dialog when it opens (C19).
+  useEffect(() => {
+    if (isOpen) closeBtnRef.current?.focus();
+  }, [isOpen]);
+  useEffect(() => {
+    if (showLastChance) lcContinueRef.current?.focus();
+  }, [showLastChance]);
 
   const subtotalUsd = items.reduce(
     (acc, line) => acc + line.unitPriceUsd * line.quantity,
@@ -272,10 +282,11 @@ export function CartDrawer() {
                 Your bag 🥟
               </h2>
               <button
+                ref={closeBtnRef}
                 type="button"
                 onClick={closeCart}
                 aria-label="Close cart"
-                className="grid h-9 w-9 place-items-center rounded-full border-[2.5px] border-ink bg-white text-base font-bold text-ink transition active:translate-x-[1px] active:translate-y-[1px]"
+                className="grid h-10 w-10 place-items-center rounded-full border-[2.5px] border-ink bg-white text-base font-bold text-ink transition active:translate-x-[1px] active:translate-y-[1px]"
               >
                 ✕
               </button>
@@ -349,7 +360,7 @@ export function CartDrawer() {
                                   onClick={() =>
                                     setLineQuantity(line.id, line.quantity - 1)
                                   }
-                                  className="h-7 w-7 font-bold text-ink"
+                                  className="h-9 w-9 font-bold text-ink"
                                 >
                                   −
                                 </button>
@@ -365,7 +376,7 @@ export function CartDrawer() {
                                       Math.min(99, line.quantity + 1),
                                     )
                                   }
-                                  className="h-7 w-7 font-bold text-ink"
+                                  className="h-9 w-9 font-bold text-ink"
                                 >
                                   +
                                 </button>
@@ -373,7 +384,7 @@ export function CartDrawer() {
                               <button
                                 type="button"
                                 onClick={() => removeLine(line.id)}
-                                className="text-xs font-bold text-ink-2 underline underline-offset-2 hover:text-pink-pop"
+                                className="px-1 py-2 text-xs font-bold text-ink-2 underline underline-offset-2 hover:text-pink-pop"
                               >
                                 Remove
                               </button>
@@ -513,6 +524,7 @@ export function CartDrawer() {
                   ))}
                 </div>
                 <button
+                  ref={lcContinueRef}
                   type="button"
                   onClick={() => void startCheckout()}
                   disabled={checkoutLoading}

@@ -109,6 +109,12 @@ export default async function CollectionPage({ params }: Props) {
                 {c.category}
               </Link>
             ))}
+            <Link
+              href={{ pathname: "/products", query: { category: collection.category } }}
+              className="rounded-full border-[2.5px] border-dashed border-ink px-4 py-1.5 font-[family-name:var(--font-fredoka)] text-sm font-semibold text-ink-2 transition-transform hover:-translate-y-0.5 hover:text-ink"
+            >
+              Sort by price ↕
+            </Link>
           </div>
 
           <div className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
