@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { christmasCutoffNotice } from "@/lib/campaigns";
-import { redirectToStripeCheckout } from "@/lib/checkout-client";
+import { redirectToCheckout } from "@/lib/checkout-client";
 import { fireEcomEvent, fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
 import { mysteryDumplingBundles, getProductBundles } from "@/lib/data";
@@ -159,8 +159,7 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
       },
     ]);
     try {
-      const checkoutId = selectedBundle.id;
-      await redirectToStripeCheckout(checkoutId, 1);
+      await redirectToCheckout([{ id: selectedBundle.id, quantity: 1 }]);
     } catch (e) {
       setCheckoutError(e instanceof Error ? e.message : "Something went wrong");
       setCheckoutLoading(false);

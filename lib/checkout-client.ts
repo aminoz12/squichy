@@ -1,9 +1,25 @@
 "use client";
 
+import { canCheckoutWithShopify, createShopifyCheckoutUrl } from "./shopify";
+
 type CartItem = {
   id: string;
   quantity: number;
 };
+
+/**
+ * Single checkout entry point. When the Shopify store is connected and every
+ * line maps to a Shopify variant, payment goes through Shopify's hosted
+ * checkout; otherwise it falls back to the existing Stripe session flow.
+ */
+export async function redirectToCheckout(items: CartItem[]): Promise<void> {
+  if (canCheckoutWithShopify(items)) {
+    const url = await createShopifyCheckoutUrl(items);
+    window.location.href = url;
+    return;
+  }
+  return redirectToStripeCheckout(items);
+}
 
 /**
  * Creates a Stripe Checkout Session via our API and redirects the browser.

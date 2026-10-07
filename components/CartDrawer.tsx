@@ -3,7 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
-import { redirectToStripeCheckout } from "@/lib/checkout-client";
+import { redirectToCheckout } from "@/lib/checkout-client";
 import { fireEcomEvent, fireGtagConversion } from "@/lib/gtag";
 import {
   estimateCartDeliveryUsd,
@@ -221,7 +221,7 @@ export function CartDrawer() {
           quantity: resolved.quantity,
         };
       });
-      await redirectToStripeCheckout(cartItems);
+      await redirectToCheckout(cartItems);
     } catch (e) {
       setShowLastChance(false);
       setCheckoutError(
