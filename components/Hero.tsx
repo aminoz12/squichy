@@ -38,7 +38,7 @@ export function Hero() {
               Find your squishy →
             </Link>
             <Link
-              href="/collections/boxes-gift-sets"
+              href="/collections/squishy-sets"
               className="btn-squish btn-sun text-sm sm:text-base"
             >
               🎁 Gift sets

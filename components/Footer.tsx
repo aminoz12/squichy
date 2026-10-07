@@ -11,15 +11,17 @@ const PAYMENT_ICONS = [
 
 const SHOP_LINKS = [
   { label: "All squishies", href: "/products" },
-  { label: "Dumplings", href: "/collections/dumplings" },
-  { label: "Bakery & Sweets", href: "/collections/bakery-sweets" },
-  { label: "Sensory & ASMR 🔥", href: "/collections/sensory-asmr" },
-  { label: "Animals", href: "/collections/animals" },
-  { label: "Mystery Minis", href: "/collections/mystery-minis" },
+  { label: "Dumpling Squishies", href: "/collections/dumpling-squishies" },
+  { label: "Glitter Squishies", href: "/collections/glitter-squishies" },
+  { label: "Crispy & Crunchy 🔥", href: "/collections/crispy-crunchy" },
+  { label: "Animal Squishies", href: "/collections/animal-squishies" },
+  { label: "Giant Squishies", href: "/collections/giant-squishies" },
+  { label: "Mystery Squishies", href: "/collections/mystery-squishies" },
 ] as const;
 
 const GIFT_LINKS = [
-  { label: "Gift sets", href: "/collections/boxes-gift-sets" },
+  { label: "Squishy Sets", href: "/collections/squishy-sets" },
+  { label: "Party Packs", href: "/collections/party-packs" },
   { label: "Advent calendars", href: "/collections/advent-calendars" },
 ] as const;
 

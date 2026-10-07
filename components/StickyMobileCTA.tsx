@@ -12,7 +12,7 @@ export function StickyMobileCTA() {
     >
       <div className="mx-auto flex max-w-lg items-center gap-3">
         <Link
-          href="/products/mystery-dumpling"
+          href="/products/rainbow-unicorn-mystery-dumpling"
           className="btn-squish flex-1 text-sm uppercase tracking-wide"
         >
           Buy 2 get 1 now

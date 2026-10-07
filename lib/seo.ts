@@ -120,6 +120,11 @@ export function ogImageUrl(): string {
   return absoluteUrl(OG_IMAGE_PATH);
 }
 
+/** Site-relative paths get the origin; Shopify CDN URLs pass through. */
+export function toAbsoluteImageUrl(src: string): string {
+  return src.startsWith("http") ? src : absoluteUrl(src);
+}
+
 export function absoluteUrl(path: string): string {
   const base = getSiteUrl().replace(/\/$/, "");
   const p = path.startsWith("/") ? path : `/${path}`;
@@ -365,11 +370,11 @@ export function productJsonLd(product: ProductOffer) {
   const productUrl = `${url}/products/${product.slug}`;
   const productImages = product.images
     .filter(isRasterImagePath)
-    .map((src) => absoluteUrl(src));
+    .map((src) => toAbsoluteImageUrl(src));
 
   // Review markup only on the product the reviews were written about —
   // duplicating identical reviews across every product is a spam signal.
-  const hasOwnReviews = product.id === "squishybun-mystery-dumpling";
+  const hasOwnReviews = product.id === "rainbow-unicorn-mystery-dumpling";
 
   return {
     "@type": "Product" as const,

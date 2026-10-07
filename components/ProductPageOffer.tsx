@@ -6,7 +6,7 @@ import { christmasCutoffNotice } from "@/lib/campaigns";
 import { redirectToCheckout } from "@/lib/checkout-client";
 import { fireEcomEvent, fireGtagConversion } from "@/lib/gtag";
 import type { ProductSizeOption } from "@/lib/data";
-import { mysteryDumplingBundles, getProductBundles } from "@/lib/data";
+import type { BundleTier } from "@/lib/data";
 import {
   FREE_DELIVERY_THRESHOLD_USD,
   qualifiesForFreeDeliverySubtotal,
@@ -23,6 +23,7 @@ export type ProductPageOfferData = {
   details: readonly string[];
   specs: readonly { label: string; value: string }[];
   options: readonly ProductSizeOption[];
+  bundles: readonly BundleTier[];
 };
 
 type ProductPageOfferProps = {
@@ -88,13 +89,8 @@ export function ProductPageOffer({ id, className = "", offer }: ProductPageOffer
   const [checkoutLoading, setCheckoutLoading] = useState(false);
   const [checkoutError, setCheckoutError] = useState<string | null>(null);
 
-  const isMysteryDumpling = offer.id === "squishybun-mystery-dumpling";
-
-  /* ── Bundle tier state ── */
-  const bundles = useMemo(() => {
-    if (isMysteryDumpling) return mysteryDumplingBundles;
-    return getProductBundles(offer.id, offer.options[0]?.priceUsd || 0);
-  }, [isMysteryDumpling, offer.id, offer.options]);
+  /* ── Bundle tier state — exactly what the product data declares ── */
+  const bundles = offer.bundles;
 
   const defaultBundle = bundles.find((b) => b.defaultSelected) ?? bundles[0];
   const [selectedBundleId, setSelectedBundleId] = useState(defaultBundle.id);

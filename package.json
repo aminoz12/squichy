@@ -11,7 +11,7 @@
     "start": "next start",
     "lint": "eslint",
     "shopify:csv": "tsx scripts/shopify/generate-import-csv.ts",
-    "shopify:sync": "tsx scripts/shopify/sync-variants.ts"
+    "shopify:sync": "tsx scripts/shopify/sync-catalog.ts"
   },
   "dependencies": {
     "next": "16.2.1",

@@ -1,84 +1,71 @@
 import { products, type ProductOffer } from "./data";
 
 /**
- * Collection landing pages (/collections/[slug]) — one per product category.
- * Slugs mirror classic storefront URLs; `intro` opens with a definition-style
- * sentence so answer engines can lift it directly.
+ * Collection landing pages (/collections/[slug]) — derived from the catalog's
+ * categories (= Shopify product types), so a new category in the store
+ * becomes a page on the next sync + deploy. `intro` opens definition-style so
+ * answer engines can lift it; a few flagship categories get hand-written copy.
  */
 export type Collection = {
   slug: string;
-  /** Must match ProductOffer.categoryName exactly. */
+  /** Matches ProductOffer.categoryName exactly. */
   category: string;
   title: string;
   metaDescription: string;
   intro: string;
 };
 
-export const collections: Collection[] = [
-  {
-    slug: "dumplings",
-    category: "Dumplings",
-    title: "Dumpling Squishies",
-    metaDescription:
-      "Shop slow-rise dumpling squishies: smiley steamed buns, glitter dumplings and mystery bao blind boxes. BUY 2 GET 1 FREE, free delivery over $50.",
-    intro:
-      "Dumpling squishies are palm-sized, slow-rise foam toys shaped like steamed bao buns — squeeze them flat and watch them puff back up. This is the collection that made SquishyBun famous on TikTok, from the classic Smiley Dumpling to glitter-filled mystery pulls.",
-  },
-  {
-    slug: "bakery-sweets",
-    category: "Bakery & Sweets",
-    title: "Bakery & Sweets Squishies",
-    metaDescription:
-      "Squishy toys shaped like food: butter sticks, toast, mochi, apples and more slow-rise bakery treats. BUY 2 GET 1 FREE, free delivery over $50.",
-    intro:
-      "Bakery and sweets squishies are slow-rise sensory toys shaped like your favorite treats — butter sticks, mini toast, mochi daifuku, apples and potato chips. Soft enough for desk fidgeting, cute enough to collect the whole pastry case.",
-  },
-  {
-    slug: "sensory-asmr",
-    category: "Sensory & ASMR",
-    title: "Sensory & ASMR Squishies",
-    metaDescription:
-      "Crunchy, gooey and stretchy ASMR squishies: ice cubes, jelly balls, NeeDoh cubes and crunch-filled fidget toys. BUY 2 GET 1 FREE.",
-    intro:
-      "Sensory and ASMR squishies are fidget toys built for texture and sound — crunchy fillings that crackle, gooey ice cubes that squash flat, and stretchy jelly balls that snap back. A quiet, satisfying outlet for busy hands at a desk or in class.",
-  },
-  {
-    slug: "animals",
-    category: "Animals",
-    title: "Animal Squishies",
-    metaDescription:
-      "Adorable animal squishies: hand-painted chonky cats, tongue-out pups, mini chicks and bunny squishies. BUY 2 GET 1 FREE, free delivery over $50.",
-    intro:
-      "Animal squishies are slow-rise foam companions shaped like chonky cats, puppies, chicks and bunnies. Several are hand-painted, which makes each one slightly unique — fan favorites for collectors and the hardest category to squish just once.",
-  },
-  {
-    slug: "mystery-minis",
-    category: "Mystery Minis",
-    title: "Mystery Mini Blind Boxes",
-    metaDescription:
-      "Mystery squishy blind boxes: surprise bao buns and angel animal minis in random styles. The unboxing is half the fun. BUY 2 GET 1 FREE.",
-    intro:
-      "Mystery minis are squishy blind boxes — you order the box, and the style and color inside stay a surprise until you open it. Random pulls, occasional rares, and the exact unboxing thrill that fills everyone’s TikTok feed.",
-  },
-  {
-    slug: "boxes-gift-sets",
-    category: "Boxes & Gift Sets",
-    title: "Squishy Gift Boxes & Sets",
-    metaDescription:
-      "Gift-ready squishy sets: bakery boxes, crunchy ASMR packs, blind bags and stocking stuffers. No wrapping needed — free delivery over $50.",
-    intro:
-      "Squishy gift boxes are curated sets of fan-favorite squishies in ready-to-give packaging — bakery assortments, crunchy ASMR packs, mystery blind bags and stocking stuffer minis. One box, zero wrapping, guaranteed squeals.",
-  },
-  {
-    slug: "advent-calendars",
-    category: "Advent Calendars",
-    title: "Squishy Advent Calendars",
-    metaDescription:
-      "Squishy advent calendars with a surprise squishy behind every door — dumplings, ice cubes and Christmas buns. Free delivery over $50.",
-    intro:
-      "A squishy advent calendar hides a small surprise squishy behind every numbered door — open one a day and build a whole collection by Christmas. Dumpling, ice-cube and Christmas-bun editions, all gift-ready out of the box.",
-  },
-];
+function slugify(category: string): string {
+  return category
+    .toLowerCase()
+    .replace(/&/g, " ")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "");
+}
+
+const CUSTOM_INTROS: Record<string, string> = {
+  "Dumpling Squishies":
+    "Dumpling squishies are palm-sized, slow-rise foam toys shaped like steamed bao buns — squeeze them flat and watch them puff back up. This is the collection that made SquishyBun famous on TikTok.",
+  "Crispy & Crunchy":
+    "Crispy and crunchy squishies are ASMR fidget toys with a crackly filling that pops and crunches with every squeeze — the most satisfying sound in the collection.",
+  "Mystery Squishies":
+    "Mystery squishies are blind-box surprises: you order the box, and the exact style and color stay secret until you open it. Random pulls, occasional rares, maximum unboxing fun.",
+  "Advent Calendars":
+    "A squishy advent calendar hides a small surprise squishy behind every numbered door — open one a day and build a whole collection by Christmas. All gift-ready out of the box.",
+  "Squishy Sets":
+    "Squishy sets are curated boxes of fan favorites in ready-to-give packaging — one box, zero wrapping, guaranteed squeals.",
+  "Giant Squishies":
+    "Giant squishies are the oversized members of the family — extra-large, two-hands-required slow-rise squish for maximum stress relief.",
+  "Glitter Squishies":
+    "Glitter squishies are filled with sparkle that shifts as you squeeze — mesmerizing to watch, satisfying to squash.",
+};
+
+function buildCollection(category: string, items: ProductOffer[]): Collection {
+  const minPrice = Math.min(
+    ...items.flatMap((p) => p.options.map((o) => o.priceUsd)),
+  );
+  const title = category;
+  const metaDescription = `Shop ${items.length} ${category.toLowerCase()} from $${minPrice.toFixed(
+    2,
+  )} — slow-rise squishy toys with bundle deals and free delivery over $50.`;
+  const intro =
+    CUSTOM_INTROS[category] ??
+    `${category} from SquishyBun: ${items.length} slow-rise squishy styles from $${minPrice.toFixed(
+      2,
+    )}, with bundle savings on most of them. Squeeze one flat and watch it rise right back.`;
+  return { slug: slugify(category), category, title, metaDescription, intro };
+}
+
+const byCategory = new Map<string, ProductOffer[]>();
+for (const p of products) {
+  const list = byCategory.get(p.categoryName) ?? [];
+  list.push(p);
+  byCategory.set(p.categoryName, list);
+}
+
+export const collections: Collection[] = [...byCategory.entries()].map(
+  ([category, items]) => buildCollection(category, items),
+);
 
 export function getCollection(slug: string): Collection | undefined {
   return collections.find((c) => c.slug === slug);

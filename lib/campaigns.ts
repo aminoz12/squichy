@@ -26,7 +26,7 @@ export const campaigns: Campaign[] = [
     icon: "🎃",
     pill: "Spooky season",
     title: "The Halloween Bun Gift Box is here — trick-or-treat ready",
-    cta: { label: "Shop Halloween →", href: "/products/halloween-bun-squishy-gift-box" },
+    cta: { label: "Shop Halloween →", href: "/collections/holiday-squishies" },
   },
   {
     id: "advent-2026",
@@ -53,7 +53,7 @@ export const campaigns: Campaign[] = [
     icon: "🎁",
     pill: "Holiday gifts",
     title: "Order by Dec 17 for estimated delivery by Christmas (US)",
-    cta: { label: "Shop gifts →", href: "/collections/boxes-gift-sets" },
+    cta: { label: "Shop gifts →", href: "/collections/squishy-sets" },
   },
   {
     id: "last-minute-2026",
@@ -62,7 +62,7 @@ export const campaigns: Campaign[] = [
     icon: "✨",
     pill: "Little gifts",
     title: "Little gifts. Big squish energy.",
-    cta: { label: "Shop gift sets →", href: "/collections/boxes-gift-sets" },
+    cta: { label: "Shop gift sets →", href: "/collections/squishy-sets" },
   },
 ];
 

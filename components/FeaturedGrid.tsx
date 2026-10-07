@@ -7,19 +7,10 @@ import { products } from "@/lib/data";
 import { fireEcomEvent } from "@/lib/gtag";
 import { useCartStore } from "@/lib/store/use-cart-store";
 
-/** Reference homepage picks: four fan favorites, mystery dumpling first. */
-const FEATURED_IDS = [
-  "squishybun-mystery-dumpling",
-  "sq-001",
-  "sq-022",
-  "sq-017",
-];
-
-
 export function FeaturedGrid() {
-  const featured = FEATURED_IDS.map((id) =>
-    products.find((p) => p.id === id),
-  ).filter((p): p is (typeof products)[number] => p != null);
+  // Four best sellers (Shopify "Best Sellers" tag → badge), else first four.
+  const bestSellers = products.filter((p) => p.badge === "Best seller");
+  const featured = (bestSellers.length >= 4 ? bestSellers : products).slice(0, 4);
 
   return (
     <section className="bg-cream pb-16 sm:pb-20">

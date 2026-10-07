@@ -8,9 +8,9 @@ import { useCartStore } from "@/lib/store/use-cart-store";
 
 const NAV_LINKS: { label: string; href: string; hot?: boolean }[] = [
   { label: "Shop all", href: "/products" },
-  { label: "Dumplings", href: "/collections/dumplings" },
-  { label: "🔥 Crunchy", href: "/collections/sensory-asmr", hot: true },
-  { label: "Gift sets", href: "/collections/boxes-gift-sets" },
+  { label: "Dumplings", href: "/collections/dumpling-squishies" },
+  { label: "🔥 Crunchy", href: "/collections/crispy-crunchy", hot: true },
+  { label: "Gift sets", href: "/collections/squishy-sets" },
   { label: "🎄 Advent", href: "/collections/advent-calendars" },
 ];
 
@@ -18,12 +18,14 @@ const NAV_LINKS: { label: string; href: string; hot?: boolean }[] = [
 const MOBILE_LINKS: { label: string; href: string }[] = [
   { label: "🔍 Search", href: "/search" },
   { label: "Shop all", href: "/products" },
-  { label: "Dumplings", href: "/collections/dumplings" },
-  { label: "Bakery & Sweets", href: "/collections/bakery-sweets" },
-  { label: "Sensory & ASMR 🔥", href: "/collections/sensory-asmr" },
-  { label: "Animals", href: "/collections/animals" },
-  { label: "Mystery Minis", href: "/collections/mystery-minis" },
-  { label: "Gift sets 🎁", href: "/collections/boxes-gift-sets" },
+  { label: "Dumpling Squishies", href: "/collections/dumpling-squishies" },
+  { label: "Glitter Squishies", href: "/collections/glitter-squishies" },
+  { label: "Mystery Squishies", href: "/collections/mystery-squishies" },
+  { label: "Giant Squishies", href: "/collections/giant-squishies" },
+  { label: "Crispy & Crunchy 🔥", href: "/collections/crispy-crunchy" },
+  { label: "Animal Squishies", href: "/collections/animal-squishies" },
+  { label: "Party Packs", href: "/collections/party-packs" },
+  { label: "Squishy Sets 🎁", href: "/collections/squishy-sets" },
   { label: "Advent calendars 🎄", href: "/collections/advent-calendars" },
   { label: "FAQ", href: "/#faq" },
   { label: "Contact", href: "/contact" },

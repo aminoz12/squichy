@@ -30,7 +30,12 @@ for (const p of products) {
   for (const o of p.options) productByOptionId.set(o.id, p);
 }
 
-const GIFT_CATEGORIES = new Set(["Boxes & Gift Sets", "Advent Calendars"]);
+const GIFT_CATEGORIES = new Set([
+  "Advent Calendars",
+  "Squishy Sets",
+  "Party Packs",
+  "Holiday Squishies",
+]);
 
 const isGiftProduct = (p: ProductOffer) => GIFT_CATEGORIES.has(p.categoryName);
 const basePrice = (p: ProductOffer) => p.options[0]?.priceUsd ?? 0;

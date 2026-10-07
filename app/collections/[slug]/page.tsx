@@ -13,10 +13,10 @@ import {
 } from "@/lib/collections";
 import type { ProductOffer } from "@/lib/data";
 import {
-  absoluteUrl,
   breadcrumbJsonLd,
   collectionPageJsonLd,
   ogImageUrl,
+  toAbsoluteImageUrl,
 } from "@/lib/seo";
 
 type Props = {
@@ -39,7 +39,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       url: `/collections/${slug}`,
       title: `${collection.title} | SquishyBun`,
       description: collection.metaDescription,
-      images: [firstImage ? absoluteUrl(firstImage) : ogImageUrl()],
+      images: [firstImage ? toAbsoluteImageUrl(firstImage) : ogImageUrl()],
     },
   };
 }

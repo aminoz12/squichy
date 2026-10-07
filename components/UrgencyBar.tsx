@@ -25,7 +25,7 @@ export function UrgencyBar() {
     ? campaign.title
     : "BUY 2, GET 1 FREE on the TikTok-viral Mystery Dumpling";
   const ctaLabel = campaign ? campaign.cta.label : "Claim the deal →";
-  const href = campaign ? campaign.cta.href : "/products/mystery-dumpling";
+  const href = campaign ? campaign.cta.href : "/products/rainbow-unicorn-mystery-dumpling";
 
   return (
     <Link

@@ -2,12 +2,12 @@ import Image from "next/image";
 import Link from "next/link";
 import { products } from "@/lib/data";
 
-/** Reference homepage tiles: category, representative studio image, tint. */
+/** Homepage tiles: flagship categories; image = first product of each. */
 const TILES = [
-  { category: "Dumplings", href: "/collections/dumplings", image: "/catalog/sq-001.webp", tint: "bg-pink-soft" },
-  { category: "Sensory & ASMR", href: "/collections/sensory-asmr", image: "/catalog/sq-017.webp", tint: "bg-mint-soft" },
-  { category: "Boxes & Gift Sets", href: "/collections/boxes-gift-sets", image: "/catalog/box-bakery.webp", tint: "bg-sun-soft" },
-  { category: "Advent Calendars", href: "/collections/advent-calendars", image: "/catalog/adv-06.webp", tint: "bg-lilac" },
+  { category: "Dumpling Squishies", href: "/collections/dumpling-squishies", tint: "bg-pink-soft" },
+  { category: "Crispy & Crunchy", href: "/collections/crispy-crunchy", tint: "bg-mint-soft" },
+  { category: "Squishy Sets", href: "/collections/squishy-sets", tint: "bg-sun-soft" },
+  { category: "Advent Calendars", href: "/collections/advent-calendars", tint: "bg-lilac" },
 ];
 
 export function DiscoverSquishies() {
@@ -37,7 +37,10 @@ export function DiscoverSquishies() {
         </div>
 
         <div className="grid grid-cols-2 gap-4 lg:grid-cols-4 lg:gap-5">
-          {TILES.map((tile) => (
+          {TILES.map((rawTile) => {
+            const first = products.find((p) => p.categoryName === rawTile.category);
+            const tile = { ...rawTile, image: first?.images[0] ?? "/hero-squish.jpg" };
+            return (
             <Link
               key={tile.category}
               href={tile.href}
@@ -59,7 +62,8 @@ export function DiscoverSquishies() {
                 />
               </div>
             </Link>
-          ))}
+            );
+          })}
         </div>
       </div>
     </section>

@@ -1,7 +1,7 @@
 import type { MetadataRoute } from "next";
 import { blogPosts } from "@/lib/blog-data";
 import { collections, collectionProducts } from "@/lib/collections";
-import { absoluteUrl, getSiteUrl, isRasterImagePath } from "@/lib/seo";
+import { absoluteUrl, getSiteUrl, isRasterImagePath, toAbsoluteImageUrl } from "@/lib/seo";
 import { products } from "@/lib/data";
 
 export default function sitemap(): MetadataRoute.Sitemap {
@@ -21,7 +21,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
     lastModified: now,
     changeFrequency: "weekly" as const,
     priority: 0.85,
-    images: p.images.filter(isRasterImagePath).map(absoluteUrl),
+    images: p.images.filter(isRasterImagePath).map(toAbsoluteImageUrl),
   }));
 
   const collectionEntries: MetadataRoute.Sitemap = collections.map((c) => ({
@@ -33,7 +33,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       .slice(0, 8)
       .map((p) => p.images.find(isRasterImagePath))
       .filter((src): src is string => Boolean(src))
-      .map(absoluteUrl),
+      .map(toAbsoluteImageUrl),
   }));
 
   return [
@@ -52,7 +52,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
       images: products
         .map((p) => p.images.find(isRasterImagePath))
         .filter((src): src is string => Boolean(src))
-        .map(absoluteUrl),
+        .map(toAbsoluteImageUrl),
     },
     {
       url: `${base}/blog`,

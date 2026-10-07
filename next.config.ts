@@ -43,7 +43,29 @@ function mergeEnvExample() {
 
 mergeEnvExample();
 
-/** Renamed product slugs → 301s so old links and indexed URLs keep working. */
+/* eslint-disable @typescript-eslint/no-require-imports */
+const legacySlugs = require("./lib/legacy-slugs.json") as {
+  productSlugs: string[];
+  collectionSlugs: string[];
+};
+const shopifyCatalog = require("./lib/shopify-catalog.generated.json") as {
+  products?: { handle: string }[];
+};
+/* eslint-enable @typescript-eslint/no-require-imports */
+
+const liveHandles = new Set((shopifyCatalog.products ?? []).map((p) => p.handle));
+
+/** Pre-Shopify collection slugs → their closest store category. */
+const LEGACY_COLLECTION_TARGETS: Record<string, string> = {
+  dumplings: "dumpling-squishies",
+  "bakery-sweets": "food-squishies",
+  "sensory-asmr": "crispy-crunchy",
+  animals: "animal-squishies",
+  "mystery-minis": "mystery-squishies",
+  "boxes-gift-sets": "squishy-sets",
+};
+
+/** Earlier same-site renames; chain into the live-handle check below. */
 const RENAMED_PRODUCT_SLUGS: Record<string, string> = {
   needoh: "gooey-groovy-cubes",
   "catalog-adv-02": "reindeer-snowman-squishy-advent-calendar",
@@ -70,11 +92,36 @@ const nextConfig: NextConfig = {
     ],
   },
   async redirects() {
-    return Object.entries(RENAMED_PRODUCT_SLUGS).map(([from, to]) => ({
-      source: `/products/${from}`,
-      destination: `/products/${to}`,
-      permanent: true,
-    }));
+    const redirects: { source: string; destination: string; permanent: boolean }[] = [];
+    const seen = new Set<string>();
+
+    const addProductRedirect = (from: string, preferred?: string) => {
+      if (seen.has(from) || liveHandles.has(from)) return;
+      seen.add(from);
+      const destination =
+        preferred && liveHandles.has(preferred)
+          ? `/products/${preferred}`
+          : "/products";
+      redirects.push({ source: `/products/${from}`, destination, permanent: true });
+    };
+
+    // Same-site renames first (may now point at live store handles).
+    for (const [from, to] of Object.entries(RENAMED_PRODUCT_SLUGS)) {
+      addProductRedirect(from, to);
+    }
+    // Every pre-Shopify product slug that isn't a live store handle → catalog.
+    for (const slug of legacySlugs.productSlugs) {
+      addProductRedirect(slug);
+    }
+    // Pre-Shopify collection slugs → their closest store category.
+    for (const [from, to] of Object.entries(LEGACY_COLLECTION_TARGETS)) {
+      redirects.push({
+        source: `/collections/${from}`,
+        destination: `/collections/${to}`,
+        permanent: true,
+      });
+    }
+    return redirects;
   },
 };
 

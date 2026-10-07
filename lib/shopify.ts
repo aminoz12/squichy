@@ -10,15 +10,22 @@
  * the site runs unchanged (Stripe checkout) until the store is connected.
  */
 
-import variantMapJson from "./shopify-variants.json";
+import catalogJson from "./shopify-catalog.generated.json";
 
 const STORE_DOMAIN = process.env.NEXT_PUBLIC_SHOPIFY_STORE_DOMAIN?.trim();
 const STOREFRONT_TOKEN =
   process.env.NEXT_PUBLIC_SHOPIFY_STOREFRONT_TOKEN?.trim();
 const API_VERSION = "2025-07";
 
-const VARIANT_BY_OPTION_ID: Record<string, string> =
-  (variantMapJson as { variants?: Record<string, string> }).variants ?? {};
+type CatalogJson = {
+  products?: { variants: { sku: string; gid: string }[] }[];
+};
+
+const VARIANT_BY_OPTION_ID: Record<string, string> = Object.fromEntries(
+  ((catalogJson as CatalogJson).products ?? []).flatMap((p) =>
+    p.variants.map((v) => [v.sku, v.gid] as const),
+  ),
+);
 
 export function isShopifyEnabled(): boolean {
   return Boolean(STORE_DOMAIN && STOREFRONT_TOKEN);

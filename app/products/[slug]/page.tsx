@@ -30,7 +30,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const productDesc = productMetaDescription(product);
   const seoTitle =
-    product.id === "squishybun-mystery-dumpling"
+    product.id === "rainbow-unicorn-mystery-dumpling"
       ? "Mystery Dumpling Toy"
       : product.name;
 

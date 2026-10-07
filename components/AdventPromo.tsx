@@ -1,14 +1,13 @@
 import Image from "next/image";
 import Link from "next/link";
-
-/** Reference dark promo: staggered advent calendar tiles on ink. */
-const PROMO_ITEMS = [
-  { slug: "mystery-bun-advent-calendar", image: "/catalog/adv-06.webp", alt: "Mystery Bun Advent Calendar" },
-  { slug: "countdown-to-christmas-dumpling-advent-calendar", image: "/catalog/adv-01.webp", alt: "Countdown to Christmas Dumpling Advent Calendar" },
-  { slug: "ice-cube-squishy-advent-calendar", image: "/catalog/adv-04.webp", alt: "Ice Cube Squishy Advent Calendar" },
-];
+import { products } from "@/lib/data";
 
 export function AdventPromo() {
+  /** Staggered advent tiles on ink — first three calendars in the catalog. */
+  const PROMO_ITEMS = products
+    .filter((p) => p.categoryName === "Advent Calendars")
+    .slice(0, 3)
+    .map((p) => ({ slug: p.slug, image: p.images[0], alt: p.name }));
   return (
     <section className="bg-ink py-16 text-white sm:py-20">
       <div className="mx-auto grid max-w-6xl items-center gap-12 px-4 sm:px-6 lg:grid-cols-[1fr_1.1fr]">

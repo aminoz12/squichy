@@ -4,6 +4,7 @@
  */
 
 import { catalogEntries, type CatalogFeel } from "./catalog-data";
+import shopifyCatalogJson from "./shopify-catalog.generated.json";
 
 export const product = {
   name: "SquishyBun Dumplings",
@@ -440,6 +441,8 @@ export type ProductOffer = Omit<typeof singleProductOffer, "id" | "name" | "slug
   details: readonly string[];
   specs: readonly { label: string; value: string }[];
   options: ProductSizeOption[];
+  /** Explicit purchase tiers — the PDP renders exactly these (prices = charged prices). */
+  bundles: BundleTier[];
   accentColor?: string;
   badge?: string;
 };
@@ -447,6 +450,7 @@ export type ProductOffer = Omit<typeof singleProductOffer, "id" | "name" | "slug
 const coreProducts: ProductOffer[] = [
   {
     ...singleProductOffer,
+    bundles: [...mysteryDumplingBundles],
     id: "squishybun-mystery-dumpling",
     accentColor: "#fdf2f8", // Rose 50
     badge: "Hot",
@@ -476,6 +480,7 @@ const coreProducts: ProductOffer[] = [
       { label: "Weight", value: "Approx. 0.2 kg" },
     ],
     accentColor: "#fff1f2", // Rose 50
+    bundles: getProductBundles("apple-squishy", 12),
     options: getProductBundles("apple-squishy", 12).map(b => ({
       id: b.id,
       label: b.title,
@@ -510,6 +515,7 @@ const coreProducts: ProductOffer[] = [
     ],
     accentColor: "#fffbeb", // Amber 50
     badge: "Trending",
+    bundles: getProductBundles("cheese-square", 18),
     options: getProductBundles("cheese-square", 18).map(b => ({
       id: b.id,
       label: b.title,
@@ -543,6 +549,7 @@ const coreProducts: ProductOffer[] = [
       { label: "Weight", value: "Approx. 0.3 kg" },
     ],
     accentColor: "#f0fdf4", // Green 50
+    bundles: getProductBundles("needoh", 22),
     options: getProductBundles("needoh", 22).map(b => ({
       id: b.id,
       label: b.title,
@@ -576,6 +583,7 @@ const coreProducts: ProductOffer[] = [
       { label: "Weight", value: "0.4 kg" },
     ],
     accentColor: "#fffbeb", // Amber 50
+    bundles: getProductBundles("butter-squishy", 18),
     options: getProductBundles("butter-squishy", 18).map(b => ({
       id: b.id,
       label: b.title,
@@ -641,6 +649,10 @@ export const catalogProducts: ProductOffer[] = catalogEntries.map((entry, i) => 
   badge: entry.badge,
   // Gift boxes and advent calendars sell at a single price — no bundle tiers.
   // sizeCm 0 = dimensions unknown for imported items; UI and checkout skip it.
+  bundles:
+    entry.category === "Boxes & Gift Sets" || entry.category === "Advent Calendars"
+      ? getProductBundles(entry.id, entry.priceUsd).slice(0, 1)
+      : getProductBundles(entry.id, entry.priceUsd),
   options: (entry.category === "Boxes & Gift Sets" ||
   entry.category === "Advent Calendars"
     ? getProductBundles(entry.id, entry.priceUsd).slice(0, 1)
@@ -654,7 +666,100 @@ export const catalogProducts: ProductOffer[] = catalogEntries.map((entry, i) => 
   })),
 }));
 
-export const products: ProductOffer[] = [...coreProducts, ...catalogProducts];
+const legacyProducts: ProductOffer[] = [...coreProducts, ...catalogProducts];
+
+/* ── Shopify headless: the store catalog is the source of truth ──
+ * lib/shopify-catalog.generated.json is written by `npm run shopify:sync`.
+ * Prices shown here are the prices Shopify charges — same source. */
+
+type ShopifyVariantEntry = {
+  sku: string;
+  gid: string;
+  title: string;
+  priceUsd: number;
+  compareAtUsd: number | null;
+};
+
+type ShopifyCatalogEntry = {
+  handle: string;
+  title: string;
+  description: string;
+  type: string;
+  tags: string[];
+  images: string[];
+  variants: ShopifyVariantEntry[];
+};
+
+const TYPE_DETAIL: Record<string, string> = {
+  "Crispy & Crunchy": "Crunchy ASMR filling that crackles with every squeeze.",
+  "Ice Cube & Maltose": "Gooey, cool-touch squish that squashes flat and snaps back.",
+  "Giant Squishies": "Extra-large squish — two hands required, maximum satisfaction.",
+  "Advent Calendars": "A surprise squishy behind every door — a little happy every day.",
+  "Squishy Sets": "A curated set in gift-ready packaging — no wrapping needed.",
+  "Party Packs": "A party-sized pack of minis, ready to share.",
+  "Mystery Squishies": "Blind-box surprise — the exact style is a mystery until you open it.",
+  "Glitter Squishies": "Glitter-filled and mesmerizing from every angle.",
+};
+
+/** "Buy 2 Get 1 Free (3 boxes)" → tier math for the PDP selector. */
+function tierFromVariant(v: ShopifyVariantEntry, index: number): BundleTier {
+  const buyGet = v.title.match(/buy\s*(\d+)\s*get\s*(\d+)/i);
+  const boxes = v.title.match(/(\d+)\s*box/i);
+  const payQty = buyGet ? Number(buyGet[1]) : boxes ? Number(boxes[1]) : 1;
+  const freeQty = buyGet ? Number(buyGet[2]) : 0;
+  const pieces = boxes ? Number(boxes[1]) : payQty + freeQty || 1;
+  return {
+    id: v.sku,
+    title: v.title,
+    payQty,
+    freeQty,
+    perBoxUsd: Math.round((v.priceUsd / Math.max(1, pieces)) * 100) / 100,
+    compareAtPerBoxUsd: v.compareAtUsd
+      ? Math.round((v.compareAtUsd / Math.max(1, pieces)) * 100) / 100
+      : undefined,
+    totalPriceUsd: v.priceUsd,
+    compareAtTotalUsd: v.compareAtUsd ?? undefined,
+    defaultSelected: index === 1,
+  };
+}
+
+const shopifyEntries: ShopifyCatalogEntry[] = (
+  shopifyCatalogJson as { products?: ShopifyCatalogEntry[] }
+).products ?? [];
+
+const shopifyProducts: ProductOffer[] = shopifyEntries.map((entry, i) => ({
+  id: entry.handle,
+  name: entry.title,
+  slug: entry.handle,
+  categoryName: entry.type,
+  categoryImage: entry.images[0]!,
+  description: entry.description,
+  deliveryUsd: 9,
+  images: entry.images,
+  details: [
+    ...(TYPE_DETAIL[entry.type] ? [TYPE_DETAIL[entry.type]] : []),
+    "Slow-rise, ultra-soft squish — squeeze it flat and watch it rise back.",
+    "Ships with email tracking; free delivery on orders over $50.",
+    "Suitable for ages 3 and up. Small parts — supervise young children.",
+  ],
+  specs: [
+    { label: "Collection", value: entry.type },
+    { label: "Brand", value: "SquishyBun" },
+    { label: "Age", value: "3+" },
+  ],
+  accentColor: CATALOG_ACCENTS[i % CATALOG_ACCENTS.length],
+  badge: entry.tags.some((t) => /best sellers?/i.test(t)) ? "Best seller" : undefined,
+  bundles: entry.variants.map(tierFromVariant),
+  options: entry.variants.map((v) => ({
+    id: v.sku,
+    label: v.title,
+    sizeCm: 0,
+    priceUsd: v.priceUsd,
+  })),
+}));
+
+export const products: ProductOffer[] =
+  shopifyProducts.length > 0 ? shopifyProducts : legacyProducts;
 
 export type ProductDetail = {
   id: string;
